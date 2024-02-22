@@ -29,6 +29,7 @@ export type PenetrationOptions = "actual" | "rate";
 
 interface InternetPenetrationProps {
   last_updated: string;
+  next_update: string;
   traffic_timeseries: WithData<Record<TrafficData, number[]>>;
   traffic_timeseries_callout: WithData<Record<Exclude<TrafficData, "x">, { latest: number }>>;
   penetration_timeseries: WithData<Record<PenetrationOptions, Record<PenetrationData, number[]>>>;
@@ -39,6 +40,7 @@ interface InternetPenetrationProps {
 
 const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({
   last_updated,
+  next_update,
   traffic_timeseries,
   traffic_timeseries_callout,
   penetration_timeseries,
@@ -53,6 +55,7 @@ const InternetPenetration: FunctionComponent<InternetPenetrationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="mcmc" />}
       />
       <Container className="min-h-screen">

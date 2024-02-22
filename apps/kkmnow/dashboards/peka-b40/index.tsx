@@ -14,6 +14,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useTranslation, useData, useSlice } from "datagovmy-ui/hooks";
 import { TimeseriesOption } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -27,6 +28,7 @@ const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr
 
 interface PekaB40Props {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;
@@ -35,13 +37,27 @@ interface PekaB40Props {
 const PekaB40: FunctionComponent<PekaB40Props> = ({
   params,
   last_updated,
+  next_update,
   timeseries,
   choropleth,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-peka-b40", "common"]);
   const currentState = params.state;
+
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,
@@ -78,6 +94,7 @@ const PekaB40: FunctionComponent<PekaB40Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.PEKA_B40} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="phcorp" />}
       />
 

@@ -15,6 +15,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { getTopIndices, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { TimeseriesOption } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
@@ -29,6 +30,7 @@ const Bar = dynamic(() => import("datagovmy-ui/charts/bar"), { ssr: false });
 
 interface OrganDonationProps {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   choropleth: any;
@@ -38,6 +40,7 @@ interface OrganDonationProps {
 
 const OrganDonation: FunctionComponent<OrganDonationProps> = ({
   last_updated,
+  next_update,
   params,
   timeseries,
   choropleth,
@@ -46,9 +49,21 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
 }) => {
   const { t, i18n } = useTranslation(["dashboard-organ-donation", "common"]);
 
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const currentState = params.state;
   const { data, setData } = useData({
-    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,
@@ -86,6 +101,7 @@ const OrganDonation: FunctionComponent<OrganDonationProps> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.ORGAN_DONATION} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="ntrc" />}
       />
       <Container className="min-h-screen">

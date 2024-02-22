@@ -15,6 +15,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { DashboardPeriod, OptionType, TimeseriesOption, WithData } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { FunctionComponent } from "react";
@@ -53,6 +54,7 @@ type TableData = {
 interface COVID19Props {
   params: Record<string, any>;
   last_updated: string;
+  next_update: string;
   snapshot_bar: WithData<
     Record<"cases" | "deaths" | "util_hosp" | "util_icu" | "util_vent", Array<BarMeterData>>
   >;
@@ -112,6 +114,7 @@ interface COVID19Props {
 const COVID19: FunctionComponent<COVID19Props> = ({
   params,
   last_updated,
+  next_update,
   snapshot_bar,
   snapshot_graphic,
   snapshot_table,
@@ -126,6 +129,18 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     { label: "Deaths", value: "deaths" },
   ];
 
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const { data, setData } = useData({
     show_indicator: {
       label: t(`opt_${filterCaseDeath[0].value}`),
@@ -134,7 +149,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
     filter_death: 0,
     filter_state: 0,
     filter_cases: 0,
-    minmax: [timeseries.data.daily.x.length - 366, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab_index: 0,
@@ -357,6 +372,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
         description={[t("description")]}
         action={<StateDropdown url={routes.COVID_19} currentState={currentState} />}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="moh" />}
       />
 
@@ -386,6 +402,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       value: snapshot_graphic.data.cases_local,
                       delta: snapshot_graphic.data.cases_local_annot,
                       inverse: true,
+                      precision: 0,
                       icon: (
                         <Image
                           src="/static/images/stages/virus.svg"
@@ -400,6 +417,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       value: snapshot_graphic.data.cases_import,
                       delta: snapshot_graphic.data.cases_import_annot,
                       inverse: true,
+                      precision: 0,
                     },
                   ],
                   col_2: [
@@ -479,6 +497,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       name: t("col3_title1"),
                       value: snapshot_graphic.data.cases_recovered,
                       delta: snapshot_graphic.data.cases_recovered_annot,
+                      precision: 0,
                       icon: (
                         <Image
                           src="/static/images/stages/recovered.svg"
@@ -492,6 +511,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       name: t("col3_title2"),
                       value: snapshot_graphic.data.deaths,
                       delta: snapshot_graphic.data.deaths_annot,
+                      precision: 0,
                       inverse: true,
                       icon: (
                         <Image
@@ -506,6 +526,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                       name: t("col3_title3"),
                       value: snapshot_graphic.data.deaths_bid,
                       delta: snapshot_graphic.data.deaths_bid_annot,
+                      precision: 0,
                       inverse: true,
                     },
                   ],
@@ -801,6 +822,10 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     <Table
                       className="text-sm text-right table-sticky-first"
                       data={snapshot_table.data}
+                      enableRowPin={true}
+                      defaultRowPin={{
+                        top: ["0"],
+                      }}
                       config={menu.config}
                       freeze={["state"]}
                       precision={{

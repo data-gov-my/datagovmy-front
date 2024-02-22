@@ -12,11 +12,13 @@ import { FunctionComponent, ReactNode } from "react";
 interface BalanceOfPaymentsLayoutProps {
   children: (tab_index: string) => ReactNode;
   last_updated: string;
+  next_update: string;
 }
 
 const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> = ({
   children,
   last_updated,
+  next_update,
 }) => {
   const { t } = useTranslation(["dashboard-bop", "agencies", "common"]);
 
@@ -43,6 +45,7 @@ const BalanceOfPaymentsLayout: FunctionComponent<BalanceOfPaymentsLayoutProps> =
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge name={t("division:bpip.full")} icon={<GlobeIcon />} isDivision />}
       />
 

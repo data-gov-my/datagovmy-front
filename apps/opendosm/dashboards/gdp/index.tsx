@@ -40,6 +40,7 @@ type GDPKeys =
 
 interface GDPDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<{
     growth_real_yoy: Record<GDPKeys, number[]>;
     growth_nominal_yoy: Record<GDPKeys, number[]>;
@@ -62,6 +63,7 @@ interface GDPDashboardProps {
 
 const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }) => {
@@ -187,6 +189,7 @@ const GDPDashboard: FunctionComponent<GDPDashboardProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bpan.full")} icon={<AccountingIcon />} isDivision />
         }

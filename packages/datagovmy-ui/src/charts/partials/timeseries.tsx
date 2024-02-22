@@ -1,4 +1,3 @@
-import { Precision } from "../../../types";
 import { Slider, Spinner } from "../../components";
 import { SliderProvider } from "../../contexts/slider";
 import { useData, useSlice, useWatch } from "../../hooks";
@@ -10,6 +9,7 @@ import { FunctionComponent, useContext, useMemo } from "react";
 import isEmpty from "lodash/isEmpty";
 import { CatalogueContext } from "../../contexts/catalogue";
 import { useTheme } from "next-themes";
+import { Precision } from "../../../types/data-catalogue";
 
 const Timeseries = dynamic(() => import("../timeseries"), { ssr: false });
 interface CatalogueTimeseriesProps {

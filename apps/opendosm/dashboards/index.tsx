@@ -1,6 +1,5 @@
 import { ArrowUpRightIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import DivisionIcon, { Division } from "@icons/division";
-import { get } from "datagovmy-ui/api";
 import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -21,7 +20,8 @@ type Dashboard = {
 
 type View = {
   id: string;
-  view_count: number;
+  type: "dashboard";
+  total_views: number;
 };
 
 interface DashboardIndexProps {
@@ -116,10 +116,24 @@ const Ranking = ({ ranks }: RankingProps) => {
   const [views, setViews] = useState<View[]>([]);
 
   useEffect(() => {
-    const fetchViews = () =>
-      get("/view-count/", { type: "dashboard", views_only: true }).then(({ data }) =>
-        setViews(data)
-      );
+    const fetchViews = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+            },
+          }
+        );
+        const { data } = await response.json();
+        setViews(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchViews();
   }, []);
 
@@ -150,10 +164,10 @@ const Ranking = ({ ranks }: RankingProps) => {
                 <div className="relative w-full">
                   <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
                     {`${numFormat(
-                      views.find(e => e.id === item.id)?.view_count ?? 0,
+                      views.find(e => e.id === item.id)?.total_views ?? 0,
                       "compact"
                     )} ${t("common:common.views", {
-                      count: views.find(e => e.id === item.id)?.view_count ?? 0,
+                      count: views.find(e => e.id === item.id)?.total_views ?? 0,
                     })}`}
                   </p>
                   <p className="absolute -bottom-6 whitespace-nowrap text-primary transition-transform group-hover:-translate-y-6 dark:text-primary-dark">

@@ -67,6 +67,7 @@ export interface IndicesTimeseriesOptionsCallout {
 
 interface ExternalTradeDashboardProp {
   last_updated: string;
+  next_update: string;
   timeseries: WithData<TimeseriesOptions>;
   timeseries_callout: WithData<TimeseriesOptionsCallout>;
   indices_timeseries: WithData<Record<TradeIndices, IndicesTimeseriesOptions>>;
@@ -80,6 +81,7 @@ interface ExternalTradeDashboardProp {
 
 const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_callout,
   indices_timeseries,
@@ -106,6 +108,7 @@ const ExternalTradeDashboard: FunctionComponent<ExternalTradeDashboardProp> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:bppa.full")} icon={<ShippingIcon />} isDivision={true} />
         }

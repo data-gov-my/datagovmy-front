@@ -18,6 +18,7 @@ import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { AgencyIcon } from "datagovmy-ui/icons/agency";
 import { Agency, Page } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 
@@ -30,8 +31,19 @@ const Home: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation();
 
+  const twoMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000)
+        .minus({ months: 2 })
+        .startOf("month")
+        .diff(DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000), [
+          "days",
+        ]).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - twoMonths, timeseries.data.x.length - 1],
     tabs_section_1: 0,
     tabs_section_2: 0,
   });
@@ -302,9 +314,6 @@ export const getStaticProps: GetStaticProps = withi18n(null, async () => {
         all_time: {
           dataset: data.table_summary.data.all_time.dataset_views,
           dashboard: data.table_summary.data.all_time.dashboard_views,
-        },
-        total: {
-          catalogue: data.total_catalog,
         },
       },
     },

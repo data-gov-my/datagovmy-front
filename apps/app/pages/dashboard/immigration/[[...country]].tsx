@@ -12,6 +12,7 @@ const Immigration: Page = ({
   meta,
   params,
   last_updated,
+  next_update,
   countries,
   timeseries,
   timeseries_callout,
@@ -26,6 +27,7 @@ const Immigration: Page = ({
       <ImmigrationDashboard
         countries={countries}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
@@ -69,6 +71,7 @@ export const getStaticProps: GetStaticProps = withi18n(
             country: country || "ALL",
           },
           last_updated: data.data_last_updated,
+          next_update: data.data_next_update,
           countries: dropdown,
           timeseries: data.timeseries_country,
           timeseries_callout: data.timeseries_country_callout,

@@ -13,12 +13,14 @@ import Taxpayers, { TaxpayersProps } from "./taxpayers";
 
 interface IncomeTaxationProps extends TaxpayersProps {
   last_updated: string;
+  next_update: string;
   stacked_bar: any;
   year: number;
 }
 
 const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({
   last_updated,
+  next_update,
   stacked_bar,
   timeseries,
   timeseries_callout,
@@ -34,6 +36,7 @@ const IncomeTaxation: FunctionComponent<IncomeTaxationProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="lhdn" icon={<LHDNIcon fillColor="#71717A" />} />}
       />
 

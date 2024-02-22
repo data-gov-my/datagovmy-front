@@ -39,6 +39,7 @@ interface RapidExplorerProps {
   B_to_A_callout?: Record<DashboardPeriod, number>;
   dropdown: Record<string, Record<string, string[]>>;
   last_updated: string;
+  next_update: string;
   params: any;
 }
 
@@ -49,6 +50,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   B_to_A_callout,
   dropdown,
   last_updated,
+  next_update,
   params,
 }) => {
   const { t, i18n } = useTranslation(["dashboard-rapid-explorer", "common"]);
@@ -144,6 +146,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="prasarana" />}
         last_updated={last_updated}
+        next_update={next_update}
       />
 
       <Container>

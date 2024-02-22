@@ -12,6 +12,7 @@ const Poverty: Page = ({
   choropleth,
   heatmap,
   last_updated,
+  next_update,
   meta,
   timeseries,
   timeseries_callout,
@@ -25,6 +26,7 @@ const Poverty: Page = ({
         choropleth={choropleth}
         heatmap={heatmap}
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
       />
@@ -39,6 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-poverty", asyn
     notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
     props: {
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       meta: {
         id: "dashboard-poverty",
         type: "dashboard",

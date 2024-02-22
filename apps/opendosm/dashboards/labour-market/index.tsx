@@ -35,6 +35,7 @@ type LabourMarketCalloutKeys =
   | "unemployed";
 interface LabourMarketProps {
   last_updated: string;
+  next_update: string;
   bar: any;
   timeseries: WithData<Record<LabourMarketKeys | "x", number[]>>;
   choropleth: any;
@@ -43,6 +44,7 @@ interface LabourMarketProps {
 
 const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
   last_updated,
+  next_update,
   bar,
   timeseries,
   choropleth,
@@ -63,6 +65,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={
           <AgencyBadge name={t("division:mbls.full")} icon={<WorkerIcon />} isDivision />
         }

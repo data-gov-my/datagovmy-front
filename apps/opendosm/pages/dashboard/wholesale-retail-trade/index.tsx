@@ -10,6 +10,7 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 const WholesaleRetail: Page = ({
   meta,
   last_updated,
+  next_update,
   timeseries,
   timeseries_callouts,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
@@ -20,6 +21,7 @@ const WholesaleRetail: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <WholesaleRetailDashboard
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         timeseries_callouts={timeseries_callouts}
       />
@@ -39,6 +41,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-wholesale-reta
         agency: "DOSM",
       },
       last_updated: data.data_last_updated,
+      next_update: data.data_next_update,
       timeseries: data.timeseries,
       timeseries_callouts: data.statistics,
     },

@@ -1,9 +1,9 @@
 import { AgencyBadge, At, Container, Hero, Section, Slider } from "datagovmy-ui/components";
 import { ArrowUpRightIcon } from "@heroicons/react/24/solid";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent, ReactNode, useMemo } from "react";
+import { FunctionComponent, ReactNode, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { WithData } from "datagovmy-ui/types";
+import { Agency, WithData } from "datagovmy-ui/types";
 import { routes } from "@lib/routes";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
@@ -18,6 +18,8 @@ import {
   InjectionIcon,
   HospitalBedIcon,
 } from "datagovmy-ui/icons/kkmnow";
+import { DateTime } from "luxon";
+import AgencyIcon from "datagovmy-ui/icons/agency";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
   ssr: false,
@@ -39,8 +41,14 @@ interface StatProps {
 type Dashboard = {
   id: string;
   name: string;
-  division: string;
+  agency: Agency;
   route: string;
+};
+
+type View = {
+  id: string;
+  type: "dashboard";
+  total_views: number;
 };
 
 interface DashboardIndexProps {
@@ -63,8 +71,20 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
   timeseries_callout,
 }) => {
   const { t, i18n } = useTranslation(["kkmnow-home", "dashboards"]);
+
+  const twoMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000)
+        .minus({ months: 2 })
+        .startOf("month")
+        .diff(DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000), [
+          "days",
+        ]).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [0, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - twoMonths, timeseries.data.x.length - 1],
   });
   const { coordinate } = useSlice(timeseries.data, data.minmax);
 
@@ -170,7 +190,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
         <Section title={t("at_a_glance")}>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             {STATS.map(({ data_as_of, icon, title, value, url }: StatProps) => (
-              <div className="flex items-center gap-3" key={url}>
+              <div className="flex items-center gap-3" key={url + title}>
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-outline dark:bg-washed-dark">
                   {icon}
                 </div>
@@ -259,12 +279,40 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({
 
 const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
   const { t, i18n } = useTranslation(["dashboards"]);
+  const [views, setViews] = useState<View[]>([]);
+
+  useEffect(() => {
+    const fetchViews = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+            },
+          }
+        );
+        const { data } = await response.json();
+        setViews(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchViews();
+  }, []);
 
   return (
     <At href={item.route} locale={i18n.language} prefetch={false}>
       <div className="border-outline hover:border-outlineHover hover:bg-background dark:border-washed-dark hover:dark:border-outlineHover-dark dark:hover:bg-washed-dark/50 group flex h-full w-full flex-col space-y-3 rounded-xl border p-6 transition-colors">
         <div className="relative flex items-center gap-3">
-          <p className="text-dim font-medium text-sm">{t(`agencies:${item.division}.abbr`)}</p>
+          <AgencyIcon
+            agency={item.agency}
+            className="h-6 w-6"
+            fillColor={item.id === "dashboard-covid-vaccination" ? AKSARA_COLOR.GREEN : undefined}
+          />
+          <p className="text-dim font-medium text-sm">{t(`agencies:${item.agency}.abbr`)}</p>
           <ArrowUpRightIcon className="text-dim absolute right-1 h-5 w-5 opacity-100 lg:opacity-0 transition-transform group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transform-none" />
         </div>
         <div className="flex grow flex-col items-start gap-3 overflow-hidden">
@@ -277,8 +325,15 @@ const DashboardCard: FunctionComponent<{ item: Dashboard }> = ({ item }) => {
             </p>
           </div>
           <div className="relative w-full">
-            <p className="text-dim transition-transform group-hover:translate-y-6 h-6 motion-reduce:transform-none"></p>
-            <p className="text-primary dark:text-primary-dark absolute bottom-0 lg:-bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
+            <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
+              {`${numFormat(views.find(e => e.id === item.id)?.total_views ?? 0, "compact")} ${t(
+                "common:common.views",
+                {
+                  count: views.find(e => e.id === item.id)?.total_views ?? 0,
+                }
+              )}`}
+            </p>
+            <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
               {t("common:components.click_to_explore")}
             </p>
           </div>

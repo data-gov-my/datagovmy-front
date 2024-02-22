@@ -16,6 +16,7 @@ import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { TimeseriesOption } from "datagovmy-ui/types";
+import { DateTime } from "luxon";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
@@ -27,6 +28,7 @@ const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr
 
 interface BloodDonationDashboardProps {
   last_updated: string;
+  next_update: string;
   params: { state: string };
   timeseries: any;
   barchart_age: any;
@@ -37,6 +39,7 @@ interface BloodDonationDashboardProps {
 
 const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = ({
   last_updated,
+  next_update,
   params,
   timeseries,
   barchart_age,
@@ -46,8 +49,21 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
 }) => {
   const { t, i18n } = useTranslation(["dashboard-blood-donation", "common"]);
   const { theme = "light" } = useTheme();
+
+  const sixMonths = Math.ceil(
+    Math.abs(
+      DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000)
+        .minus({ months: 6 })
+        .startOf("month")
+        .diff(
+          DateTime.fromSeconds(timeseries.data.daily.x[timeseries.data.daily.x.length - 1] / 1000),
+          ["days"]
+        ).days
+    )
+  );
+
   const { data, setData } = useData({
-    minmax: [timeseries.data.daily.x.length - 182, timeseries.data.daily.x.length - 1],
+    minmax: [timeseries.data.daily.x.length - sixMonths, timeseries.data.daily.x.length - 1],
     period: "auto",
     periodly: "daily_7d",
     tab1_index: 0,
@@ -97,8 +113,15 @@ const BloodDonationDashboard: FunctionComponent<BloodDonationDashboardProps> = (
         category={[t("common:categories.healthcare"), "text-danger"]}
         header={[t("header")]}
         description={[t("description"), "text-dim"]}
-        action={<StateDropdown url={routes.BLOOD_DONATION} currentState={params.state} />}
+        action={
+          <StateDropdown
+            url={routes.BLOOD_DONATION}
+            currentState={params.state}
+            exclude={["pjy", "pls", "lbn"]}
+          />
+        }
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="pdn" />}
       />
       <Container className="min-h-screen">

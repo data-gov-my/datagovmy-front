@@ -11,11 +11,13 @@ import { FunctionComponent, ReactNode } from "react";
 interface ElectronicPaymentsLayoutProps {
   children: (tab_index: string) => ReactNode;
   last_updated: string;
+  next_update: string;
 }
 
 const ElectronicPaymentsLayout: FunctionComponent<ElectronicPaymentsLayoutProps> = ({
   children,
   last_updated,
+  next_update,
 }) => {
   const { t } = useTranslation(["dashboard-electronic-payments"]);
 
@@ -46,6 +48,7 @@ const ElectronicPaymentsLayout: FunctionComponent<ElectronicPaymentsLayoutProps>
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bnm" />}
       />
 

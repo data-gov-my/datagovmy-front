@@ -21,6 +21,9 @@ import {
   FilterFn,
   getFilteredRowModel,
   SortDirection,
+  RowPinningState,
+  Row,
+  Table as Tablez,
 } from "@tanstack/react-table";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { rankItem } from "@tanstack/match-sorter-utils";
@@ -32,7 +35,7 @@ import { DebouncedFunc } from "lodash";
 import { clx, numFormat } from "../lib/helpers";
 import { UpDownIcon } from "../icons";
 import Button from "../components/Button";
-import { Precision } from "../../types";
+import { Precision } from "../../types/data-catalogue";
 
 export interface TableConfigColumn {
   id: string;
@@ -67,6 +70,8 @@ export interface TableProps {
   "config"?: Array<TableConfig>;
   "responsive"?: Boolean;
   "enablePagination"?: false | number;
+  "enableRowPin"?: boolean;
+  "defaultRowPin"?: RowPinningState;
   "pagination"?: (
     currentPage: number,
     totalPage: number,
@@ -114,6 +119,8 @@ const Table: FunctionComponent<TableProps> = ({
   search,
   responsive = true,
   enablePagination = false,
+  enableRowPin = false,
+  defaultRowPin,
   pagination,
   cellClass,
   precision,
@@ -124,6 +131,15 @@ const Table: FunctionComponent<TableProps> = ({
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { t } = useTranslation("common");
+
+  const [rowPinning, setRowPinning] = useState<RowPinningState>(
+    defaultRowPin
+      ? defaultRowPin
+      : {
+          top: [],
+          bottom: [],
+        }
+  );
 
   const sortTooltip = (sortDir: SortDirection | false) => {
     if (sortDir === false) return t("common:common.sort");
@@ -138,10 +154,13 @@ const Table: FunctionComponent<TableProps> = ({
       sorting: sorting,
       columnFilters: columnFilters,
       globalFilter: globalFilter,
+      rowPinning: enableRowPin ? rowPinning : undefined,
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
+    onRowPinningChange: setRowPinning,
+    keepPinnedRows: enableRowPin ? true : false,
     globalFilterFn: fuzzyFilter,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -168,6 +187,72 @@ const Table: FunctionComponent<TableProps> = ({
     const ele = document.getElementById(cellId)?.previousElementSibling;
     return ele !== undefined && ele !== null ? ele.clientWidth : 0;
   };
+
+  function PinnedRow({ row, table }: { row: Row<any>; table: Tablez<any> }) {
+    return (
+      <tr
+        key={row.id}
+        style={{
+          position: "sticky",
+          top: row.getIsPinned() === "top" ? `${row.getPinnedIndex() * 26 + 48}px` : undefined,
+          bottom:
+            row.getIsPinned() === "bottom"
+              ? `${(table.getBottomRows().length - 1 - row.getPinnedIndex()) * 26}px`
+              : undefined,
+        }}
+      >
+        {row.getVisibleCells().map((cell: any, index: number) => {
+          const lastCellInGroup = cell.column.parent
+            ? cell.column.parent?.columns[cell.column.parent?.columns.length - 1]
+            : cell.column;
+          const value = cell.getValue();
+          const unit = cell.column.columnDef.unit ?? undefined;
+          const inverse = cell.column.columnDef.inverse ?? undefined;
+          const relative = cell.column.columnDef.relative ?? undefined;
+          const scale = cell.column.columnDef.scale ?? undefined;
+
+          const getPrecision = (precision?: number | Precision): number | [number, number] => {
+            if (!precision) return [1, 0];
+            else if (typeof precision === "number") return precision;
+            else if (precision.columns && cell.column.id in precision.columns)
+              return precision.columns[cell.column.id];
+            else return precision.default;
+          };
+
+          const classNames = clx(
+            "border-outline dark:border-washed-dark border-b px-2 py-2.5 max-sm:max-w-[150px] truncate",
+            typeof value === "number" && "tabular-nums text-right",
+            lastCellInGroup.id === cell.column.id && "text-sm",
+            relative && relativeColor(value as number, inverse),
+            scale && scaleColor(value as number),
+            freeze?.includes(cell.column.id) && "sticky-col",
+            cell.column.columnDef.className ? cell.column.columnDef.className : cellClass
+          );
+
+          const displayValue = () => {
+            if (typeof value === "number")
+              return numFormat(value, "standard", getPrecision(precision));
+            if (value === "NaN") return "-";
+            return flexRender(cell.column.columnDef.cell, cell.getContext());
+          };
+          return (
+            <td
+              id={cell.id}
+              key={cell.id}
+              className={classNames}
+              style={{
+                left: freeze?.includes(cell.column.id) ? calcStickyLeft(cell.column.id) : 0,
+              }}
+            >
+              {displayValue()}
+              {value !== null && unit}
+              {value === null && relative && "-"}
+            </td>
+          );
+        })}
+      </tr>
+    );
+  }
 
   return (
     <div>
@@ -270,68 +355,72 @@ const Table: FunctionComponent<TableProps> = ({
             ))}
           </thead>
           <tbody>
+            {enableRowPin &&
+              table.getTopRows().map(row => <PinnedRow key={row.id} row={row} table={table} />)}
             {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map(row => {
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell: any, index: number) => {
-                      const lastCellInGroup = cell.column.parent
-                        ? cell.column.parent?.columns[cell.column.parent?.columns.length - 1]
-                        : cell.column;
-                      const value = cell.getValue();
-                      const unit = cell.column.columnDef.unit ?? undefined;
-                      const inverse = cell.column.columnDef.inverse ?? undefined;
-                      const relative = cell.column.columnDef.relative ?? undefined;
-                      const scale = cell.column.columnDef.scale ?? undefined;
+              (enableRowPin ? table.getCenterRows() : table.getRowModel().rows).map(
+                (row, index) => {
+                  return (
+                    <tr key={row.id}>
+                      {row.getVisibleCells().map((cell: any, index: number) => {
+                        const lastCellInGroup = cell.column.parent
+                          ? cell.column.parent?.columns[cell.column.parent?.columns.length - 1]
+                          : cell.column;
+                        const value = cell.getValue();
+                        const unit = cell.column.columnDef.unit ?? undefined;
+                        const inverse = cell.column.columnDef.inverse ?? undefined;
+                        const relative = cell.column.columnDef.relative ?? undefined;
+                        const scale = cell.column.columnDef.scale ?? undefined;
 
-                      const getPrecision = (
-                        precision?: number | Precision
-                      ): number | [number, number] => {
-                        if (!precision) return [1, 0];
-                        else if (typeof precision === "number") return precision;
-                        else if (precision.columns && cell.column.id in precision.columns)
-                          return precision.columns[cell.column.id];
-                        else return precision.default;
-                      };
+                        const getPrecision = (
+                          precision?: number | Precision
+                        ): number | [number, number] => {
+                          if (!precision) return [1, 0];
+                          else if (typeof precision === "number") return precision;
+                          else if (precision.columns && cell.column.id in precision.columns)
+                            return precision.columns[cell.column.id];
+                          else return precision.default;
+                        };
 
-                      const classNames = clx(
-                        "border-outline dark:border-washed-dark border-b px-2 py-2.5 max-sm:max-w-[150px] truncate",
-                        typeof value === "number" && "tabular-nums text-right",
-                        lastCellInGroup.id === cell.column.id && "text-sm",
-                        relative && relativeColor(value as number, inverse),
-                        scale && scaleColor(value as number),
-                        freeze?.includes(cell.column.id) && "sticky-col",
-                        cell.column.columnDef.className
-                          ? cell.column.columnDef.className
-                          : cellClass
-                      );
+                        const classNames = clx(
+                          "border-outline dark:border-washed-dark border-b px-2 py-2.5 max-sm:max-w-[150px] truncate",
+                          typeof value === "number" && "tabular-nums text-right",
+                          lastCellInGroup.id === cell.column.id && "text-sm",
+                          relative && relativeColor(value as number, inverse),
+                          scale && scaleColor(value as number),
+                          freeze?.includes(cell.column.id) && "sticky-col",
+                          cell.column.columnDef.className
+                            ? cell.column.columnDef.className
+                            : cellClass
+                        );
 
-                      const displayValue = () => {
-                        if (typeof value === "number")
-                          return numFormat(value, "standard", getPrecision(precision));
-                        if (value === "NaN") return "-";
-                        return flexRender(cell.column.columnDef.cell, cell.getContext());
-                      };
-                      return (
-                        <td
-                          id={cell.id}
-                          key={cell.id}
-                          className={classNames}
-                          style={{
-                            left: freeze?.includes(cell.column.id)
-                              ? calcStickyLeft(cell.column.id)
-                              : 0,
-                          }}
-                        >
-                          {displayValue()}
-                          {value !== null && unit}
-                          {value === null && relative && "-"}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })
+                        const displayValue = () => {
+                          if (typeof value === "number")
+                            return numFormat(value, "standard", getPrecision(precision));
+                          if (value === "NaN") return "-";
+                          return flexRender(cell.column.columnDef.cell, cell.getContext());
+                        };
+                        return (
+                          <td
+                            id={cell.id}
+                            key={cell.id}
+                            className={classNames}
+                            style={{
+                              left: freeze?.includes(cell.column.id)
+                                ? calcStickyLeft(cell.column.id)
+                                : 0,
+                            }}
+                          >
+                            {displayValue()}
+                            {value !== null && unit}
+                            {value === null && relative && "-"}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                }
+              )
             ) : (
               <tr>
                 <td colSpan={table.getAllColumns().length} className="border-outline border-r">

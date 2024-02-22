@@ -9,6 +9,7 @@ type ConditionalHeroProps =
   | {
       children?: ReactNode;
       last_updated?: never;
+      next_update?: never;
       header?: never;
       category?: never;
       description?: never;
@@ -20,6 +21,7 @@ type ConditionalHeroProps =
 type HeroDefault = {
   children?: never;
   last_updated?: string | number;
+  next_update?: string | number;
   header?: [text: string, className?: string];
   category?: [text: string, className?: string];
   description?: [text: string, className?: string] | ReactNode;
@@ -41,6 +43,7 @@ const Hero: FunctionComponent<HeroProps> = ({
   description,
   action,
   last_updated,
+  next_update,
   agencyBadge,
 }) => {
   const { t, i18n } = useTranslation();
@@ -94,7 +97,7 @@ const Hero: FunctionComponent<HeroProps> = ({
               </div>
             )}
 
-            {(header || description || result?.view_count) && (
+            {(header || description || result?.total_views) && (
               <div className="space-y-3">
                 {header && (
                   <h2 className={clx("text-black", header[1])} data-testid="hero-header">
@@ -112,11 +115,11 @@ const Hero: FunctionComponent<HeroProps> = ({
                 ) : (
                   description
                 )}
-                {result?.view_count && (
+                {result?.total_views && (
                   <p className="text-dim flex gap-2 text-sm" data-testid="hero-views">
                     <EyeIcon className="w-4.5 h-4.5 self-center" />
-                    {`${numFormat(result.view_count, "standard")} ${t("common:common.views", {
-                      count: result.view_count,
+                    {`${numFormat(result.total_views, "standard")} ${t("common:common.views", {
+                      count: result.total_views,
                     })}`}
                   </p>
                 )}
@@ -126,12 +129,23 @@ const Hero: FunctionComponent<HeroProps> = ({
             {(action || last_updated) && (
               <div className="space-y-6">
                 {action}
-                {last_updated && (
-                  <p className="text-dim text-sm" data-testid="hero-last-updated">
-                    {t("common:common.last_updated", {
-                      date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
-                    })}
-                  </p>
+                {(last_updated || next_update) && (
+                  <div className="flex flex-col gap-3">
+                    {last_updated && (
+                      <p className="text-dim text-sm" data-testid="hero-last-updated">
+                        {t("common:common.last_updated", {
+                          date: toDate(last_updated, "dd MMM yyyy, HH:mm", i18n.language),
+                        })}
+                      </p>
+                    )}
+                    {next_update && (
+                      <p className="text-dim text-sm" data-testid="hero-last-updated">
+                        {t("common:common.next_update", {
+                          date: toDate(next_update, "dd MMM yyyy, HH:mm", i18n.language),
+                        })}
+                      </p>
+                    )}
+                  </div>
                 )}
               </div>
             )}

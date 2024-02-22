@@ -22,6 +22,7 @@ const IPR: Page = ({
   meta,
   choropleth,
   last_updated,
+  next_update,
   params,
   timeseries,
   timeseries_callout,
@@ -34,6 +35,7 @@ const IPR: Page = ({
       <IPRDashboard
         choropleth={choropleth}
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         timeseries_callout={timeseries_callout}
@@ -80,6 +82,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         },
         choropleth: data.choropleth,
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: "mys" },
         timeseries: data.timeseries,
         timeseries_callout: data.timeseries_callout.data,

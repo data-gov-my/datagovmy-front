@@ -11,26 +11,20 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 const CatalogueIndex: Page = ({
   query,
   collection,
+  sources,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation("catalogue");
+  const { t } = useTranslation(["catalogue", "common"]);
 
   return (
     <>
-      <Metadata
-        title={t("header")}
-        description={t("description", {
-          agency: t("agencies:moh.abbr"),
-          context: "agency",
-        })}
-        keywords={""}
-      />
-      <DataCatalogue query={query} collection={collection} sources={[]} site="kkmnow" />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <DataCatalogue query={query} collection={collection} sources={sources} site="datagovmy" />
     </>
   );
 };
 
 const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
-  if (Array.isArray(data)) return sortAlpha(data, "catalog_name");
+  if (Array.isArray(data)) return sortAlpha(data, "title");
 
   return Object.fromEntries(
     Object.entries(data)
@@ -43,35 +37,35 @@ const recurSort = (data: Record<string, Catalogue[]> | Catalogue[]): any => {
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
-  ["catalogue", "common", "opendosm-home"],
+  "catalogue",
   async ({ locale, query }) => {
-    // const { data } = await get("/data-catalog/", {
-    //   lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-    //   source: "DOSM",
-    //   opendosm: true,
-    //   ...query,
-    // });
+    try {
+      const { data } = await get("/data-catalogue", {
+        language: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+        site: "kkmnow",
+        ...query,
+      });
 
-    const { data } = await get("/data-catalogue/", {
-      lang: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
-      source: "MoH",
-      kkm: true,
-      ...query,
-    });
+      // const collection = recurSort(data.dataset);
+      const collection = data.dataset;
 
-    return {
-      props: {
-        meta: {
-          id: "catalogue-index",
-          type: "misc",
-          category: null,
-          agency: null,
+      return {
+        props: {
+          meta: {
+            id: "catalogue-index",
+            type: "misc",
+            category: null,
+            agency: null,
+          },
+          query: query ?? {},
+          sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
+          collection,
         },
-        query: query ?? {},
-        total: data.total_all,
-        collection: data.dataset ? recurSort(data.dataset) : {},
-      },
-    };
+      };
+    } catch (error) {
+      console.error(error);
+      return { notFound: true };
+    }
   },
   {
     cache_expiry: 600, // 10 min

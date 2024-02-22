@@ -69,10 +69,11 @@ const Slider: FunctionComponent<SliderProps> = ({
   }, [value]);
 
   // Auto-resets slider if period changes
+  // Set to value from prop to reset slider
   useWatch(() => {
     if (data && type === "range") {
-      setMinmax([0, data.length - 1]);
-      onChange([0, data.length - 1] as number[] & number);
+      setMinmax(value);
+      onChange(value as number[] & number);
     }
   }, [period]);
 

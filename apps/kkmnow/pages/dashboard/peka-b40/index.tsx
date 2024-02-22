@@ -13,6 +13,7 @@ import { WindowProvider } from "datagovmy-ui/contexts/window";
 const PekaB40: Page = ({
   meta,
   last_updated,
+  next_update,
   params,
   timeseries,
   choropleth,
@@ -25,6 +26,7 @@ const PekaB40: Page = ({
       <PekaB40Dashboard
         params={params}
         last_updated={last_updated}
+        next_update={next_update}
         timeseries={timeseries}
         choropleth={choropleth}
       />
@@ -65,10 +67,12 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "PHCorp",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: "mys" },
         timeseries: data.timeseries,
         choropleth: data.choropleth_malaysia,
       },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
   }
 );

@@ -6,20 +6,27 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 import { ComponentProps, useEffect, useState } from "react";
 
-const ActiveLink = ({ children, className, ...props }: ComponentProps<"a">) => {
+const ActiveLink = ({ className, ...props }: ComponentProps<"a">) => {
   const { asPath, isReady } = useRouter();
   const [legacyPath, setLegacyPath] = useState<string>(props.href as string);
+  const { i18n } = useTranslation();
+
+  const routes = asPath.split("/");
 
   useEffect(() => {
     // Check if the router fields are updated client-side
     if (isReady) {
-      setLegacyPath(`https://archive.data.gov.my${asPath}`);
+      setLegacyPath(
+        `https://archive.data.gov.my/data/${
+          i18n.language === "en-GB" ? "en_US" : "ms_MY"
+        }/dataset/${routes[routes.length - 1]}`
+      );
     }
-  }, [isReady]);
+  }, [isReady, i18n.language]);
 
   return (
     <a href={legacyPath} className={className} target="_blank">
-      {children}
+      {legacyPath}
     </a>
   );
 };
@@ -37,7 +44,7 @@ const Error404: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
           description={
             <>
               {`${t("error.404.description")} ${t("error.404.legacy")}`}
-              <ActiveLink className="link-primary">{"https://archive.data.gov.my"}</ActiveLink>
+              <ActiveLink className="link-primary" />
             </>
           }
           code={404}

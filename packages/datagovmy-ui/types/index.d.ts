@@ -74,60 +74,6 @@ export type OptionType = {
 
 export type Geotype = "state" | "parlimen" | "dun" | "district";
 
-/************************ DATA CATALOGUE ************************** */
-export type DCChartKeys =
-  | "TABLE"
-  | "TIMESERIES"
-  | "CHOROPLETH"
-  | "GEOCHOROPLETH"
-  | "GEOPOINT"
-  | "GEOJSON"
-  | "BAR"
-  | "HBAR"
-  | "LINE"
-  | "PYRAMID"
-  | "HEATTABLE"
-  | "SCATTER"
-  | "STACKED_AREA"
-  | "STACKED_BAR"
-  | "INTRADAY";
-export type DCPeriod = "YEARLY" | "QUARTERLY" | "MONTHLY" | "WEEKLY" | "DAILY";
-
-type BaseFilter = {
-  key: string;
-  default: string;
-  options: string[];
-};
-export type FilterDefault = BaseFilter & {
-  interval: never;
-};
-
-export type FilterDate = BaseFilter & {
-  interval: DCPeriod;
-};
-
-export type DCFilter = FilterDefault | FilterDate;
-
-export type Precision = {
-  default: number;
-  columns?: Record<string, number>;
-};
-
-// Usage
-export type DCConfig = {
-  context: {
-    [key: string]: OptionType;
-  };
-  dates: FilterDate | null;
-  options: FilterDefault[] | null;
-  precision: number | Precision;
-  freeze?: string[];
-  color?: Color;
-  geojson?: Geotype | null;
-  line_variables?: Record<string, any>;
-  exclude_openapi: boolean;
-};
-
 /*************************** MIXPANEL ***************************** */
 
 export type EventType =

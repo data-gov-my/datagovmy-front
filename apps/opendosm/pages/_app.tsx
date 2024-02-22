@@ -1,6 +1,6 @@
 import Nexti18NextConfig from "../next-i18next.config";
 import Layout from "@components/Layout";
-import { Toast } from "datagovmy-ui/components";
+import { Progress, Toast } from "datagovmy-ui/components";
 import "datagovmy-ui/styles";
 import { body, header } from "datagovmy-ui/configs/font";
 import mixpanelConfig from "datagovmy-ui/configs/mixpanel";
@@ -63,6 +63,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
           </div>,
           pageProps
         )}
+        <Progress />
         <Toast />
       </WindowProvider>
     </ThemeProvider>

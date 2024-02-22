@@ -30,6 +30,7 @@ import { FunctionComponent, useCallback, useMemo } from "react";
 interface SekolahkuProps {
   dropdown_data: Record<string, string>[];
   last_updated: string;
+  next_update: string;
   total_schools: number;
   sekolahku_info: any;
   sekolahku_barmeter: any;
@@ -44,6 +45,7 @@ const MapPlot = dynamic(() => import("datagovmy-ui/charts/map-plot"), { ssr: fal
 const Sekolahku: FunctionComponent<SekolahkuProps> = ({
   dropdown_data,
   last_updated,
+  next_update,
   total_schools,
   sekolahku_info,
   sekolahku_barmeter,
@@ -143,6 +145,7 @@ const Sekolahku: FunctionComponent<SekolahkuProps> = ({
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="moe" />}
       />
       {/* Rest of page goes here */}

@@ -14,6 +14,7 @@ import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 const BloodDonation: Page = ({
   meta,
   last_updated,
+  next_update,
   params,
   timeseries,
   barchart_age,
@@ -42,6 +43,7 @@ const BloodDonation: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords="" />
       <BloodDonationDashboard
         last_updated={last_updated}
+        next_update={next_update}
         params={params}
         timeseries={timeseries}
         barchart_age={barchart_age}
@@ -100,6 +102,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "PDN",
         },
         last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
         params: { state: "mys" },
         timeseries: data.timeseries_all,
         barchart_age: data.bar_chart_age,
@@ -107,6 +110,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         barchart_variables: data.barchart_key_variables,
         choropleth: data.choropleth_malaysia,
       },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
   }
 );

@@ -45,8 +45,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     <>
       <div className="flex w-full flex-row">
         {/* Desktop */}
-        <div className="dark:border-r-washed-dark hidden border-r pb-6 lg:block lg:w-1/5 xl:w-1/5">
-          <ul className="sticky top-14 flex h-[calc(100vh-56px)] flex-col gap-2 overflow-auto pt-3">
+        <div className="dark:border-r-washed-dark hidden border-r lg:block lg:w-1/5 xl:w-1/5">
+          <ul className="sticky top-14 flex h-[calc(100vh-56px)] flex-col gap-2 overflow-auto pb-8 pt-3">
             <li>
               <h5 className={styles.base}>{sidebarTitle ?? t("category")}</h5>
             </li>

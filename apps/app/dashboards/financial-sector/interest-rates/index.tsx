@@ -27,6 +27,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 
 interface InterestRatesDashboardProps {
   last_updated: string;
+  next_update: string;
   timeseries: any;
   timeseries_opr: any;
   timeseries_callouts: any;
@@ -34,6 +35,7 @@ interface InterestRatesDashboardProps {
 
 const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = ({
   last_updated,
+  next_update,
   timeseries,
   timeseries_opr,
   timeseries_callouts,
@@ -147,6 +149,7 @@ const InterestRatesDashboard: FunctionComponent<InterestRatesDashboardProps> = (
         header={[t("header")]}
         description={[t("description")]}
         last_updated={last_updated}
+        next_update={next_update}
         agencyBadge={<AgencyBadge agency="bnm" />}
       />
 
