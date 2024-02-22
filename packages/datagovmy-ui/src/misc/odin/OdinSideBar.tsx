@@ -1,45 +1,55 @@
-import { FunctionComponent, useRef } from "react";
-import { Button, Section, Sidebar } from "../../components";
+import { FunctionComponent, ReactNode, useRef } from "react";
+import { Button, Sidebar } from "../../components";
 import { useTranslation } from "../../hooks";
 import { clx } from "../../lib/helpers";
-import Bar from "../../charts/bar";
-import { AKSARA_COLOR } from "../../lib/constants";
 import OdinSummary from "./OdinSummary";
 import OdinMetric from "./OdinMetric";
 
-const OdinSidebar: FunctionComponent = () => {
-  const { t } = useTranslation();
+type OdinSidebarProps = {
+  bar_chart: any;
+  keystats: any;
+  links: any;
+  table: any;
+};
+
+const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
+  bar_chart,
+  keystats,
+  links,
+  table,
+}) => {
+  const { t } = useTranslation("odin");
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
 
   const collection = {
-    [t("category.summary")]: {},
-    [t("category.social")]: {
-      [t("subcategory.population_stats")]: [],
-      [t("subcategory.edu_facilities")]: [],
-      [t("subcategory.edu_outcomes")]: [],
-      [t("subcategory.health_facilities")]: [],
-      [t("subcategory.health_outcomes")]: [],
-      [t("subcategory.reproductive_health")]: [],
-      [t("subcategory.food_security")]: [],
-      [t("subcategory.gender_stats")]: [],
-      [t("subcategory.crime_stats")]: [],
-      [t("subcategory.poverty")]: [],
+    ["summary"]: {},
+    ["social"]: {
+      ["population"]: [],
+      // ["edu_facilities"]: [],
+      // ["edu_outcomes"]: [],
+      // ["health_facilities"]: [],
+      // ["health_outcomes"]: [],
+      // ["reproductive_health"]: [],
+      // ["food_security"]: [],
+      // ["gender_stats"]: [],
+      // ["crime_stats"]: [],
+      // ["poverty"]: [],
     },
-    [t("category.economy")]: {
-      [t("subcategory.national_accounts")]: [],
-      [t("subcategory.labour_stats")]: [],
-      [t("subcategory.price_indices")]: [],
-      [t("subcategory.gov_finances")]: [],
-      [t("subcategory.money")]: [],
-      [t("subcategory.international_trade")]: [],
-      [t("subcategory.balance_of_payments")]: [],
+    ["economy"]: {
+      ["national_accounts"]: [],
+      // ["labour_stats"]: [],
+      // ["price_indices"]: [],
+      // ["gov_finances"]: [],
+      // ["money"]: [],
+      // ["international_trade"]: [],
+      // ["balance_of_payments"]: [],
     },
-    [t("category.environment")]: {
-      [t("subcategory.agriculture")]: [],
-      [t("subcategory.resource_use")]: [],
-      [t("subcategory.energy")]: [],
-      [t("subcategory.pollution")]: [],
-      [t("subcategory.built_environment")]: [],
+    ["environment"]: {
+      ["agriculture"]: [],
+      // ["resource_use"]: [],
+      // ["energy"]: [],
+      // ["pollution"]: [],
+      // ["built_environment"]: [],
     },
   };
 
@@ -49,12 +59,13 @@ const OdinSidebar: FunctionComponent = () => {
 
   const styles = {
     header:
-      "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight text-base text-black font-bold mb-1.5 cursor-default",
+      "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight text-base text-black dark:text-white font-bold mb-1.5 cursor-default",
     subcategory:
       "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight text-sm text-dim",
     active:
       "border-l-2 border-black bg-washed text-black dark:bg-washed-dark dark:text-white dark:border-white text-black",
   };
+
   return (
     <Sidebar
       categories={coll}
@@ -84,11 +95,11 @@ const OdinSidebar: FunctionComponent = () => {
                 }
               }}
             >
-              {category}
+              {t(category)}
             </Button>
             <ul className="space-y-1.5">
               {Boolean(subcategory.length) &&
-                subcategory.map((title, subIndex) => (
+                subcategory.map(title => (
                   <li key={title} title={title}>
                     <Button
                       className={clx(
@@ -100,7 +111,7 @@ const OdinSidebar: FunctionComponent = () => {
                         onSelect(`${category}: ${title}`);
                       }}
                     >
-                      {title}
+                      {t(`subcategory.${title}`)}
                     </Button>
                   </li>
                 ))}
@@ -109,18 +120,23 @@ const OdinSidebar: FunctionComponent = () => {
         ))
       }
     >
-      <div className="mx-auto flex-1 p-2 py-6 pt-16 md:max-w-screen-md lg:max-w-screen-lg lg:px-0 lg:pb-6 lg:pt-0">
-        {coll.map(item => {
-          if (item[0] === t("category.summary")) {
-            return <OdinSummary title={t("category.summary")} scrollRef={scrollRef} />;
-          } else {
+      <div className="md:px-4.5 divide-outline dark:divide-washed-dark divide-y pb-8 pt-4 sm:px-3 lg:px-6 lg:pb-12 lg:pt-0">
+        <OdinSummary bar={bar_chart} scores={keystats} title="summary" scrollRef={scrollRef} />
+        {coll.map((item, i) => {
+          if (i === 0) return;
+          else
             return (
               Boolean(item[1].length) &&
               item[1].map(title => (
-                <OdinMetric title={`${t(item[0])}: ${t(title)}`} scrollRef={scrollRef} />
+                <OdinMetric
+                  links={links[item[0]][title]}
+                  scores={keystats[item[0]][title]}
+                  table={table[item[0]][title]}
+                  title={`${t(item[0])}: ${t(`subcategory.${title}`)}`}
+                  scrollRef={scrollRef}
+                />
               ))
             );
-          }
         })}
       </div>
     </Sidebar>

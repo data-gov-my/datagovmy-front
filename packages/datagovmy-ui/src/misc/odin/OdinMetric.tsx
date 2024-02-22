@@ -1,194 +1,212 @@
-import { FunctionComponent, MutableRefObject, useMemo } from "react";
-import { At, Section } from "../../components";
-import Table, { TableConfig } from "../../charts/table";
+import { FunctionComponent, MutableRefObject } from "react";
+import { At, Panel, Section, Tabs } from "../../components";
+import { useData, useTranslation } from "../../hooks";
+import { clx } from "../../lib/helpers";
 
 type OdinMetricProps = {
+  links: any;
+  scores: any;
+  table: any;
   title: string;
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
 };
 
-const OdinMetric: FunctionComponent<OdinMetricProps> = ({ title, scrollRef }) => {
-  const data = useMemo(
-    () => [
-      {
-        firstColumn: "Row 1",
-        secondColumn: ["A1", "A2", "A3", "A4"],
-        thirdColumn: ["B1", "B2", "B3", "B4"],
-        fourthColumn: ["C1", "C2", "C3", "C4"],
-      },
-      {
-        firstColumn: "Row 2",
-        secondColumn: ["A1", "A2", "A3", "A4"],
-        thirdColumn: ["B1", "B2", "B3", "B4"],
-        fourthColumn: ["C1", "C2", "C3", "C4"],
-      },
-    ],
-    []
-  );
+const OdinMetric: FunctionComponent<OdinMetricProps> = ({
+  links,
+  scores,
+  table,
+  title,
+  scrollRef,
+}) => {
+  const { t, i18n } = useTranslation(["odin", "common"]);
 
-  const dummyRefDatasets: Array<Record<"id" | "title" | "url", string>> = [
-    {
-      id: "population_population_malaysia",
-      title: "Population Table: Malaysia",
-      url: "",
-    },
-    {
-      id: "population_population_state",
-      title: "Population Table: States",
-      url: "",
-    },
-    {
-      id: "population_population_district",
-      title: "Population Table: Administrative Districts",
-      url: "",
-    },
-    {
-      id: "healthcare_covid_cases_vaxstatus",
-      title: "Daily COVID-19 Cases by State and Vaccination Status",
-      url: "",
-    },
-    {
-      id: "healthcare_covid_cases",
-      title: "Daily COVID-19 Cases by State",
-      url: "",
-    },
-    {
-      id: "healthcare_covid_cases_age",
-      title: "Daily COVID-19 Cases by State and Age Group",
-      url: "",
-    },
-  ];
+  const { data, setData } = useData({
+    indicator: "overall",
+    score: scores.overall,
+    table: table.overall,
+    tab_idx: 0,
+  });
 
-  const columns: TableConfig<typeof data>[] = [
-    {
-      header: "Element",
-      id: "firstColumn",
-      accessorKey: "firstColumn",
-      enableSorting: false,
-    },
-    {
-      header: "Sub-element",
-      id: "secondColumn",
-      className: "border-l p-0",
-      accessorKey: "secondColumn",
-      enableSorting: false,
-      cell: ({ getValue }) => {
-        return (
-          <ul className="flex w-full flex-col">
-            {getValue().map((item: any, index: number, arr: any) => (
-              <li
-                className={
-                  index < arr.length - 1 ? "min-h-[48px] border-b p-2" : "min-h-[48px] p-2"
-                }
-                key={index}
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        );
-      },
-    },
-    {
-      header: "Score",
-      id: "thirdColumn",
-      className: "p-0",
-      accessorKey: "thirdColumn",
-      enableSorting: false,
-      cell: ({ getValue }) => {
-        return (
-          <ul>
-            {getValue().map((item: any, index: number, arr: any) => (
-              <li
-                className={
-                  index < arr.length - 1 ? "min-h-[48px] border-b p-2" : "min-h-[48px] p-2"
-                }
-                key={index}
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        );
-      },
-    },
-    {
-      header: "Justification",
-      id: "fourthColumn",
-      className: "p-0",
-      accessorKey: "fourthColumn",
-      enableSorting: false,
-      cell: ({ getValue }) => {
-        return (
-          <ul>
-            {getValue().map((item: any, index: number, arr: any) => (
-              <li
-                className={
-                  index < arr.length - 1 ? "min-h-[48px] border-b p-2" : "min-h-[48px] p-2"
-                }
-                key={index}
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        );
-      },
-    },
-  ];
+  const indicators = ["overall", ...Object.keys(scores).filter(e => e !== "overall")];
+  const classNames = {
+    tr: "border-outline dark:border-washed-dark",
+    td: "px-2 py-2.5 text-center text-sm font-medium text-start",
+  };
 
   return (
-    <Section className="border-b py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
+    <Section ref={ref => (scrollRef.current[title] = ref)}>
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-3">
-          <h4>{title}</h4>
-        </div>
-        <div className="flex items-center gap-8 pb-6">
-          <div className="flex flex-1 flex-col gap-1.5">
-            <p className="text-dim font-medium uppercase">overall score</p>
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-2xl">10</h1>
-              <p className="text-dim">out of 10</p>
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-1.5">
-            <p className="text-dim font-medium uppercase">overall score</p>
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-2xl text-orange-500">5</h1>
-              <p className="text-dim">out of 5</p>
-            </div>
-          </div>
-          <div className="flex flex-1 flex-col gap-1.5">
-            <p className="text-dim font-medium uppercase">overall score</p>
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-primary text-2xl">5</h1>
-              <p className="text-dim">out of 5</p>
-            </div>
-          </div>
-        </div>
-        <div className="w-full">
-          <Table
-            className="md:mx-auto md:w-4/5 lg:w-full"
-            data={data}
-            config={columns}
-            enablePagination={false}
-          />
-        </div>
+        <h4>{title}</h4>
 
-        <div className="flex gap-6">
-          <p className="w-content text-sm font-medium">Reference Datasets:</p>
-          <div className="flex flex-1 flex-wrap gap-x-3 gap-y-6">
-            {dummyRefDatasets.map(dataset => (
-              <At
-                className="link-primary text-sm font-normal underline"
-                href={`data-catalogue/${dataset.id}`}
-                target="_blank"
-              >
-                {dataset.title}
-              </At>
-            ))}
-          </div>
-        </div>
+        <Tabs
+          className="justify-center"
+          onChange={i => {
+            setData("tab_idx", i);
+            setData("score", scores[indicators[i]]);
+            setData("table", indicators[i] in table ? table[indicators[i]] : null);
+          }}
+        >
+          {indicators.map(indicator => (
+            <Panel key={indicator} name={t(`indicator.${indicator}`)}>
+              <div className="flex flex-col gap-y-6">
+                {/* Scores */}
+                <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
+                  <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                    <p className="font-medium uppercase">{t("overall_score")}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-2xl font-bold text-black dark:text-white">
+                        {data.score.overall.overall}
+                      </p>
+                      <p>{t("out_of", { max: data.score.overall.maximum })}</p>
+                    </div>
+                  </div>
+                  <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                    <p className="font-medium uppercase">{t("coverage_score")}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-2xl font-bold text-[#FF820E]">
+                        {data.score.coverage.overall}
+                      </p>
+                      <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
+                    </div>
+                  </div>
+                  <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                    <p className="font-medium uppercase">{t("openness_score")}</p>
+                    <div className="flex items-center gap-1.5">
+                      <p className="text-primary dark:text-primary-dark text-2xl font-bold">
+                        {data.score.openness.overall}
+                      </p>
+                      <p>{t("out_of", { max: data.score.openness.maximum })}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table */}
+                {data.table ? (
+                  <div className="w-full">
+                    <div className="overflow-x-auto">
+                      <table className="relative mx-auto w-full table-auto border-spacing-0">
+                        <thead>
+                          <tr className={clx(classNames.tr, "border-b-2")}>
+                            <th className={classNames.td}>{t("element")}</th>
+                            <th className={classNames.td}>{t("subelement")}</th>
+                            <th className={clx(classNames.td, "text-center")}>{t("score")}</th>
+                            <th className={classNames.td}>{t("justification")}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.table.coverage.map(
+                            (
+                              row: { subelement: string; score: number; justification: string },
+                              i: number
+                            ) => (
+                              <tr className={clx(classNames.tr, "border-b")}>
+                                {i === 0 ? (
+                                  <th
+                                    rowSpan={5}
+                                    className={clx(
+                                      classNames.tr,
+                                      classNames.td,
+                                      "min-w-[150px] border-r align-text-top text-[#FF820E]"
+                                    )}
+                                  >
+                                    {t("coverage")}
+                                  </th>
+                                ) : (
+                                  <></>
+                                )}
+                                <td
+                                  className={clx(
+                                    classNames.td,
+                                    "max-w-[250px] align-text-top sm:min-w-[150px]"
+                                  )}
+                                >
+                                  {t(row.subelement)}
+                                </td>
+                                <td
+                                  className={clx(
+                                    classNames.td,
+                                    "max-w-[100px] text-center align-text-top"
+                                  )}
+                                >
+                                  {row.score}
+                                </td>
+                                <td className={clx(classNames.td, "align-text-top")}>
+                                  {row.justification}
+                                </td>
+                              </tr>
+                            )
+                          )}
+                          {data.table.openness.map(
+                            (
+                              row: { subelement: string; score: number; justification: string },
+                              i: number
+                            ) => (
+                              <tr className={clx(classNames.tr, "border-b")}>
+                                {i === 0 ? (
+                                  <th
+                                    rowSpan={5}
+                                    className={clx(
+                                      classNames.td,
+                                      "text-primary dark:text-primary-dark border-outline dark:border-washed-dark max-w-[150px] border-r align-text-top"
+                                    )}
+                                  >
+                                    {t("openness")}
+                                  </th>
+                                ) : (
+                                  <></>
+                                )}
+                                <td
+                                  className={clx(classNames.td, "align-text-top sm:max-w-[250px]")}
+                                >
+                                  {t(row.subelement)}
+                                </td>
+                                <td
+                                  className={clx(
+                                    classNames.td,
+                                    "max-w-[100px] text-center align-text-top"
+                                  )}
+                                >
+                                  {row.score}
+                                </td>
+                                <td className={clx(classNames.td, "align-text-top")}>
+                                  {row.justification}
+                                </td>
+                              </tr>
+                            )
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="bg-outline dark:bg-washed-dark mx-auto my-12 w-[200px] rounded-md px-3 py-1.5 sm:w-96">
+                      <p>{t("click_indicator")}</p>
+                    </div>
+                  </>
+                )}
+
+                {/* Related Datasets */}
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <p className="w-max text-sm font-medium">{t("reference_datasets")}:</p>
+                  <div className="flex flex-wrap gap-x-3 gap-y-6">
+                    {Object.keys(links).map((indicator: string) =>
+                      links[indicator].map((link: { link_title: string; url: string }) => (
+                        <At
+                          className="link-primary text-sm font-normal underline"
+                          href={link.url}
+                          target="_blank"
+                        >
+                          {link.link_title}
+                        </At>
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Panel>
+          ))}
+        </Tabs>
       </div>
     </Section>
   );
