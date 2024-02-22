@@ -14,7 +14,7 @@ const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
   onClick,
 }) => {
   const { t } = useTranslation(["community-products"]);
-  const diffInDays = DateTime.now().diff(DateTime.fromISO(item.created_at), ["days"]);
+  const diffInDays = DateTime.now().diff(DateTime.fromISO(item.date_approved), ["days"]);
 
   return (
     <div
