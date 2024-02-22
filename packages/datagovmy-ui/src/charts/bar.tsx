@@ -227,8 +227,12 @@ const Bar: FunctionComponent<BarProps> = ({
     },
   };
   return (
-    <div className="space-y-4">
-      <ChartHeader title={title} menu={menu} controls={controls} />
+    <div className="flex flex-col gap-y-3">
+      {[menu, title, controls].some(Boolean) && (
+        <div className="flex flex-col gap-y-3">
+          <ChartHeader title={title} menu={menu} controls={controls} />
+        </div>
+      )}
       <div className={className}>
         <BarCanvas
           id={id}
