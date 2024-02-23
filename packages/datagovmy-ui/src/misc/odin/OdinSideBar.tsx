@@ -89,12 +89,12 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
             <Button
               className={clx(
                 index === 0 ? styles.subcategory : styles.header,
-                selected === t(category) && styles.active
+                selected === category && styles.active
               )}
               onClick={() => {
                 if (index === 0) {
-                  setSelected(t(category));
-                  onSelect(t(category));
+                  setSelected(category);
+                  onSelect(category);
                 }
               }}
             >
