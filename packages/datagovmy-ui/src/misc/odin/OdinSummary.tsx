@@ -1,9 +1,8 @@
-import { FunctionComponent, MutableRefObject, useMemo } from "react";
+import { FunctionComponent, MutableRefObject } from "react";
 import { Dropdown, Section } from "../../components";
 import Bar from "../../charts/bar";
 import { AKSARA_COLOR } from "../../lib/constants";
 import { useData } from "../../hooks/useData";
-import { OptionType } from "../../../types";
 import { useTranslation } from "../../hooks/useTranslation";
 
 type Category = "economy" | "environment" | "overall" | "social";
@@ -16,7 +15,7 @@ type OdinSummaryProps = {
 };
 
 const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, scrollRef }) => {
-  const { t, i18n } = useTranslation(["odin", "common"]);
+  const { t } = useTranslation(["odin", "common"]);
 
   const { data, setData } = useData({
     category: "overall",
@@ -25,38 +24,31 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
     bar: bar.overall.overall.overall,
   });
 
-  const CATEGORY_OPTIONS = useMemo<Array<OptionType>>(() => {
-    const _categories = Object.keys(scores).map(category => ({
-      label: t(category),
-      value: category,
-    }));
-    return _categories;
-  }, []);
+  const CATEGORY_OPTIONS = Object.keys(scores).map(category => ({
+    label: t(category),
+    value: category,
+  }));
 
-  const SUBCATEGORY_OPTIONS = useMemo<Array<OptionType>>(() => {
-    let _subcategories: Array<OptionType> = [];
-    if (data.category) {
-      _subcategories = Object.keys(scores[data.category]).map(subcategory => ({
-        label: t(subcategory),
+  const SUBCATEGORY_OPTIONS = data.category
+    ? Object.keys(scores[data.category]).map(subcategory => ({
+        label: t(`subcategory.${subcategory}`),
         value: subcategory,
-      }));
-    }
-    return _subcategories;
-  }, [data.category]);
+      }))
+    : [];
 
   const className = {
+    titles: "flex w-full flex-col items-center gap-3 sm:flex-row",
     scores: "w-full flex flex-col max-sm:items-center gap-y-1.5 text-dim",
   };
 
   return (
-    <Section ref={ref => (scrollRef.current[title] = ref)}>
+    <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-3 sm:flex-row">
+        <div className={className.titles}>
           <h4>{t(title)}:</h4>
-          <div className="flex w-full flex-col items-center gap-3 sm:flex-row">
+          <div className={className.titles}>
             <Dropdown
               anchor="left"
-              width="w-full sm:w-fit"
               options={CATEGORY_OPTIONS}
               selected={CATEGORY_OPTIONS.find(item => item.value === data.category)}
               onChange={e => {
@@ -66,14 +58,13 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             />
             <Dropdown
               anchor="left"
-              width="w-full sm:w-fit"
               placeholder={t("choose_subcategory")}
               disabled={data.category === "overall" || !data.category}
               options={SUBCATEGORY_OPTIONS}
               selected={SUBCATEGORY_OPTIONS.find(item => item.value === data.subcategory)}
               onChange={e => {
                 setData("subcategory", e.value);
-                setData("score", scores[data.category][e.value]["overall"]);
+                setData("score", scores[data.category][e.value].overall);
               }}
             />
           </div>
@@ -126,12 +117,20 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
                 {
                   label: t("score"),
                   data: data.bar.coverage.overall,
-                  barThickness: 38,
+                  barThickness: 32,
                   backgroundColor: AKSARA_COLOR.ORANGE_H,
                   borderColor: AKSARA_COLOR.ORANGE,
                   borderWidth: 0.5,
                 },
               ],
+            }}
+            datalabels={{
+              align: "start",
+              anchor: "end",
+              color: AKSARA_COLOR.ORANGE,
+              display(context: any) {
+                return context.dataset.data[context.dataIndex] > 5;
+              },
             }}
           />
           <Bar
@@ -148,12 +147,20 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
                 {
                   label: t("score"),
                   data: data.bar.openness.overall,
-                  barThickness: 38,
+                  barThickness: 32,
                   backgroundColor: AKSARA_COLOR.PRIMARY_H,
                   borderColor: AKSARA_COLOR.PRIMARY,
                   borderWidth: 0.5,
                 },
               ],
+            }}
+            datalabels={{
+              align: "start",
+              anchor: "end",
+              color: AKSARA_COLOR.PRIMARY,
+              display(context: any) {
+                return context.dataset.data[context.dataIndex] > 5;
+              },
             }}
           />
         </div>

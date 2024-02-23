@@ -13,10 +13,13 @@ import {
   ChartData,
   Legend,
 } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useTheme } from "next-themes";
 import { FunctionComponent, useContext, useMemo, useRef } from "react";
 import { Bar as BarCanvas, getElementAtEvent } from "react-chartjs-2";
 import { ChartJSOrUndefined, ForwardedRef } from "react-chartjs-2/dist/types";
+import { _DeepPartialObject } from "chart.js/types/utils";
+import { Options } from "chartjs-plugin-datalabels/types/options";
 
 interface BarProps extends ChartHeaderProps {
   id?: string;
@@ -44,6 +47,7 @@ interface BarProps extends ChartHeaderProps {
   forcedTheme?: string;
   interactive?: boolean;
   tooltipEnabled?: boolean;
+  datalabels?: _DeepPartialObject<Options>;
   _ref?: ForwardedRef<ChartJSOrUndefined<"bar", any[], string | number>>;
 }
 
@@ -75,12 +79,21 @@ const Bar: FunctionComponent<BarProps> = ({
   maxY,
   suggestedMaxY,
   tooltipEnabled = true,
+  datalabels,
   _ref,
 }) => {
   const ref = useRef<ChartJSOrUndefined<"bar", any[], string | number>>();
   const isVertical = useMemo(() => layout === "vertical", [layout]);
   const { size } = useContext(WindowContext);
-  ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, ChartTooltip, Legend);
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    BarElement,
+    ChartTooltip,
+    Legend,
+    ChartDataLabels
+  );
   const { theme } = useTheme();
   const isLightMode = forcedTheme ? forcedTheme === "light" : theme === "light";
   const display = (
@@ -145,7 +158,7 @@ const Bar: FunctionComponent<BarProps> = ({
       },
       crosshair: false,
       annotation: false,
-      datalabels: false,
+      datalabels: datalabels,
     },
     scales: {
       x: {
