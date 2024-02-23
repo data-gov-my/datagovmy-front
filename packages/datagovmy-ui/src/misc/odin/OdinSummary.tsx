@@ -45,7 +45,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
     <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
       <div className="flex flex-col gap-6">
         <div className={className.titles}>
-          <h4>{t(title)}:</h4>
+          <h4>{title}:</h4>
           <div className={className.titles}>
             <Dropdown
               anchor="left"

@@ -21,41 +21,46 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
   const { t } = useTranslation("odin");
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
 
-  const collection = {
-    ["summary"]: {},
-    ["social"]: {
-      ["population"]: [],
-      // ["edu_facilities"]: [],
-      // ["edu_outcomes"]: [],
-      // ["health_facilities"]: [],
-      // ["health_outcomes"]: [],
-      // ["reproductive_health"]: [],
-      // ["food_security"]: [],
-      // ["gender_stats"]: [],
-      // ["crime_stats"]: [],
-      // ["poverty"]: [],
-    },
-    ["economy"]: {
-      ["national_accounts"]: [],
-      // ["labour_stats"]: [],
-      // ["price_indices"]: [],
-      // ["gov_finances"]: [],
-      // ["money"]: [],
-      // ["international_trade"]: [],
-      // ["balance_of_payments"]: [],
-    },
-    ["environment"]: {
-      ["agriculture"]: [],
-      // ["resource_use"]: [],
-      // ["energy"]: [],
-      // ["pollution"]: [],
-      // ["built_environment"]: [],
-    },
-  };
-
-  const coll: Array<[category: string, subcategory: string[]]> = Object.entries(collection).map(
-    ([category, subcategory]) => [category, Object.keys(subcategory)]
-  );
+  const categories: Array<[category: string, subcategory: string[]]> = [
+    ["summary", []],
+    [
+      "social",
+      [
+        "population",
+        // "edu_facilities",
+        // "edu_outcomes",
+        // "health_facilities",
+        // "health_outcomes",
+        // "reproductive_health",
+        // "food_security",
+        // "gender_stats",
+        // "crime_stats",
+        // "poverty",
+      ],
+    ],
+    [
+      "economy",
+      [
+        "national_accounts",
+        // "labour_stats",
+        // "price_indices",
+        // "gov_finances",
+        // "money",
+        // "international_trade",
+        // "balance_of_payments",
+      ],
+    ],
+    [
+      "environment",
+      [
+        "agriculture",
+        // "resource_use",
+        // "energy",
+        // "pollution",
+        // "built_environment",
+      ],
+    ],
+  ];
 
   const styles = {
     header:
@@ -68,7 +73,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
 
   return (
     <Sidebar
-      categories={coll}
+      categories={categories}
       onSelect={selected => {
         scrollRef.current[selected]?.scrollIntoView({
           behavior: "smooth",
@@ -80,59 +85,60 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
       mobileClassName="top-4"
       customList={(setSelected, onSelect, categories, selected) =>
         categories.map(([category, subcategory], index) => (
-          <li key={`${category}: ${subcategory[0]}`} title={category}>
+          <li key={category} title={category}>
             <Button
               className={clx(
                 index === 0 ? styles.subcategory : styles.header,
-                selected === `${category}` && styles.active
+                selected === t(category) && styles.active
               )}
               onClick={() => {
                 if (index === 0) {
-                  setSelected(`${category}`);
-                  onSelect(
-                    subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
-                  );
+                  setSelected(t(category));
+                  onSelect(t(category));
                 }
               }}
             >
               {t(category)}
             </Button>
             <ul className="space-y-1.5">
-              {Boolean(subcategory.length) &&
-                subcategory.map(title => (
-                  <li key={title} title={title}>
-                    <Button
-                      className={clx(
-                        styles.subcategory,
-                        selected === `${category}: ${title}` && styles.active
-                      )}
-                      onClick={() => {
-                        setSelected(`${category}: ${title}`);
-                        onSelect(`${category}: ${title}`);
-                      }}
-                    >
-                      {t(`subcategory.${title}`)}
-                    </Button>
-                  </li>
-                ))}
+              {subcategory.length > 0 &&
+                subcategory.map(title => {
+                  const subcat = t("subcategory." + title);
+                  const id = t(category) + ": " + subcat;
+                  return (
+                    <li key={id} title={title}>
+                      <Button
+                        className={clx(styles.subcategory, selected === id && styles.active)}
+                        onClick={() => {
+                          setSelected(id);
+                          onSelect(id);
+                        }}
+                      >
+                        {subcat}
+                      </Button>
+                    </li>
+                  );
+                })}
             </ul>
           </li>
         ))
       }
     >
-      <div className="md:px-4.5 divide-outline dark:divide-washed-dark divide-y pb-8 pt-4 sm:px-3 lg:px-6 lg:pb-12 lg:pt-0">
-        <OdinSummary bar={bar_chart} scores={keystats} title="summary" scrollRef={scrollRef} />
-        {coll.map((item, i) => {
+      <div className="divide-outline dark:divide-washed-dark md:px-4.5 divide-y pb-8 pt-4 sm:px-3 lg:px-6 lg:pb-12 lg:pt-0">
+        <OdinSummary bar={bar_chart} scores={keystats} title={t("summary")} scrollRef={scrollRef} />
+        {categories.map((item, i) => {
+          const category = item[0];
+          const subcategories = item[1];
           if (i === 0) return;
           else
             return (
-              Boolean(item[1].length) &&
-              item[1].map(title => (
+              subcategories.length > 0 &&
+              subcategories.map(subcategory => (
                 <OdinMetric
-                  links={links[item[0]][title]}
-                  scores={keystats[item[0]][title]}
-                  table={table[item[0]][title]}
-                  title={`${t(item[0])}: ${t(`subcategory.${title}`)}`}
+                  links={links[category][subcategory]}
+                  scores={keystats[category][subcategory]}
+                  table={table[category][subcategory]}
+                  title={`${t(category)}: ${t(`subcategory.${subcategory}`)}`}
                   scrollRef={scrollRef}
                 />
               ))
