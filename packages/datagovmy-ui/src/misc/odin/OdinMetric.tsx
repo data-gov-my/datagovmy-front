@@ -34,7 +34,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
   };
 
   return (
-    <Section ref={ref => (scrollRef.current[title] = ref)}>
+    <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
       <div className="flex flex-col gap-6">
         <h4>{title}</h4>
 
@@ -109,7 +109,13 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                                       "min-w-[150px] border-r align-text-top text-[#FF820E]"
                                     )}
                                   >
-                                    {t("coverage")}
+                                    {t("coverage", {
+                                      n: data.table.coverage.reduce(
+                                        (acc: number, subelement: { score: number }) =>
+                                          acc + subelement.score,
+                                        0
+                                      ),
+                                    })}
                                   </th>
                                 ) : (
                                   <></>
@@ -150,7 +156,13 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                                       "text-primary dark:text-primary-dark border-outline dark:border-washed-dark max-w-[150px] border-r align-text-top"
                                     )}
                                   >
-                                    {t("openness")}
+                                    {t("openness", {
+                                      n: data.table.openness.reduce(
+                                        (acc: number, subelement: { score: number }) =>
+                                          acc + subelement.score,
+                                        0
+                                      ),
+                                    })}
                                   </th>
                                 ) : (
                                   <></>
@@ -180,27 +192,31 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                   </div>
                 ) : (
                   <>
-                    <div className="bg-outline dark:bg-washed-dark mx-auto my-12 w-[200px] rounded-md px-3 py-1.5 sm:w-96">
+                    <div className="bg-outline dark:bg-washed-dark mx-auto my-12 w-4/5 rounded-md px-3 py-1.5 sm:w-max">
                       <p>{t("click_indicator")}</p>
                     </div>
                   </>
                 )}
 
                 {/* Related Datasets */}
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <p className="w-max text-sm font-medium">{t("reference_datasets")}:</p>
-                  <div className="flex flex-wrap gap-x-3 gap-y-6">
-                    {Object.keys(links).map((indicator: string) =>
-                      links[indicator].map((link: { link_title: string; url: string }) => (
-                        <At
-                          className="link-primary text-sm font-normal underline"
-                          href={link.url}
-                          target="_blank"
-                        >
-                          {link.link_title}
-                        </At>
-                      ))
-                    )}
+                <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
+                  <p className="w-content text-sm font-medium">{t("reference_datasets")}:</p>
+                  <div className="flex flex-col flex-wrap gap-y-6">
+                    {Object.keys(links).map((indicator: string) => {
+                      return (
+                        <div className="flex gap-3">
+                          {links[indicator].map((l: { link_title: string; url: string }) => (
+                            <At
+                              className="link-primary text-sm font-normal underline"
+                              href={l.url}
+                              target="_blank"
+                            >
+                              {l.link_title}
+                            </At>
+                          ))}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
