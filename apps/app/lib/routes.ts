@@ -45,6 +45,7 @@ export const routes = {
   GUI_CATALOGUE: "/gui/catalogue",
   COMMUNITY_PRODUCTS: "/community-products",
   DATA_REQUEST: "/data-request",
+  ODIN: "/odin-self-assessment",
 };
 
 export const static_routes: string[] = (() => {
