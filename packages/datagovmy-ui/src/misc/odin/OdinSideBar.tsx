@@ -85,7 +85,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
       mobileClassName="top-4"
       customList={(setSelected, onSelect, categories, selected) =>
         categories.map(([category, subcategory], index) => (
-          <li key={category} title={category}>
+          <li key={category} title={t(category)}>
             <Button
               className={clx(
                 index === 0 ? styles.subcategory : styles.header,
@@ -94,7 +94,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
               onClick={() => {
                 if (index === 0) {
                   setSelected(category);
-                  onSelect(category);
+                  onSelect(t(category));
                 }
               }}
             >
@@ -106,7 +106,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
                   const subcat = t("subcategory." + title);
                   const id = t(category) + ": " + subcat;
                   return (
-                    <li key={id} title={title}>
+                    <li key={id} title={subcat}>
                       <Button
                         className={clx(styles.subcategory, selected === id && styles.active)}
                         onClick={() => {
