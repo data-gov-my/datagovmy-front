@@ -38,7 +38,7 @@ const OdinDashboard: FunctionComponent<OdinProps> = ({
             })}
             {result?.total_views && (
               <>
-                •
+                <span>•</span>
                 <p>{`${numFormat(result.total_views, "standard")} 
                   ${t("common:common.views", {
                     count: result.total_views,
