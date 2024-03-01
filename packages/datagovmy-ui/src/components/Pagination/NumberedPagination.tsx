@@ -28,7 +28,7 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
       return (
         <div className="flex items-center gap-1.5">
           {arr.map(item => (
-            <PageNumber page={item} currentPage={currentPage} setPage={setPage} />
+            <PageNumber key={item} page={item} currentPage={currentPage} setPage={setPage} />
           ))}
         </div>
       );
@@ -41,7 +41,14 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
           <span>...</span>
           {arr.map((item, index) => {
             if (index + 1 === currentPage)
-              return <PageNumber page={index + 1} currentPage={currentPage} setPage={setPage} />;
+              return (
+                <PageNumber
+                  key={index + 1}
+                  page={index + 1}
+                  currentPage={currentPage}
+                  setPage={setPage}
+                />
+              );
           })}
           <span>...</span>
           <PageNumber page={totalPage} currentPage={currentPage} setPage={setPage} />
@@ -56,7 +63,14 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
           <span>...</span>
           {arr.map((item, index) => {
             if (index + 1 >= totalPage - 1)
-              return <PageNumber page={index + 1} currentPage={currentPage} setPage={setPage} />;
+              return (
+                <PageNumber
+                  key={index + 1}
+                  page={index + 1}
+                  currentPage={currentPage}
+                  setPage={setPage}
+                />
+              );
           })}
         </div>
       );
@@ -66,7 +80,14 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
       <div className="flex items-center gap-1.5">
         {arr.map((item, index) => {
           if (index < MAX_PAGES_DISPLAYED - 1)
-            return <PageNumber page={index + 1} currentPage={currentPage} setPage={setPage} />;
+            return (
+              <PageNumber
+                key={index + 1}
+                page={index + 1}
+                currentPage={currentPage}
+                setPage={setPage}
+              />
+            );
         })}
         {totalPage > BOTTOM_THRESHOLD + 1 && <span>...</span>}
         {totalPage > BOTTOM_THRESHOLD && (
@@ -86,7 +107,7 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
       return (
         <div className="flex items-center gap-1.5">
           {arr.map(item => (
-            <PageNumber page={item} currentPage={currentPage} setPage={setPage} />
+            <PageNumber key={item} page={item} currentPage={currentPage} setPage={setPage} />
           ))}
         </div>
       );
@@ -103,7 +124,14 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
               index + 1 === currentPage ||
               index + 1 === currentPage + 1
             )
-              return <PageNumber page={index + 1} currentPage={currentPage} setPage={setPage} />;
+              return (
+                <PageNumber
+                  key={index + 1}
+                  page={index + 1}
+                  currentPage={currentPage}
+                  setPage={setPage}
+                />
+              );
           })}
           <span>...</span>
           <PageNumber page={totalPage} currentPage={currentPage} setPage={setPage} />
@@ -118,7 +146,14 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
           <span>...</span>
           {arr.map((item, index) => {
             if (index + 1 >= totalPage - 4)
-              return <PageNumber page={index + 1} currentPage={currentPage} setPage={setPage} />;
+              return (
+                <PageNumber
+                  key={index + 1}
+                  page={index + 1}
+                  currentPage={currentPage}
+                  setPage={setPage}
+                />
+              );
           })}
         </div>
       );
@@ -128,7 +163,14 @@ const NumberedPagination: FunctionComponent<NumberedPaginationProps> = ({
       <div className="flex items-center gap-1.5">
         {arr.map((item, index) => {
           if (index < MAX_PAGES_DISPLAYED - 1)
-            return <PageNumber page={index + 1} currentPage={currentPage} setPage={setPage} />;
+            return (
+              <PageNumber
+                key={index + 1}
+                page={index + 1}
+                currentPage={currentPage}
+                setPage={setPage}
+              />
+            );
         })}
         {totalPage > BOTTOM_THRESHOLD + 1 && <span>...</span>}
         {totalPage > BOTTOM_THRESHOLD && (
@@ -154,8 +196,8 @@ const PageNumber = ({
     <div
       onClick={() => setPage(page)}
       className={clx(
-        "flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium hover:cursor-pointer",
-        isActive && "bg-outline"
+        "dark:hover:bg-washed-dark hover:bg-washed flex h-8 w-8 items-center justify-center rounded-lg text-sm font-medium hover:cursor-pointer",
+        isActive && "bg-outline dark:bg-outlineHover-dark"
       )}
     >
       {page}

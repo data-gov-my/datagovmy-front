@@ -1,9 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { CheckCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import { Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
+import { AxiosError } from "axios";
+import { post } from "datagovmy-ui/api";
+import { Button, Dropdown, Input, Label, Radio, Spinner, Textarea } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
-import { AgencyLink } from "datagovmy-ui/constants";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 import { Catalogue, CatalogueCard } from "datagovmy-ui/data-catalogue";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
@@ -11,44 +13,17 @@ import { OptionType } from "datagovmy-ui/types";
 import { Fragment, FunctionComponent, useState } from "react";
 
 type PublishedDataModalProps = {
-  items?: Array<Catalogue>;
+  items: Array<Catalogue> | string;
   show: boolean;
   hide: () => void;
 };
 
-const dummyPublished: Array<Catalogue> = [
-  {
-    id: "commodities_fuelprice_master",
-    title: "Fuel Price Table",
-    data_as_of: "2023-09-07 00:01:00",
-    description:
-      "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
-    data_source: ["MOF"],
-  },
-  {
-    id: "commodities_fuelprice_master",
-    title: "Fuel Price Table",
-    data_as_of: "2023-09-07 00:01:00",
-    description:
-      "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
-    data_source: ["MOF"],
-  },
-  {
-    id: "commodities_fuelprice_master",
-    title: "Fuel Price Table",
-    data_as_of: "2023-09-07 00:01:00",
-    description:
-      "This dataset presents the weekly retail price of RON95 petrol, RON97 petrol, and diesel in Malaysia. Since April 2017, the retail price of fuel in Malaysia has been set on a weekly basis using the Automatic Pricing Mechanism (APM). Prior to that, it changed at a monthly (or longer) frequency. The APM is designed to allow the government to monitor the effects of changes in global crude oil prices and adjust retail fuel prices to ensure the continued welfare of the rakyat.",
-    data_source: ["MOF"],
-  },
-];
-
 export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
-  items = [...dummyPublished, ...dummyPublished],
+  items,
   show,
   hide,
 }) => {
-  const { t, i18n } = useTranslation(["data-request"]);
+  const { t } = useTranslation(["data-request"]);
   return (
     <>
       <Transition show={show} as={Fragment}>
@@ -72,7 +47,7 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
           </Transition.Child>
 
           <div className="fixed inset-0">
-            <div className="flex min-h-full items-center justify-center py-2 text-center">
+            <div className="flex h-screen items-center justify-center p-1 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -84,7 +59,7 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
               >
                 <Dialog.Panel
                   className={
-                    "border-outline shadow-floating dark:border-outlineHover-dark w-full max-w-xl transform overflow-hidden rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
+                    "border-outline shadow-floating  dark:border-outlineHover-dark flex max-h-[600px] w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black"
                   }
                 >
                   <Dialog.Title
@@ -105,13 +80,24 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
                     </Button>
                   </Dialog.Title>
 
-                  <div className="mt-3 flex flex-col gap-3">
-                    <p className="text-base font-medium">{t("success_modal.subtitle")}</p>
-                    <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex h-[80vh] flex-col gap-2 overflow-y-scroll rounded-xl p-3">
-                      {items.map((dataset, index) => (
-                        <CatalogueCard key={index} dataset={dataset} index={index} />
-                      ))}
-                    </div>
+                  <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+                    {Array.isArray(items) && Boolean(items.length) ? (
+                      <>
+                        <p className="text-base font-medium">{t("success_modal.subtitle")}</p>
+                        <div className="bg-washed dark:bg-washed-dark hide-scrollbar flex flex-col gap-2 overflow-y-auto rounded-xl p-3">
+                          {items.map((dataset, index) => (
+                            <CatalogueCard key={index} dataset={dataset} index={index} />
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      typeof items === "string" && (
+                        <div className="text-sm">
+                          <p className="">Remark:</p>
+                          <p className="">{items}</p>
+                        </div>
+                      )
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>
@@ -123,13 +109,31 @@ export const PublishedDataModal: FunctionComponent<PublishedDataModalProps> = ({
   );
 };
 
+type ConditionalRequestDataModalProps =
+  | {
+      type: "REQUEST_DATA";
+      ticket_id?: never;
+      dropdown: Array<{ acronym: string; name: string }>;
+    }
+  | {
+      type: "SUBSCRIBE_TICKET";
+      ticket_id: number;
+      dropdown?: never;
+    };
+
 type RequestDataModalProps = {
   show: boolean;
   hide: () => void;
-};
+} & ConditionalRequestDataModalProps;
 
-export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ show, hide }) => {
-  const { t, i18n } = useTranslation(["data-request", "agencies"]);
+export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
+  show,
+  hide,
+  type,
+  ticket_id,
+  dropdown,
+}) => {
+  const { t, i18n } = useTranslation(["data-request", "agencies", "validations"]);
   const [modalState, setModalState] = useState<"FORM" | "SUCCESS">("FORM");
   const [submissionLoading, setLoading] = useState(false);
 
@@ -137,38 +141,86 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
     name: "",
     email: "",
     institution: "",
-    dataset_title: "",
-    dataset_description: "",
-    agency: "",
-    purpose: "",
+    ...(type === "REQUEST_DATA"
+      ? {
+          dataset_title: "",
+          dataset_description: "",
+          agency: "",
+          purpose_of_request: "",
+        }
+      : {}),
+  });
+
+  const {
+    data: radio,
+    setData: setRadio,
+    reset: resetRadio,
+  } = useData({
+    useInput: false,
+    input_value: "",
+  });
+
+  const { data: errorData, setData: setError } = useData({
+    message: "",
+    code: "",
   });
 
   const { data: validation, setData: setValidation } = useData(
-    Object.fromEntries(Object.entries(data).map(([key]) => [key, key === "resources" ? [] : false]))
+    Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
 
-  const agencies: OptionType[] = Object.keys(AgencyLink).map(agency => ({
-    label: t(`agencies:${agency}.abbr`),
-    value: agency,
-  }));
-  // TODO: to set up actual list for the dropdown
-  const purposes: OptionType[] = [
-    { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
-    { label: t("catalogue:filter_options.quarterly"), value: "QUARTERLY" },
-    { label: t("catalogue:filter_options.yearly"), value: "YEARLY" },
+  const agencies: OptionType[] = dropdown
+    ? dropdown?.map(item => ({
+        label: `${item.name} (${item.acronym})`,
+        value: item.acronym,
+      }))
+    : [];
+
+  const PURPOSES: Array<OptionType> = [
+    { label: t("forms.radio.research"), value: "research" },
+    { label: t("forms.radio.learning"), value: "learning" },
+    { label: t("forms.radio.product_development"), value: "product_development" },
+    { label: t("forms.radio.general_knowledge"), value: "general_knowledge" },
+    { label: t("forms.radio.others"), value: "others" },
   ];
 
   const validateInput = async () =>
     new Promise((resolve, reject) => {
       setLoading(true);
+      setError("code", "");
+      setError("message", "");
       const updatedValidation = Object.entries(data).map(([key, value]) => {
         if (typeof value === "string") {
+          if (key === "institution") {
+            setValidation(key, false);
+            return [key, true];
+          }
           if (value) {
             setValidation(key, false);
             return [key, true];
           } else {
-            setValidation(key, "Required");
+            setValidation(key, t("validations:required"));
             return [key, false];
+          }
+        }
+        if (key === "purpose_of_request") {
+          if (radio.useInput) {
+            if (radio.input_value) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, t("validations:required"));
+              return [key, false];
+            }
+          } else {
+            const purpose = value as { value: string; label: string };
+            if (purpose && purpose.label) {
+              setValidation(key, false);
+              return [key, true];
+            } else {
+              setValidation(key, t("validations:required"));
+              return [key, false];
+            }
           }
         }
       });
@@ -205,8 +257,8 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
             <div className="fixed inset-0 bg-black bg-opacity-50" />
           </Transition.Child>
 
-          <div className="over fixed inset-0">
-            <div className="flex min-h-full items-center justify-center py-2 text-center">
+          <div className="fixed inset-0">
+            <div className="flex h-full items-center justify-center p-4 text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -217,9 +269,13 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel
-                  className={
-                    "border-outline shadow-floating dark:border-outlineHover-dark w-full max-w-xl transform overflow-hidden rounded-xl border bg-white p-6 text-left align-middle font-sans transition-all dark:bg-black"
-                  }
+                  className={clx(
+                    "border-outline shadow-floating dark:border-outlineHover-dark flex w-full max-w-xl transform flex-col gap-3 rounded-xl border bg-white p-6 text-left font-sans transition-all dark:bg-black",
+                    type === "REQUEST_DATA" && modalState === "SUCCESS"
+                      ? "h-60"
+                      : "h-full max-h-[800px]",
+                    type === "SUBSCRIBE_TICKET" && "h-fit"
+                  )}
                 >
                   {modalState === "FORM" && (
                     <>
@@ -228,7 +284,11 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                         className="border-outline flex items-start text-black dark:text-white"
                       >
                         <div className="flex flex-1 flex-col gap-1.5">
-                          <p className="text-lg font-bold">{t("request_modal.title")}</p>
+                          <p className="text-lg font-bold">
+                            {type === "REQUEST_DATA" && t("request_modal.title")}
+                            {type === "SUBSCRIBE_TICKET" &&
+                              t("request_modal.title", { context: "subscribe" })}
+                          </p>
                         </div>
                         <Button
                           variant="reset"
@@ -241,10 +301,14 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                         </Button>
                       </Dialog.Title>
 
-                      <div className="mt-3 flex flex-col gap-3">
-                        <p className="text-base font-medium">{t("request_modal.subtitle")}</p>
+                      <div className="flex flex-1 flex-col gap-3 overflow-hidden">
+                        <p className="text-base font-medium">
+                          {type === "REQUEST_DATA" && t("request_modal.subtitle")}
+                          {type === "SUBSCRIBE_TICKET" &&
+                            t("request_modal.subtitle", { context: "subscribe" })}
+                        </p>
                         <form
-                          className="hide-scrollbar flex h-[70vh] flex-col gap-3 overflow-y-scroll text-sm font-medium"
+                          className="hide-scrollbar flex flex-1 flex-col gap-3 overflow-y-scroll text-sm font-medium"
                           method="post"
                         >
                           <div className="flex">
@@ -294,75 +358,108 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                               validation={validation.institution}
                             />
                           </div>
-                          <div className="flex">
-                            <Input
-                              type="text"
-                              name="dataset_title"
-                              className="w-full"
-                              label={t("forms.dataset_title")}
-                              placeholder={t("forms.dataset_title")}
-                              value={data.dataset_title}
-                              onChange={e => {
-                                setData("dataset_title", e);
-                                setValidation("dataset_title", false);
-                              }}
-                              validation={validation.institution}
-                            />
-                          </div>
-                          <div className="flex w-full flex-col gap-2">
-                            <Label
-                              name="dataset_description"
-                              label={t("forms.dataset_description")}
-                            />
-                            <Textarea
-                              placeholder={t("forms.dataset_description_placeholder")}
-                              rows={2}
-                              className={
-                                validation.dataset_description
-                                  ? "border-danger border-2"
-                                  : "border-outline"
-                              }
-                              value={data.dataset_description}
-                              onChange={e => {
-                                setData("dataset_description", e.target.value);
-                                setValidation("dataset_description", false);
-                              }}
-                            />
-                            <p className="text-danger text-xs">{validation.dataset_description}</p>
-                          </div>
 
-                          <div className="flex flex-col gap-2">
-                            <Label label={t("forms.agency")} />
-                            <Dropdown
-                              anchor="left"
-                              width="w-full"
-                              className={validation.agency ? "border-danger border-2" : ""}
-                              options={agencies}
-                              placeholder={t("forms.agency")}
-                              selected={agencies.find(e => e.value === data.agency) ?? undefined}
-                              onChange={e => {
-                                setData("agency", e.value);
-                                setValidation("agency", false);
-                              }}
-                            />
-                            <p className="text-danger text-xs">{validation.agency}</p>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <Label label={t("forms.purpose")} />
-                            <Dropdown
-                              anchor="left"
-                              width="w-full"
-                              className={validation.purpose ? "border-danger border-2" : ""}
-                              options={purposes}
-                              placeholder={t("forms.purpose")}
-                              selected={purposes.find(e => e.value === data.purpose) ?? undefined}
-                              onChange={e => {
-                                setData("purpose", e.value);
-                                setValidation("purpose", false);
-                              }}
-                            />
-                            <p className="text-danger text-xs">{validation.purpose}</p>
-                          </div>
+                          {type === "REQUEST_DATA" && (
+                            <>
+                              <div className="flex">
+                                <Input
+                                  required
+                                  type="text"
+                                  name="dataset_title"
+                                  className="w-full"
+                                  label={t("forms.dataset_title")}
+                                  placeholder={t("forms.dataset_title")}
+                                  value={data.dataset_title}
+                                  onChange={e => {
+                                    setData("dataset_title", e);
+                                    setValidation("dataset_title", false);
+                                  }}
+                                  validation={validation.dataset_title}
+                                />
+                              </div>
+                              <div className="flex w-full flex-col gap-2">
+                                <Label
+                                  required
+                                  name="dataset_description"
+                                  label={t("forms.dataset_description")}
+                                />
+                                <Textarea
+                                  required
+                                  placeholder={t("forms.dataset_description_placeholder")}
+                                  rows={2}
+                                  className={
+                                    validation.dataset_description
+                                      ? "border-danger border-2"
+                                      : "border-outline"
+                                  }
+                                  value={data.dataset_description}
+                                  onChange={e => {
+                                    setData("dataset_description", e.target.value);
+                                    setValidation("dataset_description", false);
+                                  }}
+                                />
+                                <p className="text-danger text-xs">
+                                  {validation.dataset_description}
+                                </p>
+                              </div>
+
+                              <div className="flex flex-col gap-2">
+                                <Label required label={t("forms.agency")} />
+                                <Dropdown
+                                  enableSearch={true}
+                                  anchor="left"
+                                  width="w-full"
+                                  className={validation.agency ? "border-danger border-2" : ""}
+                                  options={agencies}
+                                  placeholder={t("forms.agency")}
+                                  selected={
+                                    agencies.find(e => e.value === data.agency) ?? undefined
+                                  }
+                                  onChange={e => {
+                                    setData("agency", e.value);
+                                    setValidation("agency", false);
+                                  }}
+                                />
+                                <p className="text-danger text-xs">{validation.agency}</p>
+                              </div>
+                              <div className="flex w-full flex-col gap-2">
+                                <Label
+                                  required
+                                  name="purpose_of_request"
+                                  label={t("forms.purpose")}
+                                />
+                                <Radio
+                                  name="purpose_of_request"
+                                  className="flex flex-col gap-3 pl-2"
+                                  options={PURPOSES}
+                                  required={true}
+                                  value={data.purpose_of_request}
+                                  onChange={e => {
+                                    setData("purpose_of_request", e);
+                                    if (e.value === "others") {
+                                      setRadio("useInput", true);
+                                    } else {
+                                      setRadio("useInput", false);
+                                      setValidation("purpose_of_request", false);
+                                    }
+                                  }}
+                                />
+                                <Textarea
+                                  placeholder={t("forms.purpose_placeholder")}
+                                  rows={2}
+                                  className={clx("ml-8", "border-outline")}
+                                  value={radio.input_value}
+                                  onChange={e => {
+                                    setRadio("input_value", e.target.value);
+                                    setValidation("purpose_of_request", false);
+                                  }}
+                                />
+                                <p className="text-danger ml-8 text-xs">
+                                  {validation.purpose_of_request}
+                                </p>
+                              </div>
+                            </>
+                          )}
 
                           <Button
                             variant="primary"
@@ -374,13 +471,56 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                                   message: string;
                                 };
                                 if (isValid.ok) {
-                                  setTimeout(() => {
+                                  if (type === "REQUEST_DATA") {
+                                    const response = await post(
+                                      `/data-request/?language=${
+                                        SHORT_LANG[i18n.language as keyof typeof SHORT_LANG]
+                                      }`,
+                                      {
+                                        ...data,
+                                        purpose_of_request: radio.useInput
+                                          ? radio.input_value
+                                          : data.purpose_of_request.label,
+                                      }
+                                    );
+
                                     setLoading(false);
                                     setModalState("SUCCESS");
                                     reset();
-                                  }, 500);
+                                    resetRadio();
+                                  }
+
+                                  if (type === "SUBSCRIBE_TICKET") {
+                                    const response = await post(
+                                      `data-request/${ticket_id}/subscription/`,
+                                      {
+                                        ...data,
+                                        language: i18n.language,
+                                      }
+                                    );
+
+                                    setLoading(false);
+                                    setModalState("SUCCESS");
+                                    reset();
+                                  }
                                 }
                               } catch (error) {
+                                if (error instanceof AxiosError) {
+                                  if (error.response?.data.detail) {
+                                    setError("code", error.response?.status);
+                                    setError("message", error.response?.data.detail);
+                                  } else if (error.response?.data.email) {
+                                    setError("code", error.response?.status);
+                                    setError("message", error.response?.data.email);
+                                  } else {
+                                    setError("code", error.code);
+                                    setError(
+                                      "message",
+                                      "Something went wrong with the submission. Please try again later."
+                                    );
+                                  }
+                                }
+
                                 setLoading(false);
                               }
                             }}
@@ -392,6 +532,9 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                               <ChevronRightIcon className="w-4.5 h-4.5 text-white" />
                             )}
                           </Button>
+                          {errorData.message && (
+                            <p className="text-danger text-sm">{errorData.message}</p>
+                          )}
                         </form>
                       </div>
                     </>
@@ -416,11 +559,17 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({ sho
                         </Button>
                       </Dialog.Title>
 
-                      <div className="mt-2 flex flex-col items-center justify-center gap-3 pb-8">
+                      <div className="flex flex-col items-center justify-center gap-3 pb-8 text-center">
                         <CheckCircleIcon className="text-primary h-11 w-11" />
-                        <p className="text-lg font-bold">{t("request_modal.success_title")}</p>
+                        <p className="text-lg font-bold">
+                          {type === "REQUEST_DATA" && t("request_modal.success_title")}
+                          {type === "SUBSCRIBE_TICKET" &&
+                            t("request_modal.success_title", { context: "subscribe" })}
+                        </p>
                         <p className="text-dim text-base font-medium">
-                          {t("request_modal.success_description")}
+                          {type === "REQUEST_DATA" && t("request_modal.success_description")}
+                          {type === "SUBSCRIBE_TICKET" &&
+                            t("request_modal.success_description", { context: "subscribe" })}
                         </p>
                       </div>
                     </>

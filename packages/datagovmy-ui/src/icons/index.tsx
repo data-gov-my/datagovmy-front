@@ -97,3 +97,43 @@ export const PDFIcon: FunctionComponent<IconProps> = ({ className }) => {
     </svg>
   );
 };
+
+export const NotFoundIcon: FunctionComponent<IconProps> = ({ className }) => {
+  return (
+    <svg
+      width="72"
+      height="72"
+      viewBox="0 0 72 72"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <path
+        d="M53.8324 13.3972C65.0287 24.5936 65.0287 42.7464 53.8324 53.9427C42.6361 65.1391 24.4832 65.1391 13.2869 53.9427C2.09057 42.7464 2.09057 24.5936 13.2869 13.3972C24.4832 2.20092 42.6361 2.20092 53.8324 13.3972Z"
+        stroke="#94A3B8"
+        stroke-width="3.66"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M54.9092 53.7998L67.1092 65.9998"
+        stroke="#94A3B8"
+        stroke-width="3.66"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M61.9467 56.523L59.79 54.3663L55.4767 58.6797L57.6334 60.8364L61.9467 56.523ZM64.9534 68.1564C66.1445 69.3475 68.0756 69.3475 69.2667 68.1564C70.4578 66.9653 70.4578 65.0341 69.2667 63.843L64.9534 68.1564ZM57.6334 60.8364L64.9534 68.1564L69.2667 63.843L61.9467 56.523L57.6334 60.8364Z"
+        fill="#94A3B8"
+      />
+      <circle cx="20.7498" cy="33.0604" r="3.66" fill="#94A3B8" />
+      <path
+        d="M27.8076 39.7703C28.7107 37.4811 30.9424 35.8613 33.5525 35.8613C36.1626 35.8613 38.3944 37.4811 39.2974 39.7703"
+        stroke="#94A3B8"
+        stroke-width="1.83"
+        stroke-linecap="round"
+      />
+      <circle cx="46.37" cy="33.0604" r="3.66" fill="#94A3B8" />
+    </svg>
+  );
+};
