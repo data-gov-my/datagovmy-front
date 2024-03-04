@@ -111,7 +111,7 @@ const CommunityDashboard: FunctionComponent = () => {
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <div className="flex space-x-1">
+                  <div className="flex flex-col sm:flex-row sm:space-x-1">
                     <p className="text-dim whitespace-pre-line">{t("link_to_showcase1")} </p>
                     <At
                       href="/community-products"
