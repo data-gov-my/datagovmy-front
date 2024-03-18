@@ -23,43 +23,9 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
 
   const categories: Array<[category: string, subcategory: string[]]> = [
     ["summary", []],
-    [
-      "social",
-      [
-        "population",
-        // "edu_facilities",
-        // "edu_outcomes",
-        // "health_facilities",
-        // "health_outcomes",
-        // "reproductive_health",
-        // "food_security",
-        // "gender_stats",
-        // "crime_stats",
-        // "poverty",
-      ],
-    ],
-    [
-      "economy",
-      [
-        "national_accounts",
-        // "labour_stats",
-        // "price_indices",
-        // "gov_finances",
-        // "money",
-        // "international_trade",
-        // "balance_of_payments",
-      ],
-    ],
-    [
-      "environment",
-      [
-        "agriculture",
-        // "resource_use",
-        // "energy",
-        // "pollution",
-        // "built_environment",
-      ],
-    ],
+    ["social", Object.keys(table.social)],
+    ["economy", Object.keys(table.economy)],
+    ["environment", Object.keys(table.environment)],
   ];
 
   const styles = {

@@ -18,16 +18,16 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
   title,
   scrollRef,
 }) => {
-  const { t, i18n } = useTranslation(["odin", "common"]);
+  const { t } = useTranslation(["odin", "common"]);
 
   const { data, setData } = useData({
     indicator: "overall",
-    score: scores.overall,
-    table: table.overall,
+    score: scores ? scores.overall : null,
+    table: null,
     tab_idx: 0,
   });
 
-  const indicators = ["overall", ...Object.keys(scores).filter(e => e !== "overall")];
+  const indicators = ["overall", ...Object.keys(table).filter(e => e !== "overall")];
   const classNames = {
     tr: "border-outline dark:border-washed-dark",
     td: "px-2 py-2.5 text-center text-sm font-medium text-start",
@@ -42,7 +42,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
           className="justify-center"
           onChange={i => {
             setData("tab_idx", i);
-            setData("score", scores[indicators[i]]);
+            setData("score", scores ? scores[indicators[i]] : null);
             setData("table", indicators[i] in table ? table[indicators[i]] : null);
           }}
         >
@@ -50,35 +50,39 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
             <Panel key={indicator} name={t(`indicator.${indicator}`)}>
               <div className="flex flex-col gap-y-6">
                 {/* Scores */}
-                <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
-                  <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
-                    <p className="font-medium uppercase">{t("overall_score")}</p>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-2xl font-bold text-black dark:text-white">
-                        {data.score.overall.overall}
-                      </p>
-                      <p>{t("out_of", { max: data.score.overall.maximum })}</p>
+                {data.score ? (
+                  <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
+                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                      <p className="font-medium uppercase">{t("overall_score")}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-2xl font-bold text-black dark:text-white">
+                          {data.score.overall.overall}
+                        </p>
+                        <p>{t("out_of", { max: data.score.overall.maximum })}</p>
+                      </div>
+                    </div>
+                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                      <p className="font-medium uppercase">{t("coverage_score")}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-2xl font-bold text-[#FF820E]">
+                          {data.score.coverage.overall}
+                        </p>
+                        <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
+                      </div>
+                    </div>
+                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                      <p className="font-medium uppercase">{t("openness_score")}</p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-primary dark:text-primary-dark text-2xl font-bold">
+                          {data.score.openness.overall}
+                        </p>
+                        <p>{t("out_of", { max: data.score.openness.maximum })}</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
-                    <p className="font-medium uppercase">{t("coverage_score")}</p>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-2xl font-bold text-[#FF820E]">
-                        {data.score.coverage.overall}
-                      </p>
-                      <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
-                    </div>
-                  </div>
-                  <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
-                    <p className="font-medium uppercase">{t("openness_score")}</p>
-                    <div className="flex items-center gap-1.5">
-                      <p className="text-primary dark:text-primary-dark text-2xl font-bold">
-                        {data.score.openness.overall}
-                      </p>
-                      <p>{t("out_of", { max: data.score.openness.maximum })}</p>
-                    </div>
-                  </div>
-                </div>
+                ) : (
+                  <></>
+                )}
 
                 {/* Table */}
                 {data.table ? (
@@ -199,26 +203,30 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                 )}
 
                 {/* Related Datasets */}
-                <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
-                  <p className="w-content text-sm font-medium">{t("reference_datasets")}:</p>
-                  <div className="flex flex-col flex-wrap gap-y-6">
-                    {Object.keys(links).map((indicator: string) => {
-                      return (
-                        <div className="flex gap-3">
-                          {links[indicator].map((l: { link_title: string; url: string }) => (
-                            <At
-                              className="link-primary text-sm font-normal underline"
-                              href={l.url}
-                              target="_blank"
-                            >
-                              {l.link_title}
-                            </At>
-                          ))}
-                        </div>
-                      );
-                    })}
+                {links ? (
+                  <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
+                    <p className="w-content text-sm font-medium">{t("reference_datasets")}:</p>
+                    <div className="flex flex-col flex-wrap gap-y-6">
+                      {Object.keys(links).map((indicator: string) => {
+                        return (
+                          <div className="flex gap-3">
+                            {links[indicator].map((l: { link_title: string; url: string }) => (
+                              <At
+                                className="link-primary text-sm font-normal underline"
+                                href={l.url}
+                                target="_blank"
+                              >
+                                {l.link_title}
+                              </At>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </Panel>
           ))}
