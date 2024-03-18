@@ -23,9 +23,9 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
 
   const categories: Array<[category: string, subcategory: string[]]> = [
     ["summary", []],
-    ["social", Object.keys(table.social)],
-    ["economy", Object.keys(table.economy)],
-    ["environment", Object.keys(table.environment)],
+    ["social", table.social ? Object.keys(table.social) : []],
+    ["economy", table.economy ? Object.keys(table.economy) : []],
+    ["environment", table.environment ? Object.keys(table.environment) : []],
   ];
 
   const styles = {
@@ -53,10 +53,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
         categories.map(([category, subcategory], index) => (
           <li key={category} title={t(category)}>
             <Button
-              className={clx(
-                index === 0 ? styles.subcategory : styles.header,
-                selected === category && styles.active
-              )}
+              className={clx(styles.header, selected === category && styles.active)}
               onClick={() => {
                 if (index === 0) {
                   setSelected(category);

@@ -4,6 +4,7 @@ import Bar from "../../charts/bar";
 import { AKSARA_COLOR } from "../../lib/constants";
 import { useData } from "../../hooks/useData";
 import { useTranslation } from "../../hooks/useTranslation";
+import { numFormat } from "../../lib/helpers";
 
 type Category = "economy" | "environment" | "overall" | "social";
 
@@ -54,6 +55,10 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
               onChange={e => {
                 setData("category", e.value);
                 setData("subcategory", "");
+                if (e.value === "overall") {
+                  setData("bar", bar.overall.overall.overall);
+                  setData("score", scores.overall.overall.overall);
+                }
               }}
             />
             <Dropdown
@@ -64,6 +69,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
               selected={SUBCATEGORY_OPTIONS.find(item => item.value === data.subcategory)}
               onChange={e => {
                 setData("subcategory", e.value);
+                setData("bar", bar[data.category as Category][e.value].overall);
                 setData("score", scores[data.category][e.value].overall);
               }}
             />
@@ -76,7 +82,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             <p className="font-medium uppercase">{t("overall_score")}</p>
             <div className="flex items-center gap-1.5">
               <p className="text-[42px] font-bold leading-[50px] text-black dark:text-white">
-                {data.score.overall.overall}
+                {numFormat(data.score.overall.overall, "standard", 0)}
               </p>
               <p>{t("out_of", { max: data.score.overall.maximum })}</p>
             </div>
@@ -85,7 +91,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             <p className="font-medium uppercase">{t("coverage_score")}</p>
             <div className="flex items-center gap-1.5">
               <p className="text-[42px] font-bold leading-[50px] text-[#FF820E]">
-                {data.score.coverage.overall}
+                {numFormat(data.score.coverage.overall, "standard", 0)}
               </p>
               <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
             </div>
@@ -94,7 +100,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             <p className="font-medium uppercase">{t("openness_score")}</p>
             <div className="flex items-center gap-1.5">
               <p className="text-primary dark:text-primary-dark text-[42px] font-bold leading-[50px]">
-                {data.score.openness.overall}
+                {numFormat(data.score.openness.overall, "standard", 0)}
               </p>
               <p>{t("out_of", { max: data.score.openness.maximum })}</p>
             </div>
@@ -111,6 +117,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             enableGridY={false}
             enableGridX={true}
             maxX={data.bar.coverage.maximum[0]}
+            precision={0}
             data={{
               labels: data.bar.coverage.subelement.map((e: string) => t(e)),
               datasets: [
@@ -128,9 +135,8 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
               align: "start",
               anchor: "end",
               color: AKSARA_COLOR.ORANGE,
-              display(context: any) {
-                return context.dataset.data[context.dataIndex] > 5;
-              },
+              display: (context: any) => context.dataset.data[context.dataIndex] > 5,
+              formatter: value => numFormat(value, "standard", 0),
             }}
           />
           <Bar
@@ -141,6 +147,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             enableGridY={false}
             enableGridX={true}
             maxX={data.bar.openness.maximum[0]}
+            precision={0}
             data={{
               labels: data.bar.openness.subelement.map((e: string) => t(e)),
               datasets: [
@@ -158,9 +165,8 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
               align: "start",
               anchor: "end",
               color: AKSARA_COLOR.PRIMARY,
-              display(context: any) {
-                return context.dataset.data[context.dataIndex] > 5;
-              },
+              display: (context: any) => context.dataset.data[context.dataIndex] > 5,
+              formatter: value => numFormat(value, "standard", 0),
             }}
           />
         </div>

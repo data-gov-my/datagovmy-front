@@ -21,9 +21,8 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
   const { t } = useTranslation(["odin", "common"]);
 
   const { data, setData } = useData({
-    indicator: "overall",
     score: scores ? scores.overall : null,
-    table: null,
+    table: table.overall ?? null,
     tab_idx: 0,
   });
 
@@ -35,7 +34,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
 
   return (
     <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
-      <div className="flex flex-col gap-6">
+      <div className="flex max-w-[1000px] flex-col gap-6">
         <h4>{title}</h4>
 
         <Tabs
@@ -51,8 +50,8 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
               <div className="flex flex-col gap-y-6">
                 {/* Scores */}
                 {data.score ? (
-                  <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
-                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                  <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-around">
+                    <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("overall_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-black dark:text-white">
@@ -61,7 +60,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                         <p>{t("out_of", { max: data.score.overall.maximum })}</p>
                       </div>
                     </div>
-                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                    <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("coverage_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-[#FF820E]">
@@ -70,7 +69,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                         <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
                       </div>
                     </div>
-                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
+                    <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("openness_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-primary dark:text-primary-dark text-2xl font-bold">
@@ -86,113 +85,105 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
 
                 {/* Table */}
                 {data.table ? (
-                  <div className="w-full">
-                    <div className="overflow-x-auto">
-                      <table className="relative mx-auto w-full table-auto border-spacing-0">
-                        <thead>
-                          <tr className={clx(classNames.tr, "border-b-2")}>
-                            <th className={classNames.td}>{t("element")}</th>
-                            <th className={classNames.td}>{t("subelement")}</th>
-                            <th className={clx(classNames.td, "text-center")}>{t("score")}</th>
-                            <th className={classNames.td}>{t("justification")}</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {data.table.coverage.map(
-                            (
-                              row: { subelement: string; score: number; justification: string },
-                              i: number
-                            ) => (
-                              <tr className={clx(classNames.tr, "border-b")}>
-                                {i === 0 ? (
-                                  <th
-                                    rowSpan={5}
-                                    className={clx(
-                                      classNames.tr,
-                                      classNames.td,
-                                      "min-w-[150px] border-r align-text-top text-[#FF820E]"
-                                    )}
-                                  >
-                                    {t("coverage", {
-                                      n: data.table.coverage.reduce(
-                                        (acc: number, subelement: { score: number }) =>
-                                          acc + subelement.score,
-                                        0
-                                      ),
-                                    })}
-                                  </th>
-                                ) : (
-                                  <></>
+                  <div className="overflow-x-auto">
+                    <table className="relative mx-auto table-auto border-spacing-0">
+                      <thead>
+                        <tr className={clx(classNames.tr, "border-b-2")}>
+                          <th className={classNames.td}>{t("element")}</th>
+                          <th className={classNames.td}>{t("subelement")}</th>
+                          <th className={clx(classNames.td, "text-center")}>{t("score")}</th>
+                          <th className={classNames.td}>{t("justification")}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.table.coverage.map(
+                          (
+                            row: { subelement: string; score: number; justification: string },
+                            i: number
+                          ) => (
+                            <tr className={clx(classNames.tr, "border-b")}>
+                              {i === 0 ? (
+                                <th
+                                  rowSpan={5}
+                                  className={clx(
+                                    classNames.tr,
+                                    classNames.td,
+                                    "min-w-[150px] border-r align-text-top text-[#FF820E]"
+                                  )}
+                                >
+                                  {`${t("coverage")} (${data.table.coverage.reduce(
+                                    (acc: number, subelement: { score: number }) =>
+                                      acc + subelement.score,
+                                    0
+                                  )}/${data.tab_idx === 0 ? 50 : 5})`}
+                                </th>
+                              ) : (
+                                <></>
+                              )}
+                              <td
+                                className={clx(
+                                  classNames.td,
+                                  "min-w-[150px] align-text-top lg:min-w-[200px]"
                                 )}
-                                <td
-                                  className={clx(
-                                    classNames.td,
-                                    "max-w-[250px] align-text-top sm:min-w-[150px]"
-                                  )}
-                                >
-                                  {t(row.subelement)}
-                                </td>
-                                <td
-                                  className={clx(
-                                    classNames.td,
-                                    "max-w-[100px] text-center align-text-top"
-                                  )}
-                                >
-                                  {row.score}
-                                </td>
-                                <td className={clx(classNames.td, "align-text-top")}>
-                                  {row.justification}
-                                </td>
-                              </tr>
-                            )
-                          )}
-                          {data.table.openness.map(
-                            (
-                              row: { subelement: string; score: number; justification: string },
-                              i: number
-                            ) => (
-                              <tr className={clx(classNames.tr, "border-b")}>
-                                {i === 0 ? (
-                                  <th
-                                    rowSpan={5}
-                                    className={clx(
-                                      classNames.td,
-                                      "text-primary dark:text-primary-dark border-outline dark:border-washed-dark max-w-[150px] border-r align-text-top"
-                                    )}
-                                  >
-                                    {t("openness", {
-                                      n: data.table.openness.reduce(
-                                        (acc: number, subelement: { score: number }) =>
-                                          acc + subelement.score,
-                                        0
-                                      ),
-                                    })}
-                                  </th>
-                                ) : (
-                                  <></>
+                              >
+                                {t(row.subelement)}
+                              </td>
+                              <td
+                                className={clx(
+                                  classNames.td,
+                                  "text-center align-text-top lg:min-w-[150px]"
                                 )}
-                                <td
-                                  className={clx(classNames.td, "align-text-top sm:max-w-[250px]")}
-                                >
-                                  {t(row.subelement)}
-                                </td>
-                                <td
+                              >
+                                {row.score}
+                              </td>
+                              <td className={clx(classNames.td, "align-text-top")}>
+                                {row.justification}
+                              </td>
+                            </tr>
+                          )
+                        )}
+                        {data.table.openness.map(
+                          (
+                            row: { subelement: string; score: number; justification: string },
+                            i: number
+                          ) => (
+                            <tr className={clx(classNames.tr, "border-b")}>
+                              {i === 0 ? (
+                                <th
+                                  rowSpan={5}
                                   className={clx(
                                     classNames.td,
-                                    "max-w-[100px] text-center align-text-top"
+                                    "text-primary dark:text-primary-dark border-outline dark:border-washed-dark max-w-[150px] border-r align-text-top"
                                   )}
                                 >
-                                  {row.score}
-                                </td>
-                                <td className={clx(classNames.td, "align-text-top")}>
-                                  {row.justification}
-                                </td>
-                              </tr>
-                            )
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
+                                  {`${t("openness")} (${data.table.openness.reduce(
+                                    (acc: number, subelement: { score: number }) =>
+                                      acc + subelement.score,
+                                    0
+                                  )}/${data.tab_idx === 0 ? 50 : 5})`}
+                                </th>
+                              ) : (
+                                <></>
+                              )}
+                              <td className={clx(classNames.td, "align-text-top sm:max-w-[250px]")}>
+                                {t(row.subelement)}
+                              </td>
+                              <td
+                                className={clx(
+                                  classNames.td,
+                                  "max-w-[100px] text-center align-text-top"
+                                )}
+                              >
+                                {row.score}
+                              </td>
+                              <td className={clx(classNames.td, "min-w-[300px] align-text-top")}>
+                                {row.justification}
+                              </td>
+                            </tr>
+                          )
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 ) : (
                   <>
