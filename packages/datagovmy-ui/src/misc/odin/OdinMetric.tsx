@@ -3,10 +3,24 @@ import { At, Panel, Section, Tabs } from "../../components";
 import { useTranslation } from "../../hooks";
 import { clx } from "../../lib/helpers";
 
+type DatasetLink = {
+  link_order: string;
+  link_title: string;
+  url: string;
+};
+
+type TableRow = {
+  subelement: string;
+  score: number | null;
+  justification: string;
+};
+
+type ScoreType = "coverage" | "openness";
+
 type OdinMetricProps = {
-  links: any;
-  scores: any;
-  table: any;
+  links: Record<string, DatasetLink[]>;
+  scores: Record<string, Record<ScoreType | "overall", Record<"maximum" | "overall", TableRow[]>>>;
+  table: Record<string, Record<ScoreType, TableRow[]>>;
   title: string;
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
 };
@@ -28,8 +42,15 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
     td: "px-4 py-2.5 text-center text-sm font-medium text-start align-text-top",
   };
 
-  function calcScore(arr: { score: number }[]) {
-    return arr.reduce((acc: number, curr) => acc + curr.score, 0);
+  function calcScore(arr: TableRow[]) {
+    return arr.reduce((acc: number, curr) => (curr.score !== null ? acc + curr.score : acc), 0);
+  }
+
+  function calcMaxScore(arr: TableRow[]) {
+    return arr.reduce(
+      (acc: number, curr) => (curr.score !== null ? acc + (tab_idx === 0 ? 10 : 1) : acc),
+      0
+    );
   }
 
   return (
@@ -48,39 +69,33 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                       <p className="font-medium uppercase">{t("overall_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-black dark:text-white">
-                          {scores[indicator].overall.overall}
+                          {calcScore(table[indicator].coverage.concat(table[indicator].openness))}
                         </p>
-                        <p>{t("out_of", { max: scores[indicator].overall.maximum })}</p>
+                        <p>
+                          {t("out_of", {
+                            max: calcMaxScore(
+                              table[indicator].coverage.concat(table[indicator].openness)
+                            ),
+                          })}
+                        </p>
                       </div>
                     </div>
                     <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("coverage_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-[#FF820E]">
-                          {tab_idx === 0
-                            ? scores[indicator].coverage.overall
-                            : calcScore(table[indicator].coverage)}
+                          {calcScore(table[indicator].coverage)}
                         </p>
-                        <p>
-                          {t("out_of", {
-                            max: tab_idx === 0 ? scores[indicator].coverage.maximum : 5,
-                          })}
-                        </p>
+                        <p>{t("out_of", { max: calcMaxScore(table[indicator].coverage) })}</p>
                       </div>
                     </div>
                     <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("openness_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-primary dark:text-primary-dark text-2xl font-bold">
-                          {tab_idx === 0
-                            ? scores[indicator].openness.overall
-                            : calcScore(table[indicator].openness)}
+                          {calcScore(table[indicator].openness)}
                         </p>
-                        <p>
-                          {t("out_of", {
-                            max: tab_idx === 0 ? scores[indicator].openness.maximum : 5,
-                          })}
-                        </p>
+                        <p>{t("out_of", { max: calcMaxScore(table[indicator].openness) })}</p>
                       </div>
                     </div>
                   </div>
@@ -101,72 +116,62 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                         </tr>
                       </thead>
                       <tbody>
-                        {table[indicator].coverage.map(
-                          (
-                            row: { subelement: string; score: number; justification: string },
-                            i: number
-                          ) => (
-                            <tr className={clx(classNames.tr, "border-b")}>
-                              {i === 0 ? (
-                                <th
-                                  rowSpan={5}
-                                  className={clx(
-                                    classNames.td,
-                                    "min-w-[150px] border-r border-inherit text-[#FF820E]"
-                                  )}
-                                >
-                                  {`${t("coverage")} (${calcScore(table[indicator].coverage)}/${
-                                    tab_idx === 0 ? 50 : 5
-                                  })`}
-                                </th>
-                              ) : (
-                                <></>
-                              )}
-                              <td className={clx(classNames.td, "min-w-[150px] lg:min-w-[200px]")}>
-                                {t(row.subelement)}
-                              </td>
-                              <td className={clx(classNames.td, "text-center lg:min-w-[150px]")}>
-                                {row.score}
-                              </td>
-                              <td className={clx(classNames.td, "min-w-[300px]")}>
-                                {row.justification}
-                              </td>
-                            </tr>
-                          )
-                        )}
-                        {table[indicator].openness.map(
-                          (
-                            row: { subelement: string; score: number; justification: string },
-                            i: number
-                          ) => (
-                            <tr className={clx(classNames.tr, "border-b")}>
-                              {i === 0 ? (
-                                <th
-                                  rowSpan={5}
-                                  className={clx(
-                                    classNames.td,
-                                    "text-primary dark:text-primary-dark max-w-[150px] border-r border-inherit"
-                                  )}
-                                >
-                                  {`${t("openness")} (${calcScore(table[indicator].openness)}/${
-                                    tab_idx === 0 ? 50 : 5
-                                  })`}
-                                </th>
-                              ) : (
-                                <></>
-                              )}
-                              <td className={clx(classNames.td, "min-w-[150px] lg:min-w-[200px]")}>
-                                {t(row.subelement)}
-                              </td>
-                              <td className={clx(classNames.td, "text-center lg:min-w-[150px]")}>
-                                {row.score}
-                              </td>
-                              <td className={clx(classNames.td, "min-w-[300px]")}>
-                                {row.justification}
-                              </td>
-                            </tr>
-                          )
-                        )}
+                        {table[indicator].coverage.map((row: TableRow, i: number) => (
+                          <tr className={clx(classNames.tr, "border-b")}>
+                            {i === 0 ? (
+                              <th
+                                rowSpan={5}
+                                className={clx(
+                                  classNames.td,
+                                  "min-w-[150px] border-r border-inherit text-[#FF820E]"
+                                )}
+                              >
+                                {`${t("coverage")} (${calcScore(
+                                  table[indicator].coverage
+                                )}/${calcMaxScore(table[indicator].coverage)})`}
+                              </th>
+                            ) : (
+                              <></>
+                            )}
+                            <td className={clx(classNames.td, "min-w-[150px] lg:min-w-[200px]")}>
+                              {t(row.subelement)}
+                            </td>
+                            <td className={clx(classNames.td, "text-center lg:min-w-[150px]")}>
+                              {row.score !== null ? row.score : "—"}
+                            </td>
+                            <td className={clx(classNames.td, "min-w-[300px]")}>
+                              {row.justification}
+                            </td>
+                          </tr>
+                        ))}
+                        {table[indicator].openness.map((row: TableRow, i: number) => (
+                          <tr className={clx(classNames.tr, "border-b")}>
+                            {i === 0 ? (
+                              <th
+                                rowSpan={5}
+                                className={clx(
+                                  classNames.td,
+                                  "text-primary dark:text-primary-dark max-w-[150px] border-r border-inherit"
+                                )}
+                              >
+                                {`${t("openness")} (${calcScore(
+                                  table[indicator].openness
+                                )}/${calcMaxScore(table[indicator].openness)})`}
+                              </th>
+                            ) : (
+                              <></>
+                            )}
+                            <td className={clx(classNames.td, "min-w-[150px] lg:min-w-[200px]")}>
+                              {t(row.subelement)}
+                            </td>
+                            <td className={clx(classNames.td, "text-center lg:min-w-[150px]")}>
+                              {row.score}
+                            </td>
+                            <td className={clx(classNames.td, "min-w-[300px]")}>
+                              {row.justification}
+                            </td>
+                          </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
@@ -183,10 +188,11 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                   <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
                     <p className="w-content text-sm font-medium">{t("reference_datasets")}:</p>
                     <div className="flex flex-col flex-wrap gap-y-6">
-                      {Object.keys(links).map((indicator: string) => {
+                      {Object.keys(links).map(curr_indicator => {
+                        if (indicator !== "overall" && indicator !== curr_indicator) return;
                         return (
                           <div className="flex gap-3">
-                            {links[indicator].map((l: { link_title: string; url: string }) => (
+                            {links[curr_indicator].map(l => (
                               <At
                                 className="link-primary text-sm font-normal underline"
                                 href={l.url}

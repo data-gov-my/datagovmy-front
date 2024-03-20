@@ -8,8 +8,17 @@ import { numFormat } from "../../lib/helpers";
 
 type Category = "economy" | "environment" | "overall" | "social";
 
+type BarDatum = {
+  subelement: string[];
+  maximum: Array<number | null>;
+  overall: Array<number | null>;
+};
+
 type OdinSummaryProps = {
-  bar: Record<Category, any>;
+  bar: Record<
+    Category,
+    Record<string, Record<string, Record<"coverage" | "openness" | "overall", BarDatum>>>
+  >;
   scores: any;
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   title: string;
@@ -25,17 +34,27 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
     bar: bar.overall.overall.overall,
   });
 
-  const CATEGORY_OPTIONS = Object.keys(scores).map(category => ({
-    label: t(category),
-    value: category,
-  }));
+  const CATEGORY_OPTIONS = ["overall", ...Object.keys(scores).filter(e => e !== "overall")].map(
+    category => ({
+      label: t(category),
+      value: category,
+    })
+  );
 
   const SUBCATEGORY_OPTIONS = data.category
-    ? Object.keys(scores[data.category]).map(subcategory => ({
-        label: t(`subcategory.${subcategory}`),
-        value: subcategory,
-      }))
+    ? ["overall", ...Object.keys(scores[data.category]).filter(e => e !== "overall")].map(
+        subcategory => ({
+          label: t(`subcategory.${subcategory}`),
+          value: subcategory,
+        })
+      )
     : [];
+
+  function calcAvgScore(arr: Array<number | null>) {
+    const total = arr.reduce((acc: number, curr) => (curr !== null ? acc + curr : acc), 0);
+    const length = arr.reduce((acc: number, curr) => (curr !== null ? acc + 1 : acc), 0);
+    return total / length;
+  }
 
   const className = {
     titles: "flex w-full flex-col items-center gap-3 sm:flex-row",
@@ -52,13 +71,11 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
               anchor="left"
               options={CATEGORY_OPTIONS}
               selected={CATEGORY_OPTIONS.find(item => item.value === data.category)}
-              onChange={e => {
+              onChange={(e: { value: Category }) => {
                 setData("category", e.value);
-                setData("subcategory", "");
-                if (e.value === "overall") {
-                  setData("bar", bar.overall.overall.overall);
-                  setData("score", scores.overall.overall.overall);
-                }
+                setData("subcategory", e.value === "overall" ? "" : "overall");
+                setData("bar", bar[e.value].overall.overall);
+                setData("score", scores[e.value].overall.overall);
               }}
             />
             <Dropdown
@@ -91,7 +108,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             <p className="font-medium uppercase">{t("coverage_score")}</p>
             <div className="flex items-center gap-1.5">
               <p className="text-[42px] font-bold leading-[50px] text-[#FF820E]">
-                {numFormat(data.score.coverage.overall, "standard", 0)}
+                {numFormat(calcAvgScore(data.bar.coverage.overall), "standard", 0)}
               </p>
               <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
             </div>
@@ -100,7 +117,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
             <p className="font-medium uppercase">{t("openness_score")}</p>
             <div className="flex items-center gap-1.5">
               <p className="text-primary dark:text-primary-dark text-[42px] font-bold leading-[50px]">
-                {numFormat(data.score.openness.overall, "standard", 0)}
+                {numFormat(calcAvgScore(data.bar.openness.overall), "standard", 0)}
               </p>
               <p>{t("out_of", { max: data.score.openness.maximum })}</p>
             </div>
