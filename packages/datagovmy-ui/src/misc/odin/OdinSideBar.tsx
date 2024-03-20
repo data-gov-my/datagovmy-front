@@ -30,7 +30,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
 
   const styles = {
     header:
-      "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight text-base text-black dark:text-white font-bold mb-1.5 cursor-default",
+      "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight text-base text-black dark:text-white font-bold mb-1.5",
     subcategory:
       "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight text-sm text-dim",
     active:
@@ -53,7 +53,11 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
         categories.map(([category, subcategory], index) => (
           <li key={category} title={t(category)}>
             <Button
-              className={clx(styles.header, selected === category && styles.active)}
+              className={clx(
+                styles.header,
+                index !== 0 && "cursor-auto",
+                selected === category && styles.active
+              )}
               onClick={() => {
                 if (index === 0) {
                   setSelected(category);
