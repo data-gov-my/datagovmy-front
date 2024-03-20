@@ -1,10 +1,10 @@
-import { FunctionComponent, MutableRefObject } from "react";
 import { Dropdown, Section } from "../../components";
-import Bar from "../../charts/bar";
 import { AKSARA_COLOR } from "../../lib/constants";
 import { useData } from "../../hooks/useData";
 import { useTranslation } from "../../hooks/useTranslation";
 import { numFormat } from "../../lib/helpers";
+import dynamic from "next/dynamic";
+import { FunctionComponent, MutableRefObject } from "react";
 
 type Category = "economy" | "environment" | "overall" | "social";
 
@@ -23,6 +23,8 @@ type OdinSummaryProps = {
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   title: string;
 };
+
+const Bar = dynamic(() => import("../../charts/bar"), { ssr: false });
 
 const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, scrollRef }) => {
   const { t } = useTranslation(["odin", "common"]);
