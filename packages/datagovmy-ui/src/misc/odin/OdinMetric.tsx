@@ -1,6 +1,6 @@
-import { FunctionComponent, MutableRefObject } from "react";
+import { FunctionComponent, MutableRefObject, useState } from "react";
 import { At, Panel, Section, Tabs } from "../../components";
-import { useData, useTranslation } from "../../hooks";
+import { useTranslation } from "../../hooks";
 import { clx } from "../../lib/helpers";
 
 type OdinMetricProps = {
@@ -20,62 +20,67 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
 }) => {
   const { t } = useTranslation(["odin", "common"]);
 
-  const { data, setData } = useData({
-    score: scores ? scores.overall : null,
-    table: table.overall ?? null,
-    tab_idx: 0,
-  });
+  const [tab_idx, setTabIdx] = useState(0);
 
   const indicators = ["overall", ...Object.keys(table).filter(e => e !== "overall")];
   const classNames = {
     tr: "border-outline dark:border-washed-dark",
-    td: "px-2 py-2.5 text-center text-sm font-medium text-start",
+    td: "px-4 py-2.5 text-center text-sm font-medium text-start align-text-top",
   };
+
+  function calcScore(arr: { score: number }[]) {
+    return arr.reduce((acc: number, curr) => acc + curr.score, 0);
+  }
 
   return (
     <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
       <div className="flex max-w-[1000px] flex-col gap-6">
         <h4>{title}</h4>
 
-        <Tabs
-          className="justify-center"
-          onChange={i => {
-            setData("tab_idx", i);
-            setData("score", scores ? scores[indicators[i]] : null);
-            setData("table", indicators[i] in table ? table[indicators[i]] : null);
-          }}
-        >
+        <Tabs className="justify-center" onChange={i => setTabIdx(i)}>
           {indicators.map(indicator => (
             <Panel key={indicator} name={t(`indicator.${indicator}`)}>
               <div className="flex flex-col gap-y-6">
                 {/* Scores */}
-                {data.score ? (
+                {scores[indicator] ? (
                   <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-around">
                     <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("overall_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-black dark:text-white">
-                          {data.score.overall.overall}
+                          {scores[indicator].overall.overall}
                         </p>
-                        <p>{t("out_of", { max: data.score.overall.maximum })}</p>
+                        <p>{t("out_of", { max: scores[indicator].overall.maximum })}</p>
                       </div>
                     </div>
                     <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("coverage_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-[#FF820E]">
-                          {data.score.coverage.overall}
+                          {tab_idx === 0
+                            ? scores[indicator].coverage.overall
+                            : calcScore(table[indicator].coverage)}
                         </p>
-                        <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
+                        <p>
+                          {t("out_of", {
+                            max: tab_idx === 0 ? scores[indicator].coverage.maximum : 5,
+                          })}
+                        </p>
                       </div>
                     </div>
                     <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("openness_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-primary dark:text-primary-dark text-2xl font-bold">
-                          {data.score.openness.overall}
+                          {tab_idx === 0
+                            ? scores[indicator].openness.overall
+                            : calcScore(table[indicator].openness)}
                         </p>
-                        <p>{t("out_of", { max: data.score.openness.maximum })}</p>
+                        <p>
+                          {t("out_of", {
+                            max: tab_idx === 0 ? scores[indicator].openness.maximum : 5,
+                          })}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -84,7 +89,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                 )}
 
                 {/* Table */}
-                {data.table ? (
+                {table[indicator] ? (
                   <div className="overflow-x-auto">
                     <table className="relative mx-auto table-auto border-spacing-0">
                       <thead>
@@ -96,7 +101,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                         </tr>
                       </thead>
                       <tbody>
-                        {data.table.coverage.map(
+                        {table[indicator].coverage.map(
                           (
                             row: { subelement: string; score: number; justification: string },
                             i: number
@@ -106,43 +111,30 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                                 <th
                                   rowSpan={5}
                                   className={clx(
-                                    classNames.tr,
                                     classNames.td,
-                                    "min-w-[150px] border-r align-text-top text-[#FF820E]"
+                                    "min-w-[150px] border-r border-inherit text-[#FF820E]"
                                   )}
                                 >
-                                  {`${t("coverage")} (${data.table.coverage.reduce(
-                                    (acc: number, subelement: { score: number }) =>
-                                      acc + subelement.score,
-                                    0
-                                  )}/${data.tab_idx === 0 ? 50 : 5})`}
+                                  {`${t("coverage")} (${calcScore(table[indicator].coverage)}/${
+                                    tab_idx === 0 ? 50 : 5
+                                  })`}
                                 </th>
                               ) : (
                                 <></>
                               )}
-                              <td
-                                className={clx(
-                                  classNames.td,
-                                  "min-w-[150px] align-text-top lg:min-w-[200px]"
-                                )}
-                              >
+                              <td className={clx(classNames.td, "min-w-[150px] lg:min-w-[200px]")}>
                                 {t(row.subelement)}
                               </td>
-                              <td
-                                className={clx(
-                                  classNames.td,
-                                  "text-center align-text-top lg:min-w-[150px]"
-                                )}
-                              >
+                              <td className={clx(classNames.td, "text-center lg:min-w-[150px]")}>
                                 {row.score}
                               </td>
-                              <td className={clx(classNames.td, "align-text-top")}>
+                              <td className={clx(classNames.td, "min-w-[300px]")}>
                                 {row.justification}
                               </td>
                             </tr>
                           )
                         )}
-                        {data.table.openness.map(
+                        {table[indicator].openness.map(
                           (
                             row: { subelement: string; score: number; justification: string },
                             i: number
@@ -153,30 +145,23 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                                   rowSpan={5}
                                   className={clx(
                                     classNames.td,
-                                    "text-primary dark:text-primary-dark border-outline dark:border-washed-dark max-w-[150px] border-r align-text-top"
+                                    "text-primary dark:text-primary-dark max-w-[150px] border-r border-inherit"
                                   )}
                                 >
-                                  {`${t("openness")} (${data.table.openness.reduce(
-                                    (acc: number, subelement: { score: number }) =>
-                                      acc + subelement.score,
-                                    0
-                                  )}/${data.tab_idx === 0 ? 50 : 5})`}
+                                  {`${t("openness")} (${calcScore(table[indicator].openness)}/${
+                                    tab_idx === 0 ? 50 : 5
+                                  })`}
                                 </th>
                               ) : (
                                 <></>
                               )}
-                              <td className={clx(classNames.td, "align-text-top sm:max-w-[250px]")}>
+                              <td className={clx(classNames.td, "min-w-[150px] lg:min-w-[200px]")}>
                                 {t(row.subelement)}
                               </td>
-                              <td
-                                className={clx(
-                                  classNames.td,
-                                  "max-w-[100px] text-center align-text-top"
-                                )}
-                              >
+                              <td className={clx(classNames.td, "text-center lg:min-w-[150px]")}>
                                 {row.score}
                               </td>
-                              <td className={clx(classNames.td, "min-w-[300px] align-text-top")}>
+                              <td className={clx(classNames.td, "min-w-[300px]")}>
                                 {row.justification}
                               </td>
                             </tr>
