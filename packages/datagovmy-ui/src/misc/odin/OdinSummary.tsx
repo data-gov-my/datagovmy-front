@@ -126,66 +126,38 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
 
         {/* Bar Chart */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-          <Bar
-            title={t("breakdown_coverage")}
-            id="bar-coverage-score-breakdown"
-            className="h-[280px] w-full"
-            layout="horizontal"
-            enableGridY={false}
-            enableGridX={true}
-            maxX={data.bar.coverage.maximum[0]}
-            precision={0}
-            data={{
-              labels: data.bar.coverage.subelement.map((e: string) => t(e)),
-              datasets: [
-                {
-                  label: t("score"),
-                  data: data.bar.coverage.overall,
-                  barThickness: 32,
-                  backgroundColor: AKSARA_COLOR.ORANGE_H,
-                  borderColor: AKSARA_COLOR.ORANGE,
-                  borderWidth: 0.5,
-                },
-              ],
-            }}
-            datalabels={{
-              align: "start",
-              anchor: "end",
-              color: AKSARA_COLOR.ORANGE,
-              display: (context: any) => context.dataset.data[context.dataIndex] > 5,
-              formatter: value => numFormat(value, "standard", 0),
-            }}
-          />
-          <Bar
-            id="bar-openness-score-breakdown"
-            title={t("breakdown_openness")}
-            className="h-[280px] w-full"
-            layout="horizontal"
-            enableGridY={false}
-            enableGridX={true}
-            maxX={data.bar.openness.maximum[0]}
-            precision={0}
-            data={{
-              labels: data.bar.openness.subelement.map((e: string) => t(e)),
-              datasets: [
-                {
-                  label: t("score"),
-                  data: data.bar.openness.overall,
-                  barThickness: 32,
-                  backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                  borderColor: AKSARA_COLOR.PRIMARY,
-                  borderWidth: 0.5,
-                },
-              ],
-            }}
-            datalabels={{
-              align: "start",
-              anchor: "end",
-              color: AKSARA_COLOR.PRIMARY,
-              display: (context: any) => context.dataset.data[context.dataIndex] > 5,
-              formatter: value => numFormat(value, "standard", 0),
-            }}
-          />
+          {["coverage", "openness"].map((score, i) => (
+            <Bar
+              title={t("breakdown_" + score)}
+              id={`bar-${score}-score-breakdown`}
+              className="h-[280px] w-full"
+              layout="horizontal"
+              enableGridY={false}
+              enableGridX={true}
+              maxX={data.bar[score].maximum[0]}
+              precision={0}
+              data={{
+                labels: data.bar[score].subelement.map((e: string) => t(e)),
+                datasets: [
+                  {
+                    label: t("score"),
+                    data: data.bar[score].overall,
+                    barThickness: 32,
+                    backgroundColor: i === 0 ? AKSARA_COLOR.ORANGE_H : AKSARA_COLOR.PRIMARY_H,
+                    borderColor: i === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.PRIMARY,
+                    borderWidth: 0.5,
+                  },
+                ],
+              }}
+              datalabels={{
+                align: "start",
+                anchor: "end",
+                color: i === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.PRIMARY,
+                display: (context: any) => context.dataset.data[context.dataIndex] > 5,
+                formatter: value => numFormat(value, "standard", 0),
+              }}
+            />
+          ))}
         </div>
       </div>
     </Section>

@@ -55,17 +55,17 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
 
   return (
     <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
-      <div className="flex max-w-[1000px] flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <h4>{title}</h4>
 
-        <Tabs className="justify-center" onChange={i => setTabIdx(i)}>
+        <Tabs className="max-w-[1000px] justify-center gap-y-0" onChange={i => setTabIdx(i)}>
           {indicators.map(indicator => (
             <Panel key={indicator} name={t(`indicator.${indicator}`)}>
               <div className="flex flex-col gap-y-6">
                 {/* Scores */}
                 {scores[indicator] ? (
-                  <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-around">
-                    <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
+                  <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
+                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("overall_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-black dark:text-white">
@@ -80,7 +80,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                         </p>
                       </div>
                     </div>
-                    <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
+                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("coverage_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-2xl font-bold text-[#FF820E]">
@@ -89,7 +89,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                         <p>{t("out_of", { max: calcMaxScore(table[indicator].coverage) })}</p>
                       </div>
                     </div>
-                    <div className="text-dim flex flex-col gap-y-1.5 max-sm:items-center">
+                    <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("openness_score")}</p>
                       <div className="flex items-center gap-1.5">
                         <p className="text-primary dark:text-primary-dark text-2xl font-bold">
@@ -105,7 +105,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
 
                 {/* Table */}
                 {table[indicator] ? (
-                  <div className="overflow-x-auto">
+                  <div className="max-w-[1000px] overflow-x-auto">
                     <table className="relative mx-auto table-auto border-spacing-0">
                       <thead>
                         <tr className={clx(classNames.tr, "border-b-2")}>
