@@ -253,10 +253,10 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             </div>
 
             <Timeseries
-              title={t("keys.overall")}
+              title={t("keys.00")}
               className="h-[300px] w-full"
               interval="month"
-              unitY={configs("overall").unit}
+              unitY={configs("00").unit}
               displayNumFormat={value =>
                 numFormat(value, "compact", 0, "short", i18n.language, true)
               }
@@ -265,7 +265,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                   item.dataset.label + ": ",
                   item.parsed.y < 0 ? "-" : "",
                   numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
-                  configs("overall").unit,
+                  configs("00").unit,
                 ].join("");
               }}
               axisY={{
@@ -286,12 +286,12 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                 datasets: [
                   {
                     type: "line",
-                    data: coordinate.overall,
-                    label: t("keys.overall"),
+                    data: coordinate.00,
+                    label: t("keys.00"),
                     borderColor: AKSARA_COLOR.ORANGE,
                     backgroundColor: AKSARA_COLOR.ORANGE_H,
                     borderWidth: 1.5,
-                    fill: configs("overall").fill,
+                    fill: configs("00").fill,
                   },
                   shader(data.shade_type.value),
                 ],
@@ -301,7 +301,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                   title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
-                  value: configs("overall").callout,
+                  value: configs("00").callout,
                 },
               ]}
             />
