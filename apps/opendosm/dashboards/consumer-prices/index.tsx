@@ -34,19 +34,20 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 type ConsumerPriceKeys =
-  | "alcohol_tobacco"
-  | "clothing_footwear"
-  | "communication"
-  | "education"
-  | "food_beverage"
-  | "furnishings"
-  | "health"
-  | "hospitality"
-  | "housing_utilities"
-  | "misc"
-  | "overall"
-  | "recreation_culture"
-  | "transport";
+  | "00"
+  | "01"
+  | "02"
+  | "03"
+  | "04"
+  | "05"
+  | "06"
+  | "07"
+  | "08"
+  | "09"
+  | "10"
+  | "11"
+  | "12"
+  | "13";
 
 interface ConsumerPricesDashboardProps {
   last_updated: string;
@@ -182,18 +183,19 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     }));
 
   const section1ChartData = getChartData([
-    "food_beverage",
-    "alcohol_tobacco",
-    "clothing_footwear",
-    "housing_utilities",
-    "furnishings",
-    "health",
-    "transport",
-    "communication",
-    "recreation_culture",
-    "education",
-    "hospitality",
-    "misc",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
   ]);
 
   return (
