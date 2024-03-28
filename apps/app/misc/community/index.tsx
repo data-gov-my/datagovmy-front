@@ -1,7 +1,16 @@
 import { AtomIcon, BarChartIcon, CheckMarkIcon, LineChartIcon, PieChartIcon } from "../../icons";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { post } from "datagovmy-ui/api";
-import { Button, Card, Container, Dropdown, Input, Spinner, toast } from "datagovmy-ui/components";
+import {
+  At,
+  Button,
+  Card,
+  Container,
+  Dropdown,
+  Input,
+  Spinner,
+  toast,
+} from "datagovmy-ui/components";
 import { clx } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
@@ -91,7 +100,7 @@ const CommunityDashboard: FunctionComponent = () => {
         <div className="flex min-h-[680px] flex-grow flex-col pb-16 pt-16 lg:grid lg:grid-cols-12">
           <div className="flex flex-col justify-center lg:col-span-10 lg:col-start-2">
             <div className="z-20 flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
-              <div className="flex-1">
+              <div className="flex flex-1 flex-col gap-6">
                 <div className="flex flex-col space-y-6">
                   <p className="text-primary dark:text-primary-dark font-semibold uppercase">{`${t(
                     "cta"
@@ -99,6 +108,17 @@ const CommunityDashboard: FunctionComponent = () => {
                   <div className="space-y-3">
                     <h2>{t("header")}</h2>
                     <p className="text-dim whitespace-pre-line">{t("description")}</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:space-x-1">
+                    <p className="text-dim whitespace-pre-line">{t("link_to_showcase1")} </p>
+                    <At
+                      href="/community-products"
+                      className="text-primary dark:text-primary-dark font-semibold hover:underline"
+                    >
+                      {t("link_to_showcase2")}
+                    </At>
                   </div>
                 </div>
               </div>

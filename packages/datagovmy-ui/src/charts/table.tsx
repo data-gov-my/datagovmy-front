@@ -79,6 +79,7 @@ export interface TableProps {
   ) => ReactNode;
   "precision"?: number | Precision;
   "data-testid"?: string;
+  "empty"?: ReactNode;
 }
 
 const relativeColor = (delta: number, inverse: boolean = false) => {
@@ -124,6 +125,7 @@ const Table: FunctionComponent<TableProps> = ({
   pagination,
   cellClass,
   precision,
+  empty,
   ...props
 }) => {
   const columns = useMemo<ColumnDef<Record<string, any>>[]>(() => config as any, [config]);
@@ -424,7 +426,7 @@ const Table: FunctionComponent<TableProps> = ({
             ) : (
               <tr>
                 <td colSpan={table.getAllColumns().length} className="border-outline border-r">
-                  <div className="text-sm">{t("common:common.no_entries")}.</div>
+                  {empty ? empty : <div className="text-sm">{t("common:common.no_entries")}.</div>}
                 </td>
               </tr>
             )}

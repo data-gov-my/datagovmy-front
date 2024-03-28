@@ -1,13 +1,16 @@
 import { Dialog, Transition } from "@headlessui/react";
+import { MagnifyingGlassMinusIcon, MagnifyingGlassPlusIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { At, Button, Spinner } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
-import { clx, toDate } from "datagovmy-ui/helpers";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import { CommunityProductsItem } from "pages/community-products/[[...product_id]]";
-import { Fragment, FunctionComponent } from "react";
+import { Fragment, FunctionComponent, useContext, useState } from "react";
 
 interface CommunityProductsModalProps {
   hide: () => void;
@@ -16,37 +19,17 @@ interface CommunityProductsModalProps {
   product: CommunityProductsItem;
 }
 
-type ApplicationData = {
-  title: string;
-  purpose: string;
-  problem_statement: string;
-  solution_developed: string;
-  source: string;
-  website: string;
-  email: string;
-};
-
-const dummyApplication: ApplicationData = {
-  title: "Mobile Trainer",
-  purpose:
-    "Aplikasi yang berfungsi sebagai pelatih kecergasan untuk kegunaan orang ramai. Berfungsi sebagai trainer maya yang mengingatkan anda tentang rancangan untuk menurunkan berat badan serta mengesyorkan diet, restoran dan gim berdekatan serta latihan fizikal yang berkesan.",
-  problem_statement:
-    "The cases of people becoming underweight, overweight and obesity is on the rise everywhere as most people don't have personal trainers or the willpower to get in shape.",
-  solution_developed:
-    "An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.An app that acts as a fitness trainer. It reminds you of your plan to lose weight, recommends diets, nearby restaurants and gyms as well as effective physical exercises.",
-  source: "KKM",
-  website: "www.website.com/hello",
-  email: "marsyam83@gmail.com",
-};
-
 const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = ({
   hide,
   loading,
   show,
   product,
 }) => {
-  const { t, i18n } = useTranslation(["community-products"]);
-  const diffInDays = product && DateTime.now().diff(DateTime.fromISO(product.date), ["days"]);
+  const { t } = useTranslation(["community-products"]);
+  const diffInDays =
+    product && DateTime.now().diff(DateTime.fromISO(product.date_approved), ["days"]);
+  const [expandImage, setExpandImage] = useState(false);
+  const { size } = useContext(WindowContext);
 
   return (
     <>
@@ -57,6 +40,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
             className={clx(header.variable, body.variable, "relative z-30 font-sans")}
             onClose={() => {
               hide();
+              setExpandImage(false);
             }}
           >
             <Transition.Child
@@ -72,7 +56,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
             </Transition.Child>
 
             <div className="fixed inset-0">
-              <div className="flex min-h-full items-center justify-center py-2 text-center">
+              <div className="flex h-full items-center justify-center p-4 text-center">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -84,7 +68,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                 >
                   <Dialog.Panel
                     className={
-                      "border-outline shadow-floating dark:border-outlineHover-dark max-h-[100vh] w-full max-w-4xl transform overflow-hidden rounded-xl border bg-white text-left align-middle font-sans transition-all dark:bg-black sm:max-h-[90vh]"
+                      "border-outline shadow-floating dark:border-outlineHover-dark flex h-full max-h-[800px] w-full max-w-4xl transform flex-col gap-3 rounded-xl border bg-white text-left font-sans transition-all dark:bg-black"
                     }
                   >
                     {loading ? (
@@ -95,11 +79,11 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                       <>
                         <Dialog.Title
                           as="div"
-                          className="border-outline flex items-start border-b p-6 pb-6 text-black dark:text-white"
+                          className="border-outline flex items-start border-b p-6 text-black dark:text-white"
                         >
                           <div className="flex flex-1 flex-col gap-1.5">
-                            <p className="text-lg font-bold">{product.title}</p>
-                            <div className="flex items-center gap-1.5 text-sm font-medium">
+                            <p className="text-lg font-bold">{product.product_name}</p>
+                            <div className="flex flex-col items-start text-sm font-medium sm:flex-row sm:items-center sm:gap-1.5">
                               <p
                                 className={clx(
                                   "text-primary",
@@ -109,13 +93,17 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 {t("new")}
                               </p>
                               {diffInDays.days < 14 && (
-                                <div className="bg-dim h-1 w-1 rounded-full" />
+                                <div className="bg-dim hidden h-1 w-1 rounded-full sm:block" />
                               )}
-                              <p className="text-dim capitalize">{product.type}</p>
-                              <div className="bg-dim h-1 w-1 rounded-full" />
+                              <p className="text-dim capitalize">
+                                {t(`product_type.${product.product_type}`)}
+                              </p>
+                              <div className="bg-dim hidden h-1 w-1 rounded-full sm:block" />
                               <p className="text-dim">
                                 {" "}
-                                {toDate(product.date, "dd MMM yyyy", i18n.language)}
+                                {DateTime.fromISO(product.date_approved).toFormat(
+                                  "dd MMM yyyy hh:mm a"
+                                )}
                               </p>
                             </div>
                           </div>
@@ -131,43 +119,80 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                         </Dialog.Title>
 
                         {/* Content */}
-                        <div className="hide-scrollbar flex h-[85vh] flex-col gap-8 overflow-scroll p-6 sm:h-full sm:flex-row">
-                          <div className="gap-4.5 flex flex-col">
-                            <div className="bg-background border-outline relative flex h-full w-full items-center rounded-lg border sm:h-[300px] sm:w-[300px]">
-                              <Image
-                                src={product.image}
-                                width={600}
-                                height={600}
-                                alt={product.title}
-                              />
-                            </div>
-                            {Object.entries(dummyApplication).map(([key, value]) => {
-                              if (key === "email" || key === "website") {
-                                return (
-                                  <div className="flex flex-col gap-1 text-base text-black">
-                                    <p className="font-bold">{t(key)}:</p>
-                                    <At
-                                      passHref={true}
-                                      external={true}
-                                      href={
-                                        key === "email"
-                                          ? `mailto:${value}`
-                                          : value.startsWith("http")
-                                          ? value
-                                          : `https://${value}`
-                                      }
-                                      className="group"
-                                    >
-                                      <p className="text-primary group-hover:underline">{value}</p>
-                                    </At>
-                                  </div>
-                                );
+                        <div className="hide-scrollbar flex flex-1 flex-col gap-8 overflow-scroll p-6 sm:h-full sm:flex-row sm:overflow-hidden">
+                          <div
+                            className={clx(
+                              "gap-4.5 hide-scrollbar flex flex-col overflow-y-visible sm:overflow-y-scroll",
+                              expandImage && "w-full transition-all"
+                            )}
+                          >
+                            <div
+                              className={clx(
+                                "bg-background border-outline group relative flex h-full w-full items-center rounded-lg border transition-all ease-in hover:cursor-pointer sm:h-[300px] sm:w-[300px]",
+                                expandImage && "flex-1  sm:w-full"
+                              )}
+                              onClick={() =>
+                                size.width > BREAKPOINTS.SM && setExpandImage(prev => !prev)
                               }
-                            })}
+                            >
+                              <Image
+                                src={product.thumbnail || "/static/images/og_en-GB.png"}
+                                width={1000}
+                                height={1000}
+                                // fill={true}
+                                alt={product.product_name}
+                              />
+                              <p className="text-dim absolute bottom-0 left-1/2 hidden -translate-x-1/2 items-center gap-1 text-xs group-hover:flex">
+                                {expandImage ? (
+                                  <MagnifyingGlassMinusIcon className="h-3 w-3" />
+                                ) : (
+                                  <MagnifyingGlassPlusIcon className="h-3 w-3" />
+                                )}
+                                {expandImage ? "Close" : "Expand"}
+                              </p>
+                            </div>
+                            {!expandImage &&
+                              Object.entries(product).map(([key, value]) => {
+                                if (key === "email" || key === "product_link") {
+                                  return (
+                                    <div className="flex flex-col gap-1 text-base text-black">
+                                      <p className="font-bold">{t(key)}:</p>
+                                      <At
+                                        passHref={true}
+                                        external={true}
+                                        href={
+                                          key === "email" && typeof value === "string"
+                                            ? `mailto:${value}`
+                                            : typeof value === "string" && value.startsWith("http")
+                                            ? value
+                                            : `https://${value}`
+                                        }
+                                        className="group"
+                                      >
+                                        <p className="text-primary group-hover:underline">
+                                          {value}
+                                        </p>
+                                      </At>
+                                    </div>
+                                  );
+                                }
+                              })}
                           </div>
-                          <div className="hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:h-[70vh] sm:overflow-y-scroll">
-                            {Object.entries(dummyApplication).map(([key, value]) => {
-                              if (key === "email" || key === "website") {
+                          <div
+                            className={clx(
+                              "hide-scrollbar flex h-full flex-1 flex-col gap-6 overflow-y-visible sm:overflow-y-scroll",
+                              expandImage && "hidden"
+                            )}
+                          >
+                            {Object.entries(product).map(([key, value]) => {
+                              if (
+                                key !== "product_name" &&
+                                key !== "product_year" &&
+                                key !== "product_description" &&
+                                key !== "problem_statement" &&
+                                key !== "solutions_developed" &&
+                                key !== "dataset_used"
+                              ) {
                                 return null;
                               }
                               return (

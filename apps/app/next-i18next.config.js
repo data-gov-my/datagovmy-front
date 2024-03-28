@@ -45,6 +45,7 @@ const namespaces = [
   "gui-opendosm-pub",
   "community-products",
   "data-request",
+  "validations",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "validations"]);

@@ -73,6 +73,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "storage.data.gov.my",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };
