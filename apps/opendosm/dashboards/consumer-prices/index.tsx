@@ -286,7 +286,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                 datasets: [
                   {
                     type: "line",
-                    data: coordinate.00,
+                    data: coordinate["00"],
                     label: t("keys.00"),
                     borderColor: AKSARA_COLOR.ORANGE,
                     backgroundColor: AKSARA_COLOR.ORANGE_H,

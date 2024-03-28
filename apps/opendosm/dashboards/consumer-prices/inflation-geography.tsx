@@ -61,7 +61,7 @@ const InflationGeography: FunctionComponent<InflationGeographyProps> = ({ bar })
       const state_overall = bar.data[period][data.active_state].y[0];
 
       _data = sortMulti<number>(_data, "y", (a: number, b: number) => b - a);
-      _data.x.unshift("overall");
+      _data.x.unshift("00");
       _data.y.unshift(state_overall);
 
       return _data;
