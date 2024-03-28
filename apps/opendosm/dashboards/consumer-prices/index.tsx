@@ -34,19 +34,20 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), {
 const Choropleth = dynamic(() => import("datagovmy-ui/charts/choropleth"), { ssr: false });
 
 type ConsumerPriceKeys =
-  | "alcohol_tobacco"
-  | "clothing_footwear"
-  | "communication"
-  | "education"
-  | "food_beverage"
-  | "furnishings"
-  | "health"
-  | "hospitality"
-  | "housing_utilities"
-  | "misc"
-  | "overall"
-  | "recreation_culture"
-  | "transport";
+  | "00"
+  | "01"
+  | "02"
+  | "03"
+  | "04"
+  | "05"
+  | "06"
+  | "07"
+  | "08"
+  | "09"
+  | "10"
+  | "11"
+  | "12"
+  | "13";
 
 interface ConsumerPricesDashboardProps {
   last_updated: string;
@@ -182,18 +183,19 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
     }));
 
   const section1ChartData = getChartData([
-    "food_beverage",
-    "alcohol_tobacco",
-    "clothing_footwear",
-    "housing_utilities",
-    "furnishings",
-    "health",
-    "transport",
-    "communication",
-    "recreation_culture",
-    "education",
-    "hospitality",
-    "misc",
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+    "13",
   ]);
 
   return (
@@ -251,10 +253,10 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
             </div>
 
             <Timeseries
-              title={t("keys.overall")}
+              title={t("keys.00")}
               className="h-[300px] w-full"
               interval="month"
-              unitY={configs("overall").unit}
+              unitY={configs("00").unit}
               displayNumFormat={value =>
                 numFormat(value, "compact", 0, "short", i18n.language, true)
               }
@@ -263,7 +265,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                   item.dataset.label + ": ",
                   item.parsed.y < 0 ? "-" : "",
                   numFormat(Math.abs(item.parsed.y), "compact", 1, "long", i18n.language, false),
-                  configs("overall").unit,
+                  configs("00").unit,
                 ].join("");
               }}
               axisY={{
@@ -284,12 +286,12 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                 datasets: [
                   {
                     type: "line",
-                    data: coordinate.overall,
-                    label: t("keys.overall"),
+                    data: coordinate["00"],
+                    label: t("keys.00"),
                     borderColor: AKSARA_COLOR.ORANGE,
                     backgroundColor: AKSARA_COLOR.ORANGE_H,
                     borderWidth: 1.5,
-                    fill: configs("overall").fill,
+                    fill: configs("00").fill,
                   },
                   shader(data.shade_type.value),
                 ],
@@ -299,7 +301,7 @@ const ConsumerPricesDashboard: FunctionComponent<ConsumerPricesDashboardProps> =
                   title: t("common:common.latest", {
                     date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
                   }),
-                  value: configs("overall").callout,
+                  value: configs("00").callout,
                 },
               ]}
             />
