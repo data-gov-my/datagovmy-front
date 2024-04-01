@@ -78,8 +78,8 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<c
 # .proto file is returned
 ```
 
-- Possible `<category>` values are `rapid-bus-kl` , `rapid-bus-kuantan` and `rapid-bus-penang`.
-  - `rapid-bus-mrtfeeder` and `rapid-rail-kl`, for which static endpoints are available, do not yet have stable realtime feeds.
+- Possible `<category>` values are `rapid-bus-kl` , `rapid-bus-mrtfeeder`, `rapid-bus-kuantan` and `rapid-bus-penang`.
+  - `rapid-rail-kl`, for which static endpoint is available, does not yet have stable realtime feeds.
 - Known errors affecting `rapid-bus-kuantan` and `rapid-bus-penang`:
   - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` does not exist in GTFS data
   - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` does not exist in GTFS data
