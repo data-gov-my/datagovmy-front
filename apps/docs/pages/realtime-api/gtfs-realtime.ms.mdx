@@ -21,7 +21,7 @@ Ini adalah kali pertama Malaysia membekalkan API GTFS yang rasmi dan boleh digun
 
 Walau bagaimanapun, dengan beberapa perkhidmatan utama yang sudah terkandung, pihak kami merasakan sudah tiba masa untuk melancarkannya - supaya sektor swasta dan komuniti pengangkutan awam dapat membina produk atas API ini, dan yang paling penting, memberi kami maklum balas untuk meningkatkan lagi mutunya.
 
-_Nota: Ralat pengesahan bagi setiap _endpoint_ dalam bahagian [Kedudukan Kenderaan](#vehicle-position) telah dijana dengan [Pengesah GTFS Realtime](https://github.com/MobilityData/gtfs-realtime-validator)._
+_Nota: Ralat pengesahan bagi setiap \_endpoint_ dalam bahagian [Kedudukan Kenderaan](#vehicle-position) telah dijana dengan [Pengesah GTFS Realtime](https://github.com/MobilityData/gtfs-realtime-validator).\_
 
 ### Sumber Data bagi GTFS _Realtime_
 
@@ -76,8 +76,8 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<c
 # .proto file dkembalikan
 ```
 
-- Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-kuantan` dan `rapid-bus-penang`.
-  - Endpoint `rapid-bus-mrtfeeder` dan `rapid-rail-kl` yang terkandung dalam API GTFS Statik belum lagi dibekalkan dalam API _realtime_ kerana data operasi _realtime_ belum dapat dibekalkan secara stabil.
+- Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-mrtfeeder`, `rapid-bus-kuantan` dan `rapid-bus-penang`.
+  - Endpoint `rapid-rail-kl` yang terkandung dalam API GTFS Statik belum lagi dibekalkan dalam API _realtime_ kerana data operasi _realtime_ belum dapat dibekalkan secara stabil.
 - Ralat yang sudah dikenalpasti bagi `rapid-bus-kuantan` dan `rapid-bus-penang`:
   - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
   - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
