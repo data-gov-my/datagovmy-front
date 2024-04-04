@@ -22,7 +22,7 @@ const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
       key={item.id}
       onClick={onClick}
     >
-      <div className="bg-background dark:bg-washed-dark border-outline dark:border-outlineHover-dark flex h-[150px] w-[150px] items-center rounded-lg border">
+      <div className="bg-background dark:bg-washed-dark border-outline dark:border-outlineHover-dark relative flex h-[150px] w-[150px] items-center overflow-hidden rounded-lg border">
         <Image
           src={item.thumbnail || "/static/images/og_en-GB.png"}
           width={150}

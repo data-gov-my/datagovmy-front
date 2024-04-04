@@ -284,7 +284,11 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                         setData("show", true);
                         setData("modal_loading", true);
                         push(
-                          routes.COMMUNITY_PRODUCTS.concat("/", item.id.toString()),
+                          routes.COMMUNITY_PRODUCTS.concat(
+                            "/",
+                            item.id.toString(),
+                            actives.length ? queries : ""
+                          ),
                           routes.COMMUNITY_PRODUCTS.concat("/", item.id.toString()),
                           { scroll: false }
                         );

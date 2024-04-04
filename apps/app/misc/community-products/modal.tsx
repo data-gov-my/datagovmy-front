@@ -5,7 +5,7 @@ import { At, Button, Spinner } from "datagovmy-ui/components";
 import { body, header } from "datagovmy-ui/configs/font";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
-import { clx } from "datagovmy-ui/helpers";
+import { clx, isValidURL } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DateTime } from "luxon";
 import Image from "next/image";
@@ -128,8 +128,8 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                           >
                             <div
                               className={clx(
-                                "bg-background border-outline group relative flex h-full w-full items-center rounded-lg border transition-all ease-in hover:cursor-pointer sm:h-[300px] sm:w-[300px]",
-                                expandImage && "flex-1  sm:w-full"
+                                "bg-background border-outline group relative flex h-full w-full items-center overflow-hidden rounded-lg border transition-all ease-in hover:cursor-pointer sm:h-[300px] sm:w-[300px]",
+                                expandImage && "flex-1 sm:w-full"
                               )}
                               onClick={() =>
                                 size.width > BREAKPOINTS.SM && setExpandImage(prev => !prev)
@@ -139,7 +139,6 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 src={product.thumbnail || "/static/images/og_en-GB.png"}
                                 width={1000}
                                 height={1000}
-                                // fill={true}
                                 alt={product.product_name}
                               />
                               <p className="text-dim absolute bottom-0 left-1/2 hidden -translate-x-1/2 items-center gap-1 text-xs group-hover:flex">
@@ -155,7 +154,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               Object.entries(product).map(([key, value]) => {
                                 if (key === "email" || key === "product_link") {
                                   return (
-                                    <div className="flex flex-col gap-1 text-base text-black">
+                                    <div className="flex max-w-xs flex-col gap-1 text-base text-black">
                                       <p className="font-bold">{t(key)}:</p>
                                       <At
                                         passHref={true}
@@ -194,6 +193,31 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 key !== "dataset_used"
                               ) {
                                 return null;
+                              }
+
+                              if (key === "dataset_used") {
+                                if (typeof value === "string") {
+                                  const datasets = value.split(",");
+                                  return (
+                                    <div className="flex flex-col gap-1 text-base text-black">
+                                      <p className="font-bold">{t(key)}:</p>
+                                      {datasets.map(ds => {
+                                        return isValidURL(ds) ? (
+                                          <At
+                                            passHref={true}
+                                            external={true}
+                                            href={ds}
+                                            className="text-primary hover:underline"
+                                          >
+                                            {ds}
+                                          </At>
+                                        ) : (
+                                          <p>{ds}</p>
+                                        );
+                                      })}
+                                    </div>
+                                  );
+                                }
                               }
                               return (
                                 <div className="flex flex-col gap-1 text-base text-black">
