@@ -1,9 +1,10 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { TableConfig } from "datagovmy-ui/charts/table";
 import {
   Button,
-  ComboBox,
   Container,
+  Input,
   Panel,
   Section,
   Spinner,
@@ -14,7 +15,6 @@ import { BREAKPOINTS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
-import { OptionType } from "datagovmy-ui/types";
 import chunk from "lodash/chunk";
 import { DateTime } from "luxon";
 import dynamic from "next/dynamic";
@@ -42,7 +42,6 @@ export type UpcomingPublication = {
 
 interface UpcomingPublicationsProps {
   cal_pubs: Record<string, string[]>;
-  dropdown: Array<{ publication_type: string; publication_type_title: string }>;
   list_pubs: UpcomingPublication[];
   params: any;
   query: any;
@@ -57,7 +56,6 @@ type ScheduledPub = {
 
 const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps> = ({
   cal_pubs,
-  dropdown,
   list_pubs,
   params,
   query,
@@ -70,10 +68,6 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   const { size } = useContext(WindowContext);
 
   const ITEMS_PER_PAGE = 15;
-  const PUBLICATION_OPTIONS: OptionType[] = dropdown.map(e => ({
-    label: e.publication_type_title,
-    value: e.publication_type,
-  }));
 
   const today = new Date();
   const thisMonth = today.getMonth(); // 0 - 11
@@ -98,7 +92,6 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   const { data, setData } = useData({
     loading: false,
     scrollToToday: false,
-    publication_option: "",
     tab_index: params.tab_index,
     month: query.start ? getMonthAndYear(query.start)[1] : thisMonth,
     year: query.start ? getMonthAndYear(query.start)[0] : thisYear,
@@ -107,10 +100,8 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
   const { filter, setFilter } = useFilter({
     start: query.start ?? "",
     end: query.end ?? "",
-    page: query.page ?? "",
-    pub_type: query.pub_type
-      ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
-      : undefined,
+    page: query.page ?? "1",
+    search: query.search ?? "",
   });
 
   const calendar = useMemo(() => {
@@ -173,24 +164,6 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       className: "max-sm:max-w-[300px]",
     },
     {
-      accessorKey: "publication_type_title",
-      id: "publication_type",
-      header: t("table.publication_type"),
-      enableSorting: false,
-    },
-    {
-      accessorKey: "product_type",
-      id: "product_type",
-      header: t("table.product_type"),
-      enableSorting: false,
-    },
-    {
-      accessorKey: "release_series",
-      id: "release_series",
-      header: t("table.release_series"),
-      enableSorting: false,
-    },
-    {
       accessorKey: "release_date",
       id: "release_date",
       header: t("table.release_date"),
@@ -241,8 +214,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
               setFilter("page", query.page ?? "1");
             } else {
               setFilter("page", undefined);
-              setFilter("pub_type", undefined);
-              setData("publication_option", undefined);
+              setFilter("search", "");
             }
           }}
           current={data.tab_index}
@@ -442,27 +414,20 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
             )}
           </Panel>
           <Panel name={t("list_view")} key={"list_view"}>
-            <div className="mx-auto w-full pb-8 sm:w-[500px]">
-              <ComboBox
-                placeholder={t("select_publication")}
-                options={PUBLICATION_OPTIONS}
-                selected={
-                  data.publication_option
-                    ? PUBLICATION_OPTIONS.find(e => e.value === data.publication_option)
-                    : null
-                }
-                onChange={selected => {
-                  if (selected) {
-                    setData("loading", true);
-                    setFilter("pub_type", selected.value);
-                    setFilter("page", "1");
-                    setData("publication_option", selected.value);
-                  } else {
-                    setFilter("pub_type", null);
-                    setData("publication_option", null);
-                  }
+            <div className="relative mx-auto my-6 w-full select-none overflow-hidden rounded-full border border-outline shadow-button hover:border-outlineHover focus:outline-none focus-visible:ring-0 dark:border-washed-dark dark:hover:border-outlineHover-dark sm:w-[500px]">
+              <Input
+                className="w-full truncate border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black hover:dark:bg-washed-dark/50 focus:dark:bg-washed-dark"
+                placeholder={t("search_publication")}
+                value={filter.search}
+                onChange={e => {
+                  setFilter("page", "1");
+                  setFilter("search", e);
+                  setData("loading", true);
                 }}
               />
+              <span className="absolute left-4 top-3.5">
+                <MagnifyingGlassIcon className="h-5 w-5 text-black dark:text-dim" />
+              </span>
             </div>
             {data.loading ? (
               <div className="flex h-[657px] w-full items-center justify-center">
@@ -473,7 +438,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
                 {t("common:common.no_entries")}.
               </p>
             ) : (
-              <Table className="md:w-full" data={list_pubs} config={config} />
+              <Table className="" data={list_pubs} config={config} />
             )}
 
             {total_pubs > ITEMS_PER_PAGE && (
