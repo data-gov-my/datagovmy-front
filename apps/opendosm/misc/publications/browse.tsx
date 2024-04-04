@@ -4,16 +4,15 @@ import {
   PubResource,
   Resource,
   Publication,
+  Input,
 } from "datagovmy-ui/components";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
-import { post } from "datagovmy-ui/api";
 import { TableConfig } from "datagovmy-ui/charts/table";
 import {
   Button,
   Checkbox,
-  ComboBox,
   Container,
   Dropdown,
   Label,
@@ -30,8 +29,10 @@ import { OptionType } from "datagovmy-ui/types";
 import { matchSorter } from "match-sorter";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { FunctionComponent, useContext, useEffect, useMemo, useState } from "react";
 import { DateTime } from "luxon";
+import { WindowContext } from "datagovmy-ui/contexts/window";
+import { BREAKPOINTS } from "datagovmy-ui/constants";
 
 /**
  * Publications
@@ -43,7 +44,6 @@ const Table = dynamic(() => import("datagovmy-ui/charts/table"), {
 });
 
 interface BrowsePublicationsProps {
-  dropdown: Array<{ publication_type: string; publication_type_title: string }>;
   params: any;
   pub: PubResource | null;
   publications: Publication[];
@@ -52,7 +52,6 @@ interface BrowsePublicationsProps {
 }
 
 const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = ({
-  dropdown,
   params,
   pub,
   publications,
@@ -61,6 +60,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
 }) => {
   const { t, i18n } = useTranslation(["publications", "catalogue", "common"]);
   const { cache } = useCache();
+  const { size } = useContext(WindowContext);
   const { push, events } = useRouter();
   const [show, setShow] = useState<boolean>(false);
   const ITEMS_PER_PAGE = 15;
@@ -68,7 +68,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     loading: false,
     modal_loading: false,
     pub: pub,
-    publication_option: query.pub_type,
     tab: 0,
   });
 
@@ -76,11 +75,6 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     () => matchSorter(data.pub ? data.pub.resources : [], data.query, { keys: ["resource_name"] }),
     [data.pub, data.query]
   );
-
-  const PUBLICATION_OPTIONS: OptionType[] = dropdown.map(e => ({
-    label: e.publication_type_title,
-    value: e.publication_type,
-  }));
 
   const frequencies: OptionType[] = [
     { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
@@ -116,22 +110,35 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       ? geographies.filter(item => query.geography.split(",").includes(item.value))
       : [],
     page: query.page ?? "1",
-    pub_type: query.pub_type
-      ? PUBLICATION_OPTIONS.find(item => item.value === query.pub_type)?.value
-      : undefined,
+    search: query.search ?? "",
   });
 
   useEffect(() => {
     show ? (document.body.style.overflow = "hidden") : (document.body.style.overflow = "unset");
   }, [show]);
 
+  useEffect(() => {
+    if (size.width < BREAKPOINTS.SM) {
+      if (cache.has("tab")) {
+        setData("tab", cache.get("tab"));
+      } else {
+        setData("tab", 1);
+      }
+    } else {
+      if (cache.has("tab")) {
+        setData("tab", cache.get("tab"));
+      } else {
+        setData("tab", 0);
+      }
+    }
+  }, [size.width]);
+
   const reset = () => {
     setFilter("demography", []);
     setFilter("frequency", undefined);
     setFilter("geography", []);
     setFilter("page", "1");
-    setFilter("pub_type", undefined);
-    setData("publication_option", undefined);
+    setFilter("search", "");
   };
 
   const pubConfig: TableConfig<Publication>[] = [
@@ -168,7 +175,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     {
       id: "release_date",
       header: t("table.release_date"),
-      className: "w-[150px]",
+      className: "w-fit",
       accessorFn({ release_date }) {
         return toDate(release_date, "dd MMM yyyy", i18n.language);
       },
@@ -177,7 +184,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
       accessorKey: "total_downloads",
       id: "downloads",
       header: t("downloads"),
-      className: "w-[150px]",
+      className: "w-fit",
     },
   ];
 
@@ -240,27 +247,20 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
     <Container>
       <Section>
         <h4 className="text-center">{t("browse_publications")}</h4>
-        <div className="mx-auto w-full py-6 sm:w-[500px]">
-          <ComboBox
-            placeholder={t("select_publication")}
-            options={PUBLICATION_OPTIONS}
-            selected={
-              data.publication_option
-                ? PUBLICATION_OPTIONS.find(e => e.value === data.publication_option)
-                : null
-            }
-            onChange={selected => {
-              if (selected) {
-                setData("loading", true);
-                setFilter("pub_type", selected.value);
-                setData("publication_option", selected.value);
-                setFilter("page", "1");
-              } else {
-                setFilter("pub_type", null);
-                setData("publication_option", null);
-              }
+        <div className="relative mx-auto my-6 w-full select-none overflow-hidden rounded-full border border-outline shadow-button hover:border-outlineHover focus:outline-none focus-visible:ring-0 dark:border-washed-dark dark:hover:border-outlineHover-dark sm:w-[500px]">
+          <Input
+            className="w-full truncate border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black hover:dark:bg-washed-dark/50 focus:dark:bg-washed-dark"
+            placeholder={t("search_publication")}
+            value={filter.search}
+            onChange={e => {
+              setFilter("page", "1");
+              setFilter("search", e);
+              setData("loading", true);
             }}
           />
+          <span className="absolute left-4 top-3.5">
+            <MagnifyingGlassIcon className="h-5 w-5 text-black dark:text-dim" />
+          </span>
         </div>
 
         {/* Mobile */}
@@ -444,7 +444,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
             </Panel>
             <Panel name={t("list_view")} key={"list_view"}>
               <Table
-                className="md:mx-auto md:w-4/5 lg:w-3/4 xl:w-3/5"
+                className="md:mx-auto"
                 data={publications}
                 enablePagination={filteredRes.length > ITEMS_PER_PAGE ? ITEMS_PER_PAGE : false}
                 config={pubConfig}

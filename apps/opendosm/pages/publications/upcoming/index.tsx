@@ -11,7 +11,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 const UpcomingPublications: Page = ({
   cal_pubs,
-  dropdown,
   list_pubs,
   meta,
   params,
@@ -27,7 +26,6 @@ const UpcomingPublications: Page = ({
         <WindowProvider>
           <UpcomingPublicationsDashboard
             cal_pubs={cal_pubs}
-            dropdown={dropdown}
             list_pubs={list_pubs}
             params={params}
             query={query}
@@ -61,10 +59,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       const endDay = toDate(new Date(thisYear, thisMonth + 1, remaining));
 
       const { start, end, ...rest } = query;
-      const [{ data: dropdown }, { data: calendar }, { data: list }] = await Promise.all([
-        get("/pub-upcoming-dropdown/", {
-          language: locale,
-        }),
+      const [{ data: calendar }, { data: list }] = await Promise.all([
         get("/pub-upcoming/calendar/", {
           language: locale,
           start: start ?? startDay,
@@ -98,7 +93,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             agency: "DOSM",
           },
           cal_pubs: calendar ? transform(calendar) : {},
-          dropdown: dropdown ?? [],
           list_pubs: list.results,
           params: "page" in query || "pub_type" in query ? { tab_index: 1 } : { tab_index: 0 },
           query: query ?? {},
@@ -106,7 +100,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
       };
     } catch (e: any) {
-      console.error(e.message);
       return { notFound: true };
     }
   },

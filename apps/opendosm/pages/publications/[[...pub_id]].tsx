@@ -1,6 +1,7 @@
 import { get } from "datagovmy-ui/api";
 import { Metadata, PubResource } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
@@ -11,7 +12,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { AxiosResponse } from "axios";
 
 const BrowsePublications: Page = ({
-  dropdown,
   meta,
   pub,
   publications,
@@ -29,14 +29,15 @@ const BrowsePublications: Page = ({
         keywords={""}
       />
       <PublicationsLayout>
-        <BrowsePublicationsDashboard
-          dropdown={dropdown}
-          pub={pub}
-          publications={publications}
-          params={params}
-          query={query}
-          total_pubs={total_pubs}
-        />
+        <WindowProvider>
+          <BrowsePublicationsDashboard
+            pub={pub}
+            publications={publications}
+            params={params}
+            query={query}
+            total_pubs={total_pubs}
+          />
+        </WindowProvider>
       </PublicationsLayout>
     </AnalyticsProvider>
   );
@@ -47,10 +48,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   async ({ locale, query, params }) => {
     try {
       const pub_id = params.pub_id ? params.pub_id[0] : "";
-      const [{ data: dropdown }, { data }, response] = await Promise.all([
-        get("/publication-dropdown/", {
-          language: locale,
-        }),
+      const [{ data }, response] = await Promise.all([
         get("/publication/", {
           language: locale,
           ...query,
@@ -83,7 +81,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             category: null,
             agency: "DOSM",
           },
-          dropdown: dropdown,
           pub: pub
             ? {
                 ...pub.data,
@@ -115,7 +112,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
         },
       };
     } catch (e: any) {
-      console.error(e.message);
       return { notFound: true };
     }
   },
