@@ -38,7 +38,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
     return sets.map(([key, y], index) => ({
       data: y as number[],
-      label: sets.length === 1 ? dataset.meta.title : translations[key] ?? key,
+      label: translations[key] ?? key,
       borderColor: CATALOGUE_COLORS[index],
       backgroundColor: CATALOGUE_COLORS[index].concat("1A"),
       borderWidth: 1,
