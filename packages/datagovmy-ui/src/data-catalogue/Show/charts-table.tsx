@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/router";
-import { Card, Dropdown, Search, Section } from "../../components";
+import { Card, Dropdown, Search, Section, Slider } from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { clx, interpolate, numFormat, toDate } from "../../lib/helpers";
 import { DocumentArrowDownIcon } from "@heroicons/react/24/solid";
@@ -19,7 +19,7 @@ import CataloguePreview from "../Preview";
 import { DCDataViz, DCVariable } from "../../../types/data-catalogue";
 import dynamic from "next/dynamic";
 import { UNIVERSAL_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
-import { SHORT_PERIOD_FORMAT } from "../../lib/constants";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "../../lib/constants";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
@@ -61,6 +61,8 @@ type ChartTableProps = {
   setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
   filter: any;
   setFilter: (key: string, value: any) => void;
+  sliderOptions: Array<string> | null;
+  slider: string | null;
 };
 
 const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
@@ -70,6 +72,8 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   setSelectedViz,
   filter,
   setFilter,
+  sliderOptions,
+  slider,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { downloads, dataset } = useContext(CatalogueContext);
@@ -316,6 +320,23 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
           </div>
         </div>
 
+        {/* Date Slider (optional) */}
+        {sliderOptions !== null && (
+          <Slider
+            type="single"
+            value={sliderOptions.indexOf(
+              router.query.date_slider
+                ? (router.query.date_slider as string)
+                : sliderOptions[sliderOptions.length - 1]
+            )}
+            data={sliderOptions}
+            period={config.slider ? config.slider.interval : "auto"}
+            onChange={e => {
+              setFilter("date_slider", sliderOptions[e]);
+            }}
+          />
+        )}
+
         <CatalogueEmbed
           uid={dataset.meta.unique_id}
           ref={embedRef}
@@ -376,6 +397,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                   .map(viz => {
                     return (
                       <CataloguePreview
+                        key={viz.dataviz_id}
                         dataviz={viz}
                         dataset={dataset}
                         urls={urls}
