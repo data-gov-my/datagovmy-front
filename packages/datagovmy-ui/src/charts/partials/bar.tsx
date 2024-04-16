@@ -11,14 +11,18 @@ const Bar = dynamic(() => import("../bar"), { ssr: false });
 
 interface CatalogueBarProps {
   className?: string;
-  config: any;
+  config: {
+    precision: number;
+  };
   translations: Record<string, string>;
+  isPreview?: boolean;
 }
 
 const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
   className,
   config,
   translations,
+  isPreview,
 }) => {
   const { bind, dataset } = useContext(CatalogueContext);
   const { forcedTheme } = useTheme();
@@ -34,7 +38,7 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
 
     return sets.map(([key, y], index) => ({
       data: y as number[],
-      label: sets.length === 1 ? dataset.meta.title : translations[key] ?? key,
+      label: translations[key] ?? key,
       borderColor: CATALOGUE_COLORS[index],
       backgroundColor: CATALOGUE_COLORS[index].concat("1A"),
       borderWidth: 1,
@@ -57,9 +61,17 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
       enableGridX={bar_layout !== "vertical"}
       enableGridY={bar_layout === "vertical"}
       enableLegend={_datasets.length > 1}
-      precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
+      tooltipEnabled={isPreview ? false : true}
+      displayXAxis={isPreview ? false : true}
+      displayYAxis={isPreview ? false : true}
+      precision={config?.precision ? [config.precision, config.precision] : [1, 1]}
       data={{
-        labels: dataset.chart.x,
+        labels: dataset.chart.x.map((_x: number | string) => {
+          if (typeof _x === "number") {
+            return _x.toString();
+          }
+          return _x;
+        }),
         datasets: _datasets,
       }}
       forcedTheme={forcedTheme}

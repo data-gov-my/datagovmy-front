@@ -16,7 +16,11 @@ const BirthdayExplorer = ({
   const { t } = useTranslation(["dashboard-birthday-explorer", "common"]);
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={t("header")}
+        description={t("description", { quote: t("quote") })}
+        keywords={""}
+      />
       <WindowProvider>
         <BirthdayExplorerDashboard
           last_updated={last_updated}
