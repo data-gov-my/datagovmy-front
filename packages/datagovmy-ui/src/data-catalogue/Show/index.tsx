@@ -20,6 +20,7 @@ import { AnalyticsProvider, Meta } from "../../contexts/analytics";
 import { DownloadCard } from "../Card";
 import DCMetadata from "./metadata";
 import DCChartsAndTable from "./charts-table";
+import { groupBy } from "lodash";
 
 /**
  * Catalogue Show
@@ -42,11 +43,39 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
   query,
 }) => {
   const [selectedViz, setSelectedViz] = useState<DCDataViz>(
-    data.dataviz_set.find(item => item.dataviz_id === query.visual) ?? data.dataviz_set[0]
+    data.dataviz_set.find(item => item.dataviz_id === query.visual) ??
+      data.dataviz_set.find(item => item.chart_type === "TABLE") ??
+      data.dataviz_set[0]
   );
   const router = useRouter();
 
+  const sliderOptions = useMemo(() => {
+    if (!selectedViz.config.slider) {
+      return null;
+    }
+
+    const groupedData = groupBy(data.data, "date");
+
+    return Object.keys(groupedData);
+  }, [selectedViz]);
+
+  const [slider, setSlider] = useState(
+    sliderOptions?.find(date => date === query.slider) ??
+      (sliderOptions && sliderOptions[sliderOptions?.length - 1]) ??
+      null
+  );
+
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
+    if (slider) {
+      const groupedData = groupBy(table_data, "date");
+      const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
+        recurDataMapping(key, value, groupedData[slider])
+      );
+      return {
+        ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+      };
+    }
+
     const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
       recurDataMapping(key, value, table_data)
     );
@@ -66,7 +95,7 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
         desc: data.description,
       },
     };
-  }, [selectedViz, query]);
+  }, [selectedViz, query, slider]);
 
   return (
     <AnalyticsProvider meta={meta}>
@@ -89,6 +118,9 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
           data={data}
           selectedViz={selectedViz}
           setSelectedViz={setSelectedViz}
+          sliderOptions={sliderOptions}
+          slider={slider}
+          setSlider={setSlider}
         />
       </CatalogueProvider>
     </AnalyticsProvider>
@@ -102,7 +134,10 @@ export interface CatalogueShowProps {
   data: DCVariable;
   selectedViz: DCDataViz;
   setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
+  slider: string | null;
+  setSlider: Dispatch<SetStateAction<string | null>>;
   query: any;
+  sliderOptions: Array<string> | null;
 }
 
 const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
@@ -111,6 +146,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   selectedViz,
   setSelectedViz,
   query,
+  sliderOptions,
+  slider,
+  setSlider,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { config, ...viz } = selectedViz;
@@ -135,6 +173,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             },
       ]),
       ["visual", { value: selectedViz.dataviz_id, label: selectedViz.dataviz_id }],
+      [
+        "slider",
+        {
+          value: slider,
+          label: slider,
+        },
+      ],
     ]),
     { id: params.id },
     true
@@ -177,6 +222,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               setSelectedViz={setSelectedViz}
               filter={filter}
               setFilter={setFilter}
+              sliderOptions={sliderOptions}
+              slider={slider}
+              setSlider={setSlider}
             />
 
             {/* Methodology */}

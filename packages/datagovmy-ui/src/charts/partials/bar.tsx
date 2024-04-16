@@ -59,7 +59,12 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
       enableLegend={_datasets.length > 1}
       precision={config?.precision !== undefined ? [config.precision, config.precision] : [1, 1]}
       data={{
-        labels: dataset.chart.x,
+        labels: dataset.chart.x.map((_x: number | string) => {
+          if (typeof _x === "number") {
+            return _x.toString();
+          }
+          return _x;
+        }),
         datasets: _datasets,
       }}
       forcedTheme={forcedTheme}

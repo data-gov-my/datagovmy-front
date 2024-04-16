@@ -106,6 +106,7 @@ export type DCDataViz = {
     operation?: string;
     colors?: string;
     geojson?: string;
+    slider?: string;
   };
 };
 

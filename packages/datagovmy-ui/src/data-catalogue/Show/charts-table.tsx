@@ -8,7 +8,7 @@ import {
   useRef,
 } from "react";
 import { useRouter } from "next/router";
-import { Card, Dropdown, Search, Section } from "../../components";
+import { Card, Dropdown, Search, Section, Slider } from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { clx, interpolate, numFormat, toDate } from "../../lib/helpers";
 import { DocumentArrowDownIcon } from "@heroicons/react/24/solid";
@@ -61,6 +61,9 @@ type ChartTableProps = {
   setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
   filter: any;
   setFilter: (key: string, value: any) => void;
+  sliderOptions: Array<string> | null;
+  slider: string | null;
+  setSlider: Dispatch<SetStateAction<string | null>>;
 };
 
 const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
@@ -70,6 +73,9 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   setSelectedViz,
   filter,
   setFilter,
+  sliderOptions,
+  slider,
+  setSlider,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { downloads, dataset } = useContext(CatalogueContext);
@@ -316,6 +322,32 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
           </div>
         </div>
 
+        {/* Date Slider (optional) */}
+        {sliderOptions !== null && (
+          <Slider
+            type="single"
+            value={sliderOptions.indexOf(
+              router.query.slider
+                ? (router.query.slider as string)
+                : sliderOptions[sliderOptions.length - 1]
+            )}
+            data={sliderOptions}
+            // NOTE: ASK FOR THIS
+            // period={SHORT_PERIOD[config.dates.interval]}
+            period={"year"}
+            onChange={e => {
+              setSlider(sliderOptions[e]);
+              router.replace(
+                {
+                  query: { ...router.query, slider: sliderOptions[e] },
+                },
+                undefined,
+                { shallow: true }
+              );
+            }}
+          />
+        )}
+
         <CatalogueEmbed
           uid={dataset.meta.unique_id}
           ref={embedRef}
@@ -376,6 +408,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                   .map(viz => {
                     return (
                       <CataloguePreview
+                        key={viz.dataviz_id}
                         dataviz={viz}
                         dataset={dataset}
                         urls={urls}
