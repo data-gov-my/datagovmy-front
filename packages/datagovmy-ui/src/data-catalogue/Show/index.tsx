@@ -59,11 +59,15 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
     return Object.keys(groupedData);
   }, [selectedViz]);
 
-  const [slider, setSlider] = useState(
-    sliderOptions?.find(date => date === query.slider) ??
-      (sliderOptions && sliderOptions[sliderOptions?.length - 1]) ??
+  const slider = useMemo(() => {
+    if (!sliderOptions) return null;
+
+    return (
+      sliderOptions.find(date => date === query.date_slider) ??
+      sliderOptions[sliderOptions.length - 1] ??
       null
-  );
+    );
+  }, [sliderOptions, query.date_slider]);
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
     if (slider) {
@@ -120,7 +124,6 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
           setSelectedViz={setSelectedViz}
           sliderOptions={sliderOptions}
           slider={slider}
-          setSlider={setSlider}
         />
       </CatalogueProvider>
     </AnalyticsProvider>
@@ -135,7 +138,6 @@ export interface CatalogueShowProps {
   selectedViz: DCDataViz;
   setSelectedViz: Dispatch<SetStateAction<DCDataViz>>;
   slider: string | null;
-  setSlider: Dispatch<SetStateAction<string | null>>;
   query: any;
   sliderOptions: Array<string> | null;
 }
@@ -148,7 +150,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   query,
   sliderOptions,
   slider,
-  setSlider,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { config, ...viz } = selectedViz;
@@ -174,7 +175,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
       ]),
       ["visual", { value: selectedViz.dataviz_id, label: selectedViz.dataviz_id }],
       [
-        "slider",
+        "date_slider",
         {
           value: slider,
           label: slider,
@@ -224,7 +225,6 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               setFilter={setFilter}
               sliderOptions={sliderOptions}
               slider={slider}
-              setSlider={setSlider}
             />
 
             {/* Methodology */}

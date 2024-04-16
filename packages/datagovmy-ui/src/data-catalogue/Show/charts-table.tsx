@@ -63,7 +63,6 @@ type ChartTableProps = {
   setFilter: (key: string, value: any) => void;
   sliderOptions: Array<string> | null;
   slider: string | null;
-  setSlider: Dispatch<SetStateAction<string | null>>;
 };
 
 const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
@@ -75,7 +74,6 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   setFilter,
   sliderOptions,
   slider,
-  setSlider,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { downloads, dataset } = useContext(CatalogueContext);
@@ -327,8 +325,8 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
           <Slider
             type="single"
             value={sliderOptions.indexOf(
-              router.query.slider
-                ? (router.query.slider as string)
+              router.query.date_slider
+                ? (router.query.date_slider as string)
                 : sliderOptions[sliderOptions.length - 1]
             )}
             data={sliderOptions}
@@ -336,14 +334,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
             // period={SHORT_PERIOD[config.dates.interval]}
             period={"year"}
             onChange={e => {
-              setSlider(sliderOptions[e]);
-              router.replace(
-                {
-                  query: { ...router.query, slider: sliderOptions[e] },
-                },
-                undefined,
-                { shallow: true }
-              );
+              setFilter("date_slider", sliderOptions[e]);
             }}
           />
         )}
