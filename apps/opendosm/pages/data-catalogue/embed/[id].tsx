@@ -28,7 +28,7 @@ const CatalogueEmbed: Page = ({
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
     if (query.date_slider) {
-      const groupedData = groupBy(table_data, "date");
+      const groupedData = groupBy(table_data, currentViz.config.slider?.key);
       const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
         recurDataMapping(key, value, groupedData[query.date_slider])
       );

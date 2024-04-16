@@ -54,7 +54,7 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
       return null;
     }
 
-    const groupedData = groupBy(data.data, "date");
+    const groupedData = groupBy(data.data, selectedViz.config.slider.key);
 
     return Object.keys(groupedData);
   }, [selectedViz]);
@@ -71,7 +71,7 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
     if (slider) {
-      const groupedData = groupBy(table_data, "date");
+      const groupedData = groupBy(table_data, currentViz.config.slider?.key);
       const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
         recurDataMapping(key, value, groupedData[slider])
       );

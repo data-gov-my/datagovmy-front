@@ -77,7 +77,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
       return null;
     }
 
-    const groupedData = groupBy(dataset.table, "date");
+    const groupedData = groupBy(dataset.table, dataviz.config.slider.key);
 
     const sliderOptions = Object.keys(groupedData);
 
@@ -151,7 +151,7 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
     if (slider) {
-      const groupedData = groupBy(table_data, "date");
+      const groupedData = groupBy(table_data, currentViz.config.slider?.key);
       const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
         recurDataMapping(key, value, groupedData[slider])
       );
