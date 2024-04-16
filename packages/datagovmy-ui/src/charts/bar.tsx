@@ -34,6 +34,8 @@ interface BarProps extends ChartHeaderProps {
   formatX?: (key: string) => string | string[];
   onClick?: (label: string, index: number) => void;
   reverse?: boolean;
+  displayXAxis?: boolean;
+  displayYAxis?: boolean;
   enableLegend?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
@@ -62,6 +64,8 @@ const Bar: FunctionComponent<BarProps> = ({
   onClick,
   reverse = false,
   precision = [1, 0],
+  displayXAxis = true,
+  displayYAxis = true,
   enableLegend = false,
   enableStack = false,
   enableGridX = true,
@@ -155,6 +159,7 @@ const Bar: FunctionComponent<BarProps> = ({
           drawBorder: true,
         },
         ticks: {
+          display: displayXAxis,
           font: {
             family: "Inter",
           },
@@ -183,6 +188,7 @@ const Bar: FunctionComponent<BarProps> = ({
       },
       y: {
         // reverse: !isVertical,
+        display: displayYAxis,
         suggestedMax: suggestedMaxY,
         grid: {
           display: enableGridY,

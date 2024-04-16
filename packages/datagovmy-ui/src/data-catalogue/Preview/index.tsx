@@ -1,4 +1,4 @@
-import { Dispatch, FunctionComponent, ReactNode, SetStateAction } from "react";
+import { Dispatch, FunctionComponent, ReactNode, SetStateAction, useMemo } from "react";
 import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { Card } from "datagovmy-ui/components";
 import dynamic from "next/dynamic";
@@ -6,6 +6,7 @@ import { WindowProvider } from "datagovmy-ui/contexts/window";
 import { clx, recurDataMapping } from "datagovmy-ui/helpers";
 import { DCDataViz } from "../../../types/data-catalogue";
 import { useRouter } from "next/router";
+import { groupBy } from "lodash";
 
 /**
  * Catalogue Preview
@@ -71,6 +72,20 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   }
   const router = useRouter();
 
+  const slider = useMemo(() => {
+    if (!dataviz.config.slider) {
+      return null;
+    }
+
+    const groupedData = groupBy(dataset.table, "date");
+
+    const sliderOptions = Object.keys(groupedData);
+
+    return router.query.date_slider
+      ? (router.query.date_slider as string)
+      : sliderOptions[sliderOptions.length - 1] ?? null;
+  }, []);
+
   const renderChart = (): ReactNode | undefined => {
     switch (dataviz.chart_type) {
       case "TIMESERIES":
@@ -87,14 +102,21 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
             }}
           />
         );
-      // case "BAR":
-      // case "HBAR":
-      // case "STACKED_BAR":
-      //   return (
-      //     <WindowProvider>
-      //       <CatalogueBar config={config} translations={translations} />
-      //     </WindowProvider>
-      //   );
+      case "BAR":
+      case "HBAR":
+      case "STACKED_BAR":
+        return (
+          <WindowProvider>
+            <CatalogueBar
+              className={"h-[94px] w-full"}
+              config={{
+                precision: dataviz?.config.precision,
+              }}
+              translations={translations}
+              isPreview={true}
+            />
+          </WindowProvider>
+        );
       case "CHOROPLETH":
         return (
           <CatalogueChoropleth
@@ -128,6 +150,16 @@ const CataloguePreview: FunctionComponent<CataloguePreviewProps> = ({
   };
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
+    if (slider) {
+      const groupedData = groupBy(table_data, "date");
+      const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
+        recurDataMapping(key, value, groupedData[slider])
+      );
+      return {
+        ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+      };
+    }
+
     const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
       recurDataMapping(key, value, table_data)
     );
