@@ -106,7 +106,10 @@ export type DCDataViz = {
     operation?: string;
     colors?: string;
     geojson?: string;
-    slider?: string;
+    slider?: {
+      key: string;
+      interval: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week">;
+    };
   };
 };
 

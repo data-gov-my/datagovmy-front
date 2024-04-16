@@ -19,7 +19,7 @@ import CataloguePreview from "../Preview";
 import { DCDataViz, DCVariable } from "../../../types/data-catalogue";
 import dynamic from "next/dynamic";
 import { UNIVERSAL_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
-import { SHORT_PERIOD_FORMAT } from "../../lib/constants";
+import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "../../lib/constants";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
@@ -330,9 +330,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                 : sliderOptions[sliderOptions.length - 1]
             )}
             data={sliderOptions}
-            // NOTE: ASK FOR THIS
-            // period={SHORT_PERIOD[config.dates.interval]}
-            period={"year"}
+            period={config.slider ? config.slider.interval : "auto"}
             onChange={e => {
               setFilter("date_slider", sliderOptions[e]);
             }}
