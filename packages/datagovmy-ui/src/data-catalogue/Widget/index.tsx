@@ -95,6 +95,7 @@ const CatalogueWidget: FunctionComponent<CatalogueWidgetProps> = ({
       id: params.id,
       theme: params.theme,
       visual: query.visual,
+      date_slider: query.date_slider,
     }
   );
   const { dataset } = useContext(CatalogueContext);

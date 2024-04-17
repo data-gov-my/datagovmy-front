@@ -174,13 +174,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             },
       ]),
       ["visual", { value: selectedViz.dataviz_id, label: selectedViz.dataviz_id }],
-      [
-        "date_slider",
-        {
-          value: slider,
-          label: slider,
-        },
-      ],
+      Boolean(slider)
+        ? [
+            "date_slider",
+            {
+              value: slider,
+              label: slider,
+            },
+          ]
+        : [],
     ]),
     { id: params.id },
     true
