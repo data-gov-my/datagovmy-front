@@ -48,12 +48,12 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
     <>
       <Section
         title={"Metadata"}
-        ref={ref =>
+        ref={ref => {
           scrollRef &&
-          (scrollRef.current[
-            i18n.language === "en-GB" ? "Metadata: Variables" : "Metadata: Pembolehubah"
-          ] = ref)
-        }
+            (scrollRef.current[
+              i18n.language === "en-GB" ? "Metadata: Variables" : "Metadata: Pembolehubah"
+            ] = ref);
+        }}
         className="dark:border-b-outlineHover-dark mx-auto border-b py-8 lg:py-12"
       >
         <Card className="bg-background dark:border-outlineHover-dark dark:bg-washed-dark p-6">
@@ -111,14 +111,14 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
             {/* Next update */}
             <div
               className="space-y-3"
-              ref={ref =>
+              ref={ref => {
                 scrollRef &&
-                (scrollRef.current[
-                  i18n.language === "en-GB"
-                    ? "Metadata: Next update"
-                    : "Metadata: Kemaskini seterusnya"
-                ] = ref)
-              }
+                  (scrollRef.current[
+                    i18n.language === "en-GB"
+                      ? "Metadata: Next update"
+                      : "Metadata: Kemaskini seterusnya"
+                  ] = ref);
+              }}
             >
               <h5>{t("common:common.next_update", { date: "" })}</h5>
               <p className="text-dim" data-testid="catalogue-next-update">
@@ -161,12 +161,12 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
             {/* License */}
             <div
               className="space-y-3"
-              ref={ref =>
+              ref={ref => {
                 scrollRef &&
-                (scrollRef.current[
-                  i18n.language === "en-GB" ? "Metadata: License" : "Metadata: Lesen"
-                ] = ref)
-              }
+                  (scrollRef.current[
+                    i18n.language === "en-GB" ? "Metadata: License" : "Metadata: Lesen"
+                  ] = ref);
+              }}
             >
               <h5>{t("meta_license")}</h5>
               <p className="text-dim">

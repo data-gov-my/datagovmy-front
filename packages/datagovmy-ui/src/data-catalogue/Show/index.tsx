@@ -174,13 +174,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             },
       ]),
       ["visual", { value: selectedViz.dataviz_id, label: selectedViz.dataviz_id }],
-      [
-        "date_slider",
-        {
-          value: slider,
-          label: slider,
-        },
-      ],
+      Boolean(slider)
+        ? [
+            "date_slider",
+            {
+              value: slider,
+              label: slider,
+            },
+          ]
+        : [],
     ]),
     { id: params.id },
     true
@@ -256,9 +258,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             {/* Download */}
             <Section
               title={t("download")}
-              ref={ref =>
-                (scrollRef.current[i18n.language === "en-GB" ? "Download" : "Muat Turun"] = ref)
-              }
+              ref={ref => {
+                scrollRef.current[i18n.language === "en-GB" ? "Download" : "Muat Turun"] = ref;
+              }}
               className="dark:border-b-outlineHover-dark mx-auto border-b py-12 "
             >
               <div className="space-y-5">
@@ -300,13 +302,13 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             {/* Dataset Source Code */}
             <Section
               title={t("code")}
-              ref={ref =>
-                (scrollRef.current[
+              ref={ref => {
+                scrollRef.current[
                   i18n.language === "en-GB"
                     ? "Programmatic Access: Full dataset"
                     : "Akses Programatif: Dataset penuh"
-                ] = ref)
-              }
+                ] = ref;
+              }}
               description={t("code_desc")}
               className="mx-auto w-full py-12"
             >
@@ -320,25 +322,25 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             {data.exclude_openapi ? (
               <Section
                 title={t("sample_query.section_title")}
-                ref={ref =>
-                  (scrollRef.current[
+                ref={ref => {
+                  scrollRef.current[
                     i18n.language === "en-GB"
                       ? "Programmatic Access: Open API"
                       : "Akses Programatif: Open API"
-                  ] = ref)
-                }
+                  ] = ref;
+                }}
                 description={t("sample_query.unavailable")}
               />
             ) : (
               <Section
                 title={t("sample_query.section_title")}
-                ref={ref =>
-                  (scrollRef.current[
+                ref={ref => {
+                  scrollRef.current[
                     i18n.language === "en-GB"
                       ? "Programmatic Access: Open API"
                       : "Akses Programatif: Open API"
-                  ] = ref)
-                }
+                  ] = ref;
+                }}
                 description={
                   <>
                     {t("sample_query.desc1")}

@@ -198,9 +198,9 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
     <>
       {/* Chart & Table */}
       <Section
-        ref={ref =>
-          (scrollRef.current[i18n.language === "en-GB" ? "Table & Charts" : "Jadual & Carta"] = ref)
-        }
+        ref={ref => {
+          scrollRef.current[i18n.language === "en-GB" ? "Table & Charts" : "Jadual & Carta"] = ref;
+        }}
         title={<h4 data-testid="catalogue-title">{dataset.meta.title}</h4>}
         description={
           <p className="text-dim whitespace-pre-line text-base" data-testid="catalogue-description">
