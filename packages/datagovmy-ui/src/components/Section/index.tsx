@@ -1,6 +1,15 @@
 import { clx, toDate } from "../../lib/helpers";
 import { useTranslation } from "../../hooks/useTranslation";
-import { FunctionComponent, ReactNode, forwardRef, LegacyRef, ForwardedRef, useMemo } from "react";
+import {
+  FunctionComponent,
+  ReactNode,
+  forwardRef,
+  LegacyRef,
+  ForwardedRef,
+  useMemo,
+  RefAttributes,
+  ForwardRefExoticComponent,
+} from "react";
 import { DateTime } from "luxon";
 
 interface SectionProps {
@@ -10,14 +19,11 @@ interface SectionProps {
   children?: ReactNode;
   menu?: ReactNode;
   date?: string | number | null;
-  ref?: ForwardedRef<HTMLElement> | undefined;
+  ref?: LegacyRef<HTMLElement> | undefined;
 }
 
-const Section: FunctionComponent<SectionProps> = forwardRef(
-  (
-    { title, className = "py-8 lg:py-12", description, children, date, menu },
-    ref: LegacyRef<HTMLElement> | undefined
-  ) => {
+const Section: ForwardRefExoticComponent<SectionProps> = forwardRef(
+  ({ title, className = "py-8 lg:py-12", description, children, date, menu }, ref) => {
     const { t, i18n } = useTranslation();
 
     const displayDate = useMemo((): string => {
@@ -50,7 +56,7 @@ const Section: FunctionComponent<SectionProps> = forwardRef(
                 <div
                   className={clx(
                     "text-dim flex w-full flex-wrap justify-between gap-y-3 md:flex-nowrap md:items-start",
-                    description && menu && "gap-x-6"
+                    description && menu ? "gap-x-6" : ""
                   )}
                 >
                   {description && typeof description === "string" ? (

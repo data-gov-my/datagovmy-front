@@ -25,8 +25,8 @@ import {
   ForwardRefExoticComponent,
   forwardRef,
   useImperativeHandle,
-  ForwardedRef,
   useContext,
+  LegacyRef,
 } from "react";
 import CatalogueCard from "../Card";
 import { Catalogue } from "../../../types/data-catalogue";
@@ -168,7 +168,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
                   <Section
                     title={title}
                     key={title}
-                    ref={ref => (scrollRef.current[title] = ref)}
+                    ref={ref => {
+                      scrollRef.current[title] = ref;
+                    }}
                     className="p-2 py-6 first-of-type:max-lg:pb-6 first-of-type:max-lg:pt-14 lg:p-8"
                   >
                     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -195,7 +197,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 interface CatalogueFilterProps {
   query: Record<string, any>;
   sources: OptionType[];
-  ref?: ForwardedRef<CatalogueFilterRef>;
+  ref?: LegacyRef<CatalogueFilterRef>;
 }
 
 interface CatalogueFilterRef {

@@ -3,7 +3,7 @@ import { IndexedDB } from "@lib/idb";
 import { useTranslation, useWatch } from "datagovmy-ui/hooks";
 import {
   ForwardRefExoticComponent,
-  ForwardedRef,
+  LegacyRef,
   ReactNode,
   createContext,
   forwardRef,
@@ -165,7 +165,7 @@ export interface FileNodeInterface {
 interface FiletreeProviderProps {
   model: string;
   children: ReactNode;
-  ref?: ForwardedRef<FileNodeInterface>;
+  ref?: LegacyRef<FileNodeInterface>;
 }
 
 export const FiletreeContext = createContext<FiletreeContextProps>({
