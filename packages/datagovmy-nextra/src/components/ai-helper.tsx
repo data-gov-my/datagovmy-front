@@ -4,7 +4,7 @@ import {
   forwardRef,
   useEffect,
   useState,
-  ForwardedRef,
+  LegacyRef,
   useRef,
   Fragment,
 } from "react";
@@ -32,7 +32,7 @@ export type ChatType = {
 };
 
 interface ChatInterface {
-  ref?: ForwardedRef<HTMLDivElement>;
+  ref?: LegacyRef<HTMLDivElement>;
   from: "user" | "assistant";
   children: string;
 }

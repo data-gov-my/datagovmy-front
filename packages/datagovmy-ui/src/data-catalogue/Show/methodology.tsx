@@ -42,12 +42,12 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
       {/* How is this data produced? */}
       <Section
         title={t("header_1")}
-        ref={ref =>
+        ref={ref => {
           scrollRef &&
-          (scrollRef.current[
-            i18n.language === "en-GB" ? "Metadata: Methodology" : "Metadata: Metodologi"
-          ] = ref)
-        }
+            (scrollRef.current[
+              i18n.language === "en-GB" ? "Metadata: Methodology" : "Metadata: Metodologi"
+            ] = ref);
+        }}
         className=""
         description={
           <div
@@ -105,11 +105,12 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
       {/* What caveats I should bear in mind when using this data? */}
       <Section
         title={t("header_2")}
-        ref={ref =>
+        ref={ref => {
           scrollRef &&
-          (scrollRef.current[i18n.language === "en-GB" ? "Metadata: Caveats" : "Metadata: Kaveat"] =
-            ref)
-        }
+            (scrollRef.current[
+              i18n.language === "en-GB" ? "Metadata: Caveats" : "Metadata: Kaveat"
+            ] = ref);
+        }}
         className=""
         description={
           <div
@@ -168,12 +169,12 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
       {(Boolean(explanation.publication) || isGUI) && (
         <Section
           title={t("header_3")}
-          ref={ref =>
+          ref={ref => {
             scrollRef &&
-            (scrollRef.current[
-              i18n.language === "en-GB" ? "Metadata: Publications" : "Metadata: Penerbitan"
-            ] = ref)
-          }
+              (scrollRef.current[
+                i18n.language === "en-GB" ? "Metadata: Publications" : "Metadata: Penerbitan"
+              ] = ref);
+          }}
           className=""
           description={
             <div
@@ -233,14 +234,14 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
       {Boolean(explanation.related_datasets.length) && (
         <Section
           title={t("header_4")}
-          ref={ref =>
+          ref={ref => {
             scrollRef &&
-            (scrollRef.current[
-              i18n.language === "en-GB"
-                ? "Metadata: Related Datasets"
-                : "Metadata: Dataset Berkaitan"
-            ] = ref)
-          }
+              (scrollRef.current[
+                i18n.language === "en-GB"
+                  ? "Metadata: Related Datasets"
+                  : "Metadata: Dataset Berkaitan"
+              ] = ref);
+          }}
           className=""
         >
           <div className="flex h-full w-full items-start gap-[0.5rem] overflow-x-scroll pb-4">

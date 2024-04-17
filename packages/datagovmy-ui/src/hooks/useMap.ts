@@ -1,7 +1,7 @@
 import { LeafletMouseEvent } from "leaflet";
 import {
   ForwardRefExoticComponent,
-  ForwardedRef,
+  LegacyRef,
   forwardRef,
   useEffect,
   useImperativeHandle,
@@ -12,7 +12,7 @@ import L from "leaflet";
 import "leaflet-easyprint";
 
 interface MapControlProps {
-  ref?: ForwardedRef<MapControlRef>;
+  ref?: LegacyRef<MapControlRef>;
 }
 export interface MapControlRef {
   zoomToFeature: (e: LeafletMouseEvent) => void;
