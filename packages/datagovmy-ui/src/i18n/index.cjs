@@ -7,18 +7,18 @@ const defineConfig = (namespace, autoloadNs) => {
     i18n: {
       defaultLocale: "en-GB",
       locales: ["en-GB", "ms-MY"],
-      backend: {
-        loadPath: `${process.env.NEXT_PUBLIC_I18N_URL}/${
-          process.env.NEXT_PUBLIC_APP_ENV === "production" ? "production" : "staging"
-        }/{{lng}}/{{ns}}.json`,
-        crossDomain: true,
-        allowMultiLoading: true,
-      },
       // USE THIS for local translation file
       // localePath:
       //   typeof window === "undefined"
       //     ? require("path").resolve("./public/translations")
       //     : "./public/translations",
+    },
+    backend: {
+      loadPath: `${process.env.NEXT_PUBLIC_I18N_URL}/${
+        process.env.NEXT_PUBLIC_APP_ENV === "production" ? "production" : "staging"
+      }/{{lng}}/{{ns}}.json`,
+      crossDomain: true,
+      allowMultiLoading: true,
     },
     debug: false,
     ns: namespace,
