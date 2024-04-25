@@ -77,7 +77,7 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
     ];
   }, [data]);
 
-  const { interpolate } = useColor(color, [min, max]);
+  const { interpolate } = useColor(color);
 
   const display = (
     value: number,
@@ -236,7 +236,10 @@ const Heatmap: FunctionComponent<HeatmapProps> = ({
               {
                 data: data,
                 backgroundColor(ctx: ScriptableContext<"matrix">) {
-                  return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z);
+                  return interpolate((ctx.dataset.data[ctx.dataIndex] as HeatmapDatum).z, [
+                    min,
+                    max,
+                  ]);
                 },
                 width: ({ chart }) => (chart.chartArea || {}).width / uniqueXs.length - 1,
                 height: ({ chart }) => (chart.chartArea || {}).height / uniqueYs.length - 1,

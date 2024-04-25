@@ -3,10 +3,9 @@ import { ChoroplethController, GeoFeature, ColorScale, ProjectionScale } from "c
 import { ChartHeaderProps, default as ChartHeader } from "./chart-header";
 // import { ArrowPathIcon, MinusSmallIcon, PlusSmallIcon } from "@heroicons/react/24/outline";
 import { FeatureCollection } from "geojson";
-import { Color } from "../hooks/useColor";
+import { Color, useColor } from "../hooks/useColor";
 import { clx, numFormat } from "../lib/helpers";
 import { ChartCrosshairOption, Geotype } from "../../types";
-import { useTheme } from "next-themes";
 import { Chart } from "react-chartjs-2";
 import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { ForwardedRef, FunctionComponent, useEffect, useState } from "react";
@@ -47,7 +46,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
   prefix,
   precision = [1, 0],
   unit,
-  color,
+  color = "blues",
   enableOutline = true,
   enableZoom = true,
   enableTooltip = true,
@@ -72,13 +71,10 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
 
     fetchMaps();
   }, [type]);
-  const { theme } = useTheme();
+
+  const { interpolate } = useColor(color);
+
   const options: ChartCrosshairOption<"choropleth"> = {
-    elements: {
-      geoFeature: {
-        outlineBorderColor: theme === "light" ? "black" : "white",
-      },
-    },
     maintainAspectRatio: false,
     showOutline: enableOutline,
     plugins: {
@@ -112,7 +108,7 @@ const Choropleth: FunctionComponent<ChoroplethProps> = ({
       },
       color: {
         display: false,
-        interpolate: color,
+        interpolate: interpolate,
         missing: "#fff",
       },
     },
