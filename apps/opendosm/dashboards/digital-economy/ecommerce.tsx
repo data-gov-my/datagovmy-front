@@ -118,6 +118,9 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                   className="h-[300px] w-full"
                   interval="year"
                   prefixY="RM "
+                  displayNumFormat={(value, type, precision) =>
+                    numFormat(value, "compact", precision, "long", i18n.language)
+                  }
                   data={{
                     labels: timeseries.data[transaction][sector].x,
                     datasets: [
@@ -148,7 +151,7 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                         ),
                     },
                     {
-                      title: ["b2b", "b2c", "b2g"].includes(type) ? t("yoy_growth") : "CAGR",
+                      title: "CAGR",
                       value:
                         numFormat(
                           timeseries_callout.data[transaction][sector][type].cagr,
