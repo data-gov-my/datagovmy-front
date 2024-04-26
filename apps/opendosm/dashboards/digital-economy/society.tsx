@@ -27,9 +27,7 @@ type ICTAccess = (typeof ICT_ACCESS)[number];
 type SocietyProps = {
   choropleth: WithData<{ x: StateCode[]; y: Record<ICTAccess, number[]> }>;
   timeseries: WithData<Record<StateCode, Record<"x" | ICTAccess, number[]>>>;
-  timeseries_callout: WithData<
-    Record<StateCode, Record<"x" | ICTAccess, { latest: number; urban: number; rural: number }>>
-  >;
+  timeseries_callout: WithData<Record<StateCode, Record<"x" | ICTAccess, { latest: number }>>>;
 };
 
 const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
@@ -100,14 +98,6 @@ const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
                     value:
                       numFormat(timeseries_callout.data[state][tech].latest, "standard", 1) + "%",
                   },
-                  // {
-                  //   title: t("urban"),
-                  //   value: numFormat(timeseries_callout.data[state][tech].urban, "standard", 1) + "%",
-                  // },
-                  // {
-                  //   title: t("rural"),
-                  //   value: numFormat(timeseries_callout.data[state][tech].rural, "standard", 1) + "%",
-                  // },
                 ]}
               />
             ))}

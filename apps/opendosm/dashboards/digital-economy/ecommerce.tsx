@@ -118,7 +118,7 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                   className="h-[300px] w-full"
                   interval="year"
                   prefixY="RM "
-                  displayNumFormat={(value, type, precision) =>
+                  displayNumFormat={(value, _, precision) =>
                     numFormat(value, "compact", precision, "long", i18n.language)
                   }
                   data={{
