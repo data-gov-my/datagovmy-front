@@ -82,15 +82,11 @@ export type Color =
 
 export const useColor = (key: Color) => {
   const blueScheme = [
-    "#eff6ff", // Blue 50
-    "#dbeafe", // Blue 100
-    "#bfdbfe", // Blue 200
-    "#93c5fd", // Blue 300
-    "#60a5fa", // Blue 400
-    "#3b82f6", // Blue 500
-    "#2563eb", // Blue 600
-    "#1d4ed8", // Blue 700
-    "#1e40af", // Blue 800
+    "#DCE7FF",
+    "#AAC4FD",
+    "#81A4F9",
+    "#437BF4",
+    "#2563EB", // Blue 600
   ];
 
   const lookup: { [key: string]: (normalizedValue: number) => string } = {
