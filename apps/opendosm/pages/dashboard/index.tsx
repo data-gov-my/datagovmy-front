@@ -153,8 +153,9 @@ export const getStaticProps: GetStaticProps = withi18n(
         {
           id: "dashboard-digital-economy",
           name: "digital-economy",
-          division: "bptms",
+          division: "bpp",
           route: routes.DIGITAL_ECONOMY,
+          colour: AKSARA_COLOR.PRIMARY,
         },
         {
           id: "dashboard-composite-index",
