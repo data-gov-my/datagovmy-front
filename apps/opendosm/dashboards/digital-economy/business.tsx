@@ -54,6 +54,7 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
   return (
     <>
       <Container>
+        {/* Are business increasing their use of ICT tools? */}
         <Section
           title={t("businesses.usage")}
           description={
@@ -112,6 +113,8 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
             ))}
           </div>
         </Section>
+
+        {/* How does the use of ICT tools differ across states? */}
         <Section>
           <LeftRightCard
             left={

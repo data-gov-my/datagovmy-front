@@ -1,5 +1,6 @@
-import { SocietyIcon } from "@icons/division";
+import { CustomerServiceIcon } from "@icons/division";
 import { AgencyBadge, Hero } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
@@ -23,7 +24,7 @@ const DigitalEconomyLayout: FunctionComponent<DigitalEconomyLayoutProps> = ({
 }) => {
   const { t } = useTranslation("dashboard-digital-economy");
 
-  const TAB_OPTIONS: Array<OptionType> = ["businesses", "society", "ecommerce"].map(tab => ({
+  const TAB_OPTIONS: Array<OptionType> = ["businesses", "households", "ecommerce"].map(tab => ({
     label: t(`tab.${tab}`),
     value: tab,
   }));
@@ -40,7 +41,11 @@ const DigitalEconomyLayout: FunctionComponent<DigitalEconomyLayoutProps> = ({
         last_updated={last_updated}
         next_update={next_update}
         agencyBadge={
-          <AgencyBadge name={t("division:bptms.full")} icon={<SocietyIcon />} isDivision />
+          <AgencyBadge
+            name={t("division:bpp.full")}
+            icon={<CustomerServiceIcon fillColor={AKSARA_COLOR.PRIMARY} />}
+            isDivision
+          />
         }
       />
 

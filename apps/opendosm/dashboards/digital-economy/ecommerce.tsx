@@ -79,20 +79,19 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
   return (
     <>
       <Container>
+        {/* How is E-Commerce trending? */}
         <Section
           title={t("ecommerce.header")}
           description={
             <div className="flex w-full flex-col gap-3 sm:flex-row">
               <Dropdown
                 anchor="left"
-                width="w-[calc(100dvw-24px)] sm:w-max"
                 options={TRANSACTION_OPTIONS}
                 selected={TRANSACTION_OPTIONS.find(option => data.transaction === option.value)}
                 onChange={e => setData("transaction", e.value)}
               />
               <Dropdown
                 anchor="left"
-                width="w-[calc(100dvw-24px)] sm:w-max"
                 options={SECTOR_OPTIONS}
                 selected={SECTOR_OPTIONS.find(option => data.sector === option.value)}
                 onChange={e => setData("sector", e.value)}
@@ -118,6 +117,7 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                   className="h-[300px] w-full"
                   interval="year"
                   prefixY="RM "
+                  tickSource="labels"
                   displayNumFormat={(value, _, precision) =>
                     numFormat(value, "compact", precision, "long", i18n.language)
                   }
@@ -165,6 +165,8 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
             ))}
           </div>
         </Section>
+
+        {/* How does e-commerce differ across states? */}
         <Section>
           <LeftRightCard
             left={
@@ -180,7 +182,6 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                   </div>
                   <Dropdown
                     anchor="left"
-                    width="w-full lg:w-fit"
                     placeholder={t("common:common.select")}
                     options={FILTER_OPTIONS}
                     selected={FILTER_OPTIONS.find(e => e.value === filter)}

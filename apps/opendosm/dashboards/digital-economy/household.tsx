@@ -14,7 +14,7 @@ import dynamic from "next/dynamic";
 import { FunctionComponent } from "react";
 
 /**
- * Digital Economy - Society
+ * Digital Economy - Household
  * @overview Status: Live
  */
 
@@ -24,13 +24,13 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 const ICT_ACCESS = ["mobile_phone", "computer", "internet"] as const;
 type ICTAccess = (typeof ICT_ACCESS)[number];
 
-type SocietyProps = {
+type HouseholdProps = {
   choropleth: WithData<{ x: StateCode[]; y: Record<ICTAccess, number[]> }>;
   timeseries: WithData<Record<StateCode, Record<"x" | ICTAccess, number[]>>>;
   timeseries_callout: WithData<Record<StateCode, Record<"x" | ICTAccess, { latest: number }>>>;
 };
 
-const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
+const DigitalEconomyHousehold: FunctionComponent<HouseholdProps> = ({
   choropleth,
   timeseries,
   timeseries_callout,
@@ -55,8 +55,9 @@ const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
   return (
     <>
       <Container>
+        {/* Are households getting greater access to ICT tools? */}
         <Section
-          title={t("society.access")}
+          title={t("household.access")}
           description={
             <StateDropdown
               anchor="left"
@@ -103,13 +104,15 @@ const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
             ))}
           </div>
         </Section>
+
+        {/* How does household access to ICT tools differ across states? */}
         <Section>
           <LeftRightCard
             left={
               <div className="flex h-[600px] w-full flex-col overflow-hidden p-6 lg:p-8">
                 <div className="space-y-6 pb-6">
                   <div className="flex flex-col gap-2">
-                    <h4>{t("society.access_by_state")}</h4>
+                    <h4>{t("household.access_by_state")}</h4>
                     <span className="text-sm text-dim">
                       {t("common:common.data_of", {
                         date: toDate(choropleth.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
@@ -118,15 +121,14 @@ const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
                   </div>
                   <Dropdown
                     anchor="left"
-                    width="w-full lg:w-fit"
                     options={FILTER_OPTIONS}
                     selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
                     onChange={e => setData("filter", e.value)}
                   />
-                  <p className="text-dim">{t("society.access_by_state_desc")}</p>
+                  <p className="text-dim">{t("household.access_by_state_desc")}</p>
                 </div>
                 <RankList
-                  id="society-access-by-state"
+                  id="household-access-by-state"
                   title={t("common:common.ranking", {
                     count: choropleth.data.x.length,
                   })}
@@ -161,4 +163,4 @@ const DigitalEconomyBusiness: FunctionComponent<SocietyProps> = ({
   );
 };
 
-export default DigitalEconomyBusiness;
+export default DigitalEconomyHousehold;
