@@ -1,7 +1,7 @@
 import Business from "@dashboards/digital-economy/business";
 import Ecommerce from "@dashboards/digital-economy/ecommerce";
 import Layout from "@dashboards/digital-economy/layout";
-import Society from "@dashboards/digital-economy/society";
+import Household from "@dashboards/digital-economy/household";
 import { get } from "datagovmy-ui/api";
 import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
@@ -19,9 +19,9 @@ const DigitalEconomy: Page = ({
   ecommerce_choropleth,
   ecommerce_timeseries,
   ecommerce_timeseries_callout,
-  society_choropleth,
-  society_timeseries,
-  society_timeseries_callout,
+  household_choropleth,
+  household_timeseries,
+  household_timeseries_callout,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboard-digital-economy");
 
@@ -36,11 +36,11 @@ const DigitalEconomy: Page = ({
                 businesses: (
                   <Business choropleth={business_choropleth} timeseries={business_timeseries} />
                 ),
-                society: (
-                  <Society
-                    choropleth={society_choropleth}
-                    timeseries={society_timeseries}
-                    timeseries_callout={society_timeseries_callout}
+                households: (
+                  <Household
+                    choropleth={household_choropleth}
+                    timeseries={household_timeseries}
+                    timeseries_callout={household_timeseries_callout}
                   />
                 ),
                 ecommerce: (
@@ -73,7 +73,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-digital-econom
       }),
     ]);
 
-    const [business, society, ecommerce] = results.map(e => {
+    const [business, household, ecommerce] = results.map(e => {
       if (e.status === "rejected") return {};
       else return e.value.data;
     });
@@ -90,9 +90,9 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-digital-econom
         next_update: business.data_next_update,
         business_choropleth: business.choropleth_state,
         business_timeseries: business.timeseries,
-        society_choropleth: society.choropleth_state,
-        society_timeseries: society.timeseries,
-        society_timeseries_callout: society.timeseries_callout,
+        household_choropleth: household.choropleth_state,
+        household_timeseries: household.timeseries,
+        household_timeseries_callout: household.timeseries_callout,
         ecommerce_choropleth: ecommerce.choropleth_state,
         ecommerce_timeseries: ecommerce.timeseries,
         ecommerce_timeseries_callout: ecommerce.timeseries_callout,
