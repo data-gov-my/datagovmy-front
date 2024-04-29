@@ -27,7 +27,12 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
   const { t, i18n } = useTranslation("dashboard-digital-economy");
 
   const FILTER_OPTIONS: Array<OptionType> = ICT_USAGE.map(tech => ({
-    label: t(tech),
+    label:
+      tech === "web_presence" ? (
+        <p className={i18n.language === "ms-MY" && "italic"}>Web Presence</p>
+      ) : (
+        t(tech)
+      ),
     value: tech,
   }));
 
@@ -54,7 +59,6 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
           description={
             <Dropdown
               anchor="left"
-              width="w-[calc(100dvw-24px)] sm:w-max"
               options={SECTOR_OPTIONS}
               selected={SECTOR_OPTIONS.find(option => data.sector === option.value)}
               onChange={e => setData("sector", e.value)}
@@ -66,18 +70,28 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
             {ICT_USAGE.map(tech => (
               <Timeseries
                 key={tech}
-                title={t(tech)}
+                title={
+                  tech === "web_presence" ? (
+                    <h5 className={i18n.language === "ms-MY" && "italic"}>Web Presence</h5>
+                  ) : (
+                    t(tech)
+                  )
+                }
                 className="h-[300px] w-full"
                 interval="year"
                 precision={1}
                 unitY="%"
                 maxY={100}
+                tickSource="labels"
+                tooltipFontStyle={
+                  tech === "web_presence" && i18n.language === "ms-MY" ? "italic" : "normal"
+                }
                 data={{
                   labels: timeseries.data[sector].x,
                   datasets: [
                     {
                       type: "line",
-                      label: t(tech),
+                      label: tech === "web_presence" ? "Web Presence" : t(tech),
                       data: timeseries.data[sector][tech],
                       backgroundColor: AKSARA_COLOR.PRIMARY_H,
                       borderColor: AKSARA_COLOR.PRIMARY,
@@ -113,7 +127,6 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
                   </div>
                   <Dropdown
                     anchor="left"
-                    width="w-full lg:w-fit"
                     options={FILTER_OPTIONS}
                     selected={FILTER_OPTIONS.find(e => e.value === data.filter)}
                     onChange={e => setData("filter", e.value)}
