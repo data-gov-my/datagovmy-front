@@ -68,7 +68,7 @@ export interface AnalyticsEvent {
 }
 
 export type OptionType = {
-  label: ReactNode;
+  label: string;
   value: string;
 };
 
