@@ -20,6 +20,7 @@ import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { AgencyIcon } from "datagovmy-ui/icons/agency";
 import { Agency, OptionType, WithData } from "datagovmy-ui/types";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import { DateTime } from "luxon";
 
 /**
  * Dashboard Index
@@ -46,27 +47,13 @@ interface DashboardIndexProps {
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dashboards }) => {
   const { t, i18n } = useTranslation(["dashboards", "agencies"]);
+  const [views, setViews] = useState<View[]>([]);
 
   const { data, setData } = useData({
     agency: "",
     search: "",
     tabs: 0,
   });
-
-  const PANELS = [
-    {
-      name: t("tabs.thematic"),
-      // data: analytics.today,
-    },
-    {
-      name: t("tabs.most_popular"),
-      // data: analytics.all_time,
-    },
-    {
-      name: t("tabs.recent_updated"),
-      // data: analytics.all_time,
-    },
-  ];
 
   // for ALL dashboards
   const _collection = useMemo<Dashboard[]>(() => {
@@ -84,6 +71,68 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
 
     return dashboards.data.filter(d => filterByName(d, data.search));
   }, [data.search, data.agency]);
+
+  const tabs_data = useMemo<
+    Record<"thematic" | "most_popular" | "recent_updated", Dashboard[]>
+  >(() => {
+    const thematic = _collection;
+
+    const recent_updated = [..._collection].sort(
+      (a, b) =>
+        DateTime.fromSQL(b.last_updated).toMillis() - DateTime.fromSQL(a.last_updated).toMillis()
+    );
+
+    const most_popular = [..._collection].sort(
+      (a, b) =>
+        (views.find(view => view.id === `dashboard-${b.name}`)?.total_views ?? 0) -
+        (views.find(view => view.id === `dashboard-${a.name}`)?.total_views ?? 0)
+    );
+
+    return {
+      thematic,
+      most_popular,
+      recent_updated,
+    };
+  }, [_collection, views]);
+
+  const PANELS = [
+    {
+      name: t("tabs.thematic"),
+      data: tabs_data.thematic,
+    },
+    {
+      name: t("tabs.most_popular"),
+      data: tabs_data.most_popular,
+    },
+    {
+      name: t("tabs.recent_updated"),
+      data: tabs_data.recent_updated,
+    },
+  ];
+
+  useEffect(() => {
+    const fetchViews = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+            },
+          }
+        );
+        const { data } = await response.json();
+        setViews(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchViews();
+  }, []);
+
+  console.log(data.tabs);
 
   return (
     <>
@@ -129,7 +178,13 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
             </>
           }
         >
-          <Ranking ranks={_collection} />
+          <Tabs hidden current={data.tabs} onChange={index => setData("tabs", index)}>
+            {PANELS.map((panel, index) => (
+              <Tabs.Panel name={panel.name} key={index}>
+                <Ranking ranks={panel.data} views={views} tabs={data.tabs} />
+              </Tabs.Panel>
+            ))}
+          </Tabs>
         </Section>
       </Container>
     </>
@@ -207,33 +262,12 @@ DashboardFilter.displayName = "DashboardFilter";
 
 interface RankingProps {
   ranks: Dashboard[];
+  views: View[];
+  tabs: number;
 }
 
-const Ranking = ({ ranks }: RankingProps) => {
+const Ranking = ({ ranks, views, tabs }: RankingProps) => {
   const { t, i18n } = useTranslation("dashboards");
-  const [views, setViews] = useState<View[]>([]);
-
-  useEffect(() => {
-    const fetchViews = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
-            },
-          }
-        );
-        const { data } = await response.json();
-        setViews(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchViews();
-  }, []);
 
   return (
     <>
@@ -276,7 +310,7 @@ const Ranking = ({ ranks }: RankingProps) => {
                     {t(`dashboards.${item.name}.description`)}
                   </p>
                 </div>
-                <div className="relative w-full">
+                <div className="relative flex w-full items-center gap-1">
                   <p className="text-dim h-6 transition-transform group-hover:translate-y-6">
                     {`${numFormat(
                       views.find(e => e.id === `dashboard-${item.name}`)?.total_views ?? 0,
@@ -285,6 +319,16 @@ const Ranking = ({ ranks }: RankingProps) => {
                       count: views.find(e => e.id === `dashboard-${item.name}`)?.total_views ?? 0,
                     })}`}
                   </p>
+                  {tabs === 2 && (
+                    <>
+                      <div className="bg-dim h-1 w-1 rounded-full px-0.5 transition-transform group-hover:translate-y-6" />
+                      <p className="text-dim h-6 transition-transform group-hover:translate-y-6">
+                        {t("common:common.last_updated", {
+                          date: DateTime.fromSQL(item.last_updated).toFormat("dd MMM yyyy"),
+                        })}
+                      </p>
+                    </>
+                  )}
                   <p className="text-primary dark:text-primary-dark absolute -bottom-6 transition-transform group-hover:-translate-y-6 motion-reduce:transform-none">
                     {t("common:components.click_to_explore")}
                   </p>
