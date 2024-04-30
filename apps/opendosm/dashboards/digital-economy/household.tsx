@@ -1,12 +1,5 @@
-import {
-  Container,
-  Dropdown,
-  LeftRightCard,
-  RankList,
-  Section,
-  StateDropdown,
-} from "datagovmy-ui/components";
-import { AKSARA_COLOR, CountryAndStates } from "datagovmy-ui/constants";
+import { Container, Dropdown, LeftRightCard, RankList, Section } from "datagovmy-ui/components";
+import { AKSARA_COLOR, CountryAndStates, MALAYSIA, STATES } from "datagovmy-ui/constants";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, StateCode, WithData } from "datagovmy-ui/types";
@@ -42,9 +35,14 @@ const DigitalEconomyHousehold: FunctionComponent<HouseholdProps> = ({
     value: tech,
   }));
 
+  const STATES_OPTION: Array<OptionType> = [MALAYSIA, ...STATES].map(state => ({
+    label: state.name,
+    value: state.key,
+  }));
+
   const { data, setData } = useData({
     filter: FILTER_OPTIONS[0].value,
-    state: "mys",
+    state: STATES_OPTION[0].value,
   });
 
   const filter = data.filter as ICTAccess;
@@ -59,9 +57,10 @@ const DigitalEconomyHousehold: FunctionComponent<HouseholdProps> = ({
         <Section
           title={t("household.access")}
           description={
-            <StateDropdown
+            <Dropdown
               anchor="left"
-              currentState={data.state}
+              selected={STATES_OPTION.find(option => option.value === data.state)}
+              options={STATES_OPTION}
               onChange={e => setData("state", e.value)}
             />
           }
