@@ -3,6 +3,7 @@ import DivisionIcon, { Division } from "@icons/division";
 import { AgencyBadge, At, Button, Container, Hero, Section, Search } from "datagovmy-ui/components";
 import { numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { WithData } from "datagovmy-ui/types";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 
 /**
@@ -25,7 +26,7 @@ type View = {
 };
 
 interface DashboardIndexProps {
-  dashboards: Record<string, Dashboard[]>;
+  dashboards: WithData<Dashboard[]>;
 }
 
 const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dashboards }) => {
