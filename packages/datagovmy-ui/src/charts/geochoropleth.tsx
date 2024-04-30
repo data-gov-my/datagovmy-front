@@ -61,7 +61,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
   const [choromap, setChoromap] = useState<FeatureCollection | undefined>(undefined);
   const [min, max] = minMax(data.values);
 
-  const { interpolate } = useColor(color, [min, max]);
+  const { interpolate } = useColor(color);
 
   useEffect(() => {
     import(`../lib/geojson/${type}/_map`).then(item => {
@@ -109,7 +109,7 @@ const GeoChoropleth: FunctionComponent<GeoChoroplethProps> = ({
                 data={feature}
                 style={{
                   color: "#0000001A",
-                  fillColor: enableFill ? interpolate(value) : interpolate(0.33, true), // assuming with enableFill
+                  fillColor: interpolate(enableFill ? value : 0.33, [min, max]), // assuming with enableFill
                   fillOpacity: 0.6,
                 }}
                 onEachFeature={(_, layer) => {

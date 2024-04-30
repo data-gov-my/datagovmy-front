@@ -5,6 +5,7 @@ export const routes = {
   COMPOSITE_INDEX: "/dashboard/composite-indices",
   CONSTRUCTION_STATISTICS: "/dashboard/construction-statistics",
   CONSUMER_PRICES: "/dashboard/consumer-prices",
+  DIGITAL_ECONOMY: "/dashboard/digital-economy",
   EXCHANGE_RATES: "/dashboard/exchange-rates",
   EXTERNAL_TRADE: "/dashboard/external-trade",
   FORMAL_SECTOR_WAGES: "/dashboard/formal-sector-wages",

@@ -157,3 +157,22 @@ export type Agency =
   | "spr"
   | "ssm"
   | "unhcr";
+
+export type StateCode =
+  | "mys"
+  | "jhr"
+  | "kdh"
+  | "ktn"
+  | "kul"
+  | "lbn"
+  | "mlk"
+  | "nsn"
+  | "phg"
+  | "prk"
+  | "pls"
+  | "png"
+  | "pjy"
+  | "sbh"
+  | "swk"
+  | "sgr"
+  | "trg";
