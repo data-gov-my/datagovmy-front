@@ -192,7 +192,7 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                 <RankList
                   id="ecommerce-by-state"
                   title={t("common:common.ranking", {
-                    count: choropleth.data.x.length,
+                    count: choropleth.data.x.length - 1,
                   })}
                   data={choropleth.data.y[filter]}
                   color="text-blue-600 dark:text-primary-dark"
@@ -209,6 +209,7 @@ const DigitalEconomyEcommerce: FunctionComponent<EcommerceProps> = ({
                       value: (filter === "population" ? "" : "RM ") + value,
                     };
                   }}
+                  mysIndex={choropleth.data.x.findIndex(e => e === "mys")}
                 />
               </div>
             }

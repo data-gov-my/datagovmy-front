@@ -73,7 +73,7 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
                 key={tech}
                 title={
                   tech === "web_presence" ? (
-                    <h5 className={i18n.language === "ms-MY" && "italic"}>Web Presence</h5>
+                    <h5 className={i18n.language === "ms-MY" ? "italic" : ""}>Web Presence</h5>
                   ) : (
                     t(tech)
                   )
@@ -139,7 +139,7 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
                 <RankList
                   id="business-usage-by-state"
                   title={t("common:common.ranking", {
-                    count: choropleth.data.x.length,
+                    count: choropleth.data.x.length - 1,
                   })}
                   data={choropleth.data.y[filter]}
                   color="text-blue-600 dark:text-primary-dark"
@@ -150,6 +150,7 @@ const DigitalEconomyBusiness: FunctionComponent<BusinessProps> = ({ choropleth, 
                       value: numFormat(choropleth.data.y[filter][position], "standard", 1) + "%",
                     };
                   }}
+                  mysIndex={choropleth.data.x.findIndex(e => e === "mys")}
                 />
               </div>
             }

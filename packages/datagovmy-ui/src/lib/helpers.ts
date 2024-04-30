@@ -232,17 +232,34 @@ export const copyClipboard = async (text: string): Promise<void> => {
 };
 
 /**
- * Returns indices of top n largest/smallest item from an array
+ * Sort and slice the array, with Malaysia ranked first if index is included,
+ * then return an array with the indices of each value from original array
+ * @param arr array of values
+ * @param n slice array to top n items
+ * @param desc sort in descending order if true
+ * @param mysIndex index of Malaysia in array
+ * @returns An array of top n sorted indices
  */
-export const getTopIndices = (arr: number[], n: number, reverse = false): number[] => {
+export const getTopIndices = (
+  arr: number[],
+  n: number,
+  desc = true,
+  mysIndex: number = -1
+): number[] => {
   // create an array of [value, index] pairs
   const pairs = arr.map((value, index) => [value, index]);
 
-  // sort the pairs by value (in descending or ascending order depending on the "reverse" flag)
-  pairs.sort((a, b) => (reverse ? b[0] - a[0] : a[0] - b[0]));
+  const hasMYS = mysIndex > -1;
+  const mys = hasMYS ? pairs[mysIndex] : null;
+  const _pairs = hasMYS ? pairs.filter((_, i) => i !== mysIndex) : pairs;
+
+  // sort the pairs by value (in descending or ascending order depending on the "desc" flag)
+  _pairs.sort((a, b) => (desc ? b[0] - a[0] : a[0] - b[0]));
+
+  if (hasMYS && mys !== null) _pairs.unshift(mys);
 
   // extract the first n indices from the sorted pairs
-  const topPairs = pairs.slice(0, n);
+  const topPairs = _pairs.slice(0, n);
 
   // extract the indices from the top pairs and return them
   return topPairs.map(pair => pair[1]);

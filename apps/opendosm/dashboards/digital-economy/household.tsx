@@ -130,7 +130,7 @@ const DigitalEconomyHousehold: FunctionComponent<HouseholdProps> = ({
                 <RankList
                   id="household-access-by-state"
                   title={t("common:common.ranking", {
-                    count: choropleth.data.x.length,
+                    count: choropleth.data.x.length - 1,
                   })}
                   data={choropleth.data.y[filter]}
                   color="text-blue-600 dark:text-primary-dark"
@@ -141,6 +141,7 @@ const DigitalEconomyHousehold: FunctionComponent<HouseholdProps> = ({
                       value: numFormat(choropleth.data.y[filter][position], "standard", 1) + "%",
                     };
                   }}
+                  mysIndex={choropleth.data.x.findIndex(e => e === "mys")}
                 />
               </div>
             }
