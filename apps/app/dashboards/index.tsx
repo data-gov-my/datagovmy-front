@@ -79,7 +79,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
 
     const recent_updated = [..._collection].sort(
       (a, b) =>
-        DateTime.fromSQL(b.last_updated).toMillis() - DateTime.fromSQL(a.last_updated).toMillis()
+        DateTime.fromISO(b.last_updated).toMillis() - DateTime.fromISO(a.last_updated).toMillis()
     );
 
     const most_popular = [..._collection].sort(
@@ -132,8 +132,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
     fetchViews();
   }, []);
 
-  console.log(data.tabs);
-
   return (
     <>
       <Hero
@@ -169,7 +167,6 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
         <Section
           title={
             <>
-              <h4>{t("section2_title")}</h4>
               <Tabs.List
                 options={PANELS.map(item => item.name)}
                 current={data.tabs}
@@ -324,7 +321,7 @@ const Ranking = ({ ranks, views, tabs }: RankingProps) => {
                       <div className="bg-dim h-1 w-1 rounded-full px-0.5 transition-transform group-hover:translate-y-6" />
                       <p className="text-dim h-6 transition-transform group-hover:translate-y-6">
                         {t("common:common.last_updated", {
-                          date: DateTime.fromSQL(item.last_updated).toFormat("dd MMM yyyy"),
+                          date: DateTime.fromISO(item.last_updated).toFormat("dd MMM yyyy"),
                         })}
                       </p>
                     </>
