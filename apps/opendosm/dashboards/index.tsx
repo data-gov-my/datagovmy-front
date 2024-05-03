@@ -10,6 +10,7 @@ import {
   Search,
   Tabs,
 } from "datagovmy-ui/components";
+import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { isValidURL, numFormat } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { WithData } from "datagovmy-ui/types";
@@ -220,7 +221,11 @@ const Ranking = ({ ranks, views, tabs }: RankingProps) => {
                 <DivisionIcon
                   division={item.agency}
                   className="h-6 w-6"
-                  // fillColor={item.colour}
+                  fillColor={
+                    item.name === "digital-economy" || item.name === "household-income-expenditure"
+                      ? AKSARA_COLOR.PRIMARY
+                      : undefined
+                  }
                 />
                 <p className="text-sm text-dim">{t(`division:${item.agency}.abbr`)}</p>
                 <ArrowUpRightIcon className="absolute right-1 h-5 w-5 text-dim opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100 motion-reduce:transition-none" />
