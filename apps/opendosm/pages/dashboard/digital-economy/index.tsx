@@ -61,21 +61,8 @@ const DigitalEconomy: Page = ({
 
 export const getStaticProps: GetStaticProps = withi18n("dashboard-digital-economy", async () => {
   try {
-    const results = await Promise.allSettled([
-      get("/dashboard", {
-        dashboard: "digital_business",
-      }),
-      get("/dashboard", {
-        dashboard: "digital_society",
-      }),
-      get("/dashboard", {
-        dashboard: "digital_ecommerce",
-      }),
-    ]);
-
-    const [business, household, ecommerce] = results.map(e => {
-      if (e.status === "rejected") return {};
-      else return e.value.data;
+    const { data } = await get("/dashboard", {
+      dashboard: "digital_economy",
     });
 
     return {
@@ -86,16 +73,16 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-digital-econom
           category: "economy",
           agency: "DOSM",
         },
-        last_updated: business.data_last_updated,
-        next_update: business.data_next_update,
-        business_choropleth: business.choropleth_state,
-        business_timeseries: business.timeseries,
-        household_choropleth: household.choropleth_state,
-        household_timeseries: household.timeseries,
-        household_timeseries_callout: household.timeseries_callout,
-        ecommerce_choropleth: ecommerce.choropleth_state,
-        ecommerce_timeseries: ecommerce.timeseries,
-        ecommerce_timeseries_callout: ecommerce.timeseries_callout,
+        last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
+        business_choropleth: data.business_choropleth_state,
+        business_timeseries: data.business_timeseries,
+        household_choropleth: data.household_choropleth_state,
+        household_timeseries: data.household_timeseries,
+        household_timeseries_callout: data.household_timeseries_callout,
+        ecommerce_choropleth: data.ecommerce_choropleth_state,
+        ecommerce_timeseries: data.ecommerce_timeseries,
+        ecommerce_timeseries_callout: data.ecommerce_timeseries_callout,
       },
     };
   } catch (error: any) {
