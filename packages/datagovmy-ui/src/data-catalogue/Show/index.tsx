@@ -342,7 +342,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                   ] = ref;
                 }}
                 description={
-                  <>
+                  <p>
                     {t("sample_query.desc1")}
                     <At
                       className="link-dim text-base underline"
@@ -354,7 +354,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                       {t("sample_query.link1")}
                     </At>
                     .
-                  </>
+                  </p>
                 }
                 className="mx-auto w-full py-12"
               >

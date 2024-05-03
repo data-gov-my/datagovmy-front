@@ -69,7 +69,7 @@ const Section: ForwardRefExoticComponent<SectionProps> = forwardRef(
                       {description}
                     </p>
                   ) : (
-                    <div>{description}</div>
+                    description
                   )}
                   {menu && <div className="flex w-full gap-3 md:w-auto md:justify-end">{menu}</div>}
                 </div>

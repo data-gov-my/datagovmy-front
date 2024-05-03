@@ -148,7 +148,7 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
           title={t("title")}
           date={A_to_B.data_as_of}
           description={
-            <div className="w-full">
+            <div>
               <div className="flex sm:hidden">
                 <Modal
                   trigger={open => (

@@ -1,5 +1,6 @@
+import { interpolateRgbBasis } from "d3-interpolate";
 import {
-  interpolateBlues,
+  // interpolateBlues,
   interpolateBrBG,
   interpolateBuGn,
   interpolateBuPu,
@@ -79,9 +80,17 @@ export type Color =
   | "ylOrBr"
   | "ylOrRd";
 
-export const useColor = (key: Color, domain: [min: number, max: number]) => {
+export const useColor = (key: Color) => {
+  const blueScheme = [
+    "#DCE7FF",
+    "#AAC4FD",
+    "#81A4F9",
+    "#437BF4",
+    "#2563EB", // Blue 600
+  ];
+
   const lookup: { [key: string]: (normalizedValue: number) => string } = {
-    blues: interpolateBlues,
+    blues: value => interpolateRgbBasis(blueScheme)(value), // interpolateBlues,
     brBG: interpolateBrBG,
     buGn: interpolateBuGn,
     buPu: interpolateBuPu,
@@ -121,11 +130,16 @@ export const useColor = (key: Color, domain: [min: number, max: number]) => {
     ylOrRd: interpolateYlOrRd,
   };
 
-  const normalize = (value: number): number => (value - domain[0]) / (domain[1] - domain[0]);
-
-  const interpolate = (value: number | null, normalized: boolean = false): string => {
-    if (value === null || !value) return "#ffffff00"; // transparent
-    return !normalized ? lookup[key](normalize(value)) : lookup[key](value);
+  const interpolate = (
+    value: number | null,
+    domain: [min: number, max: number] | null = null
+  ): string => {
+    if (value === null) return "#ffffff00"; // transparent
+    if (domain !== null) {
+      const normalize = (value: number): number => (value - domain[0]) / (domain[1] - domain[0]);
+      return lookup[key](normalize(value));
+    }
+    return lookup[key](value);
   };
 
   return {

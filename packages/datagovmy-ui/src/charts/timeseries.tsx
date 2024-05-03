@@ -86,8 +86,10 @@ export interface TimeseriesProps extends ChartHeaderProps {
     index: number,
     ticks: Tick[]
   ) => string | string[] | number | number[] | null | undefined;
+  tickSource?: "auto" | "data" | "labels";
   gridOffsetX?: boolean;
   tooltipCallback?: (item: TooltipItem<"line">) => string | string[];
+  tooltipFontStyle?: "normal" | "italic" | "oblique" | "initial" | "inherit";
   stats?: Array<StatProps> | null;
   tooltipItemSort?: (a: TooltipItem<"line">, b: TooltipItem<"line">) => number;
   generateLabels?: (chart: ChartJS<"line">) => LegendItem[];
@@ -133,9 +135,11 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableTooltip = true,
   gridOffsetX = true,
   tooltipCallback,
+  tooltipFontStyle = "normal",
   tooltipItemSort,
   generateLabels,
   tickXCallback,
+  tickSource = "auto",
   forcedTheme,
   beginZero = true,
   minY,
@@ -215,6 +219,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           itemSort: tooltipItemSort,
           bodyFont: {
             family: "Inter",
+            style: tooltipFontStyle,
           },
           animation: {
             duration: enableAnimation ? 1000 : 0,
@@ -333,15 +338,15 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             tooltipFormat: tooltipFormat
               ? tooltipFormat
               : ["year", "month", "quarter", "day", "minute", "hour"].includes(interval as string)
-              ? {
-                  quarter: "qQ yyyy",
-                  month: "MMM yyyy",
-                  year: "yyyy",
-                  day: "dd MMM yyyy",
-                  minute: "dd MMM yyyy HH:mm",
-                  hour: "dd MMM yyyy HH:mm",
-                }[interval as string]
-              : "dd MMM yyyy",
+                ? {
+                    quarter: "qQ yyyy",
+                    month: "MMM yyyy",
+                    year: "yyyy",
+                    day: "dd MMM yyyy",
+                    minute: "dd MMM yyyy HH:mm",
+                    hour: "dd MMM yyyy HH:mm",
+                  }[interval as string]
+                : "dd MMM yyyy",
           },
           grid: {
             offset: gridOffsetX,
@@ -350,6 +355,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             borderDash: [5, 10],
           },
           ticks: {
+            source: tickSource,
             callback: tickXCallback,
             major: {
               enabled: enableMajorTick,
