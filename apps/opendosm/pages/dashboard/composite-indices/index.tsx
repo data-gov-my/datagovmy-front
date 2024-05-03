@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-composite-inde
   return {
     props: {
       meta: {
-        id: "dashboard-composite-index",
+        id: "dashboard-composite-indices",
         type: "dashboard",
         category: "economy",
         agency: "DOSM",
