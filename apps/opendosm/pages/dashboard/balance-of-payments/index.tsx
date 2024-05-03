@@ -50,7 +50,7 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-bop", async ()
     notFound: false,
     props: {
       meta: {
-        id: "dashboard-bop",
+        id: "dashboard-balance-of-payments",
         type: "dashboard",
         category: "national-accounts",
         agency: "DOSM",
