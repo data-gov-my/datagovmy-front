@@ -237,7 +237,7 @@ const Ranking = ({ ranks, views, tabs }: RankingProps) => {
                     {t(`dashboards.${item.name}.description`)}
                   </p>
                 </div>
-                <div className="relative w-full flex items-center gap-1">
+                <div className="relative w-full flex items-center gap-2">
                   <p className="h-6 text-dim transition-transform group-hover:translate-y-6">
                     {`${numFormat(
                       views.find(e => e.id === `dashboard-${item.name}`)?.total_views ?? 0,
