@@ -162,7 +162,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                       },
                     ]}
                   />
-                  <Timeseries
+                  {/* <Timeseries
                     title={t("keys.under_employment_rate")}
                     className="h-[300px] w-full"
                     interval="month"
@@ -194,7 +194,7 @@ const LabourMarketDashboard: FunctionComponent<LabourMarketProps> = ({
                         )}%`,
                       },
                     ]}
-                  />
+                  /> */}
                   <Timeseries
                     title={t("keys.employment_population_ratio")}
                     className="h-[300px] w-full"
