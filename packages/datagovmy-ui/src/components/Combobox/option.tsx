@@ -1,57 +1,44 @@
 import { clx } from "../../lib/helpers";
-import ImageWithFallback from "../ImageWithFallback";
 import { OptionType } from "../../../types";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import { ForwardedRef, forwardRef, ReactNode } from "react";
-import { useId } from "@floating-ui/react";
+import { CSSProperties, ForwardedRef, forwardRef, MouseEventHandler, ReactNode } from "react";
 
 export type ComboOptionProp<T extends unknown> = OptionType & T;
 
 export type ComboOptionProps<T> = {
   option: ComboOptionProp<T>;
   format?: (option: ComboOptionProp<T>) => ReactNode;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<Element> | undefined;
   image?: (value: string) => ReactNode;
   isSelected: boolean;
   active: boolean;
   index: number;
   total: number;
+  style?: CSSProperties;
 };
 
 function ComboOptionInner<T>(
-  {
-    option,
-    format,
-    image,
-    onClick,
-    isSelected,
-    active,
-    index,
-    total,
-    ...rest
-  }: ComboOptionProps<T>,
-  ref: ForwardedRef<HTMLDivElement>
+  { option, format, image, onClick, isSelected, active, index, total, style }: ComboOptionProps<T>,
+  ref: ForwardedRef<HTMLLIElement>
 ) {
-  const id = useId();
-
   return (
-    <div
-      id={id}
+    <li
+      key={index}
       ref={ref}
       role="option"
-      aria-selected={active}
+      aria-selected={isSelected}
       onClick={onClick}
-      {...rest}
       // As the list is virtualized, this lets the assistive tech know
       // how many options there are total without looking at the DOM.
       aria-setsize={total}
       aria-posinset={index + 1}
       className={clx(
-        "relative flex w-full cursor-pointer select-none flex-row gap-2 px-4 py-2",
-        active && "bg-washed dark:bg-washed-dark"
+        "px-4 py-2 w-full cursor-pointer select-none z-10",
+        active && "bg-slate-100 dark:bg-zinc-800"
       )}
+      style={style}
     >
-      <>
+      <div className="relative flex flex-row gap-2">
         {format ? (
           <p className={clx("flex gap-x-1 truncate", isSelected ? "font-medium" : "font-normal")}>
             {format(option)}
@@ -60,19 +47,22 @@ function ComboOptionInner<T>(
           <>
             {image && image(option.value)}
             <p
-              className={clx("block grow self-center", isSelected ? "font-medium" : "font-normal")}
+              className={clx(
+                "block grow self-center truncate",
+                isSelected ? "font-medium" : "font-normal"
+              )}
             >
               {option.label}
             </p>
           </>
         )}
         {isSelected && (
-          <span className="absolute inset-y-0 right-3 flex items-center">
-            <CheckCircleIcon className="text-primary dark:text-primary-dark h-4 w-4" />
+          <span className="absolute inset-y-0 right-0 flex items-center">
+            <CheckCircleIcon className="text-primary dark:text-secondary h-4 w-4" />
           </span>
         )}
-      </>
-    </div>
+      </div>
+    </li>
   );
 }
 
