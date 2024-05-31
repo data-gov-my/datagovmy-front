@@ -362,7 +362,9 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
                                 value: "+" + numFormat(CARS[0][1].cars.at(-1)!, "standard"),
                               },
                               {
-                                title: t("past_5yrs"),
+                                title: t("since", {
+                                  year: new Date(LATEST_TIMESTAMP).getFullYear() - 5,
+                                }),
                                 value: numFormat(past_5yrs, "standard"),
                               },
                               {
