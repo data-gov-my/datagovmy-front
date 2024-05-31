@@ -1,5 +1,5 @@
-import { GetStaticProps } from "next";
-import { InferGetStaticPropsType } from "next";
+import { GetServerSideProps } from "next";
+import { InferGetServerSidePropsType } from "next";
 import { get } from "datagovmy-ui/api";
 import { Page } from "datagovmy-ui/types";
 import { withi18n } from "datagovmy-ui/decorators";
@@ -7,17 +7,16 @@ import { Metadata } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { slugify } from "datagovmy-ui/helpers";
 
 const CarPopularity: Page = ({
   last_updated,
   next_update,
+  cars,
   meta,
-  model,
-  queryOptions,
-  tableData,
   timeseries,
-  timeseries_callout,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  tableData,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["dashboard-car-popularity", "common"]);
 
   return (
@@ -26,57 +25,64 @@ const CarPopularity: Page = ({
       <CarPopularityDashboard
         last_updated={last_updated}
         next_update={next_update}
-        model={model}
-        queryOptions={queryOptions}
-        tableData={tableData}
+        cars={cars}
         timeseries={timeseries}
-        timeseries_callout={timeseries_callout}
+        tableData={tableData}
       />
     </AnalyticsProvider>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
-  try {
-    const [{ data: dropdown }, { data }, { data: model }] = await Promise.all([
-      get("/dropdown", {
-        dashboard: "car_popularity",
-      }),
-      get("/dashboard", { dashboard: "car_popularity" }),
-      get("chart/", {
-        dashboard: "car_popularity",
-        chart_name: "timeseries",
-        maker: "PERODUA",
-        model: "MYVI",
-      }),
-    ]).catch(e => {
-      throw new Error("Error: " + e);
-    });
+export const getServerSideProps: GetServerSideProps = withi18n(
+  "dashboard-car-popularity",
+  async ({}) => {
+    try {
+      const makers = ["PERODUA", "PROTON", "HONDA"];
+      const maker_id = makers.map(maker => `maker_id=${maker}`).join("&");
+      const models = ["MYVI", "SAGA", "CITY"];
+      const model_id = models.map(model => `model_id=${model}`).join("&");
 
-    return {
-      notFound: false,
-      props: {
-        meta: {
-          id: "dashboard-car-popularity",
-          type: "dashboard",
-          category: "transportation",
-          agency: "JPJ",
+      const results = await Promise.allSettled([
+        get("/dashboard", { dashboard: "car_popularity" }),
+        get(`/explorer?explorer=car_popularity&${maker_id}&${model_id}`),
+      ]);
+
+      const [data, explorer] = results.map(e => {
+        if (e.status === "rejected") return {};
+        else return e.value.data;
+      });
+
+      return {
+        notFound: false,
+        props: {
+          meta: {
+            id: "dashboard-car-popularity",
+            type: "dashboard",
+            category: "transportation",
+            agency: "JPJ",
+          },
+          last_updated: data.data_last_updated,
+          next_update: data.data_next_update,
+          cars: makers.map((maker, i) => {
+            const label = `${maker} ${models[i]}`;
+            return {
+              label,
+              value: slugify(label),
+              maker,
+              model: models[i],
+            };
+          }),
+          tableData: data,
+          timeseries: explorer.timeseries,
         },
-        last_updated: data.data_last_updated,
-        next_update: data.data_next_update,
-        model: model,
-        queryOptions: dropdown.data,
-        tableData: data,
-        timeseries: data.vehicle_timeseries,
-        timeseries_callout: data.vehicle_timeseries_callout,
-      },
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      notFound: true,
-    };
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        notFound: true,
+      };
+    }
   }
-});
+);
 
 export default CarPopularity;
