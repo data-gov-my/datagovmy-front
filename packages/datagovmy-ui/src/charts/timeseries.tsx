@@ -40,7 +40,9 @@ import { ChartJSOrUndefined } from "react-chartjs-2/dist/types";
 import { useTheme } from "next-themes";
 import { AKSARA_COLOR } from "../lib/constants";
 import Spinner from "../components/Spinner";
+import { flatten } from "lodash";
 
+type Bounds = { y: number; height: number };
 export type Periods = TimeUnit | "auto" | false;
 export interface TimeseriesProps extends ChartHeaderProps {
   id?: string;
@@ -246,7 +248,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
           ? {
               clip: false,
               common: {
-                drawTime: "afterDraw",
+                drawTime: "afterDatasetsDraw",
               },
               annotations: data.datasets.map((set, index) => {
                 const INDEXES = {
@@ -266,7 +268,65 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
                 return {
                   type: "label",
                   callout: {
-                    display: true,
+                    display: false,
+                  },
+                  beforeDraw: ({ chart, element }) => {
+                    const bounds = chart.getSortedVisibleDatasetMetas().map(e => ({
+                      index: e.index,
+                      y: e.data[e.data.length - 1].y - 6,
+                      height: 12,
+                    }));
+
+                    const MIN_SPACING = 2;
+                    const sortedBounds = bounds.sort((a, b) => a.y - b.y);
+
+                    const groupBounds = (group: Bounds[]) => {
+                      const first = group[0];
+                      const last = group[group.length - 1];
+                      return { y: first.y, height: last.y + last.height - first.y };
+                    };
+
+                    const isOverlapping = (e1: Bounds, e2: Bounds) =>
+                      e1.y + e1.height < e2.y || e2.y + e2.height < e1.y ? false : true;
+
+                    const stackGroupsVertically = (group: Bounds[], y: number) => {
+                      let currentY = y;
+                      group.forEach(bound => {
+                        bound.y = currentY;
+                        currentY += bound.height + MIN_SPACING;
+                      });
+                      return group;
+                    };
+
+                    const groups = sortedBounds.map(bound => [bound]);
+                    let hasOverlap;
+
+                    do {
+                      hasOverlap = false;
+                      for (let i = 0; i < groups.length - 1; i++) {
+                        const topGrp = groups[i];
+                        const btmGrp = groups[i + 1];
+                        const top = groupBounds(topGrp);
+                        const btm = groupBounds(btmGrp);
+                        if (isOverlapping(top, btm)) {
+                          const overlap = top.y + top.height - btm.y + MIN_SPACING;
+                          const targetY =
+                            top.y - overlap * (btmGrp.length / (topGrp.length + btmGrp.length));
+                          const newGroup = [...topGrp, ...btmGrp];
+                          stackGroupsVertically(newGroup, targetY);
+                          groups.splice(i, 2, newGroup);
+                          hasOverlap = true;
+                          break;
+                        }
+                      }
+                    } while (hasOverlap && groups.length > 1);
+
+                    const centerY =
+                      flatten(groups).find(e => e.index === element.options.z)?.y ?? 0;
+
+                    element.y = centerY - 6;
+                    element.y2 = centerY + 6;
+                    return;
                   },
                   content() {
                     let text: string = set.label!;
@@ -286,15 +346,11 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
                     x: "start",
                     y: "center",
                   },
-                  xAdjust: 0,
+                  xAdjust: 10,
                   xValue: data.labels![xIndex] as string | number,
-                  yAdjust: (data.datasets as any[]).reduce((prev: any, current: any) => {
-                    if (Math.abs(current.data[yIndex] - set.data[yIndex]) < 3) {
-                      return prev + 1;
-                    }
-                    return prev;
-                  }, -1) as number,
+                  yAdjust: 0,
                   yValue: set.data[yIndex],
+                  z: index,
                 } as AnnotationOptions;
               }),
             }
@@ -319,7 +375,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
       layout: {
         padding: {
           right: enableCallout ? 160 : 0,
-          top: enableCallout ? 20 : 0,
+          top: 0,
         },
       },
       scales: {
@@ -447,7 +503,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             <div className="flex flex-col gap-y-3">
               <ChartHeader title={title} menu={menu} controls={controls} />
               {stats && <Stats data={stats} />}
-              {subheader && <div>{subheader}</div>}
+              {subheader && <>{subheader}</>}
             </div>
           )}
           <div className={className}>
@@ -483,7 +539,6 @@ const dummy: ChartData = {
     0, 300000, 600000, 900000, 1200000, 1500000, 1800000, 2100000, 2400000, 2700000, 3000000,
     3300000, 3600000,
   ], //[1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
-  // labels: [1111111111111, 1579478400000], // x-values - must be epoch millis eg. [168231311000, 16856172321, ...] etc
   datasets: [
     // stacked y-values
     {
