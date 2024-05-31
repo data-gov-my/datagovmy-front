@@ -39,6 +39,7 @@ export const routes = {
   RESERVE_MONEY: "/dashboard/reserve-money",
   RETIREMENT_READINESS: "/dashboard/retirement-readiness",
   SEKOLAHKU: "/dashboard/sekolahku",
+  VEHICLE_REGISTRATIONS: "/dashboard/vehicle-registrations",
   WEATHER_CLIMATE: "/dashboard/weather-and-climate",
   GUI: "/gui",
   GUI_OPENDOSM_PUB: "/gui/opendosm-pub",
