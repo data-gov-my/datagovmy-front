@@ -106,7 +106,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                         <td className="w-1/2 px-1 py-2 text-start text-sm font-medium capitalize">
                           {`${item.maker} ${item.model}`}
                         </td>
-                        <td className="px-1 py-2 text-end text-sm font-medium">
+                        <td className="px-1 py-2 text-end text-sm font-medium tabular-nums">
                           {item.vehicles.toLocaleString()}
                         </td>
                       </tr>
