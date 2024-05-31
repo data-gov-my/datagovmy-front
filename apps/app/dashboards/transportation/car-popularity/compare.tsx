@@ -18,7 +18,7 @@ import { OptionType } from "datagovmy-ui/types";
 import debounce from "lodash/debounce";
 import { useTheme } from "next-themes";
 import dynamic from "next/dynamic";
-import { FunctionComponent, useCallback, useMemo } from "react";
+import { FunctionComponent, useCallback, useMemo, useRef } from "react";
 
 /**
  * Car Popularity Dashboard - Compare
@@ -55,6 +55,7 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
   timeseries,
 }) => {
   const { t, i18n } = useTranslation("dashboard-car-popularity");
+  const ref = useRef<HTMLDivElement | null>(null);
   const { resolvedTheme } = useTheme();
 
   const COLOURS = [
@@ -152,7 +153,10 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
         toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
         console.error(e);
       })
-      .finally(() => setData("loading", false));
+      .finally(() => {
+        setData("loading", false);
+        ref && ref.current && ref.current.scrollIntoView({ behavior: "smooth" });
+      });
   };
 
   const LATEST_TIMESTAMP = timeseries.x[timeseries.x.length - 1];
@@ -322,7 +326,7 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
           {/* Registrations with JPJ since 2000 */}
           <SliderProvider>
             {play => (
-              <div className="relative lg:col-span-2">
+              <div ref={ref} className="relative lg:col-span-2 scroll-mt-20 lg:scroll-mt-40">
                 <Timeseries
                   title={t("timeseries_title")}
                   className={clx(
@@ -339,6 +343,7 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
                   }
                   isLoading={data.loading}
                   precision={0}
+                  suggestedMaxY={2}
                   interval="month"
                   mode="grouped"
                   enableCallout={CARS.length > 0}

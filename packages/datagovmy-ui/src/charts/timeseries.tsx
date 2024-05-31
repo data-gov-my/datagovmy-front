@@ -271,13 +271,14 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
                     display: false,
                   },
                   beforeDraw: ({ chart, element }) => {
+                    const HALF_FONT_SIZE = 6;
+                    const MIN_SPACING = 2;
                     const bounds = chart.getSortedVisibleDatasetMetas().map(e => ({
                       index: e.index,
-                      y: e.data[e.data.length - 1].y - 6,
-                      height: 12,
+                      y: e.data[e.data.length - 1].y - HALF_FONT_SIZE,
+                      height: 2 * HALF_FONT_SIZE + MIN_SPACING,
                     }));
 
-                    const MIN_SPACING = 2;
                     const sortedBounds = bounds.sort((a, b) => a.y - b.y);
 
                     const groupBounds = (group: Bounds[]) => {
@@ -324,8 +325,8 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
                     const centerY =
                       flatten(groups).find(e => e.index === element.options.z)?.y ?? 0;
 
-                    element.y = centerY - 6;
-                    element.y2 = centerY + 6;
+                    element.y = centerY - HALF_FONT_SIZE;
+                    element.y2 = centerY + HALF_FONT_SIZE;
                     return;
                   },
                   content() {
