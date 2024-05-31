@@ -55,7 +55,6 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
   timeseries,
 }) => {
   const { t, i18n } = useTranslation("dashboard-car-popularity");
-
   const { resolvedTheme } = useTheme();
 
   const COLOURS = [
@@ -71,6 +70,10 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
 
   const DEFAULT_CARS = cars.map((car, i) => ({ ...car, colour: COLOURS[i] }));
 
+  const order: Record<string, number> = {},
+    sortOrder = cars.map(({ label }) => label);
+  for (let i = 0; i < sortOrder.length; i++) order[sortOrder[i]] = i;
+
   const { data, setData } = useData({
     type: RADIO_OPTIONS[1].value,
     query: "",
@@ -83,9 +86,74 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
     // timeseries data
     loading: false,
     x: Object.entries(timeseries).filter(([key, _]) => key === "x"),
-    cars: Object.entries(timeseries).filter(([key, _]) => key !== "x"),
+    cars: (Object.entries(timeseries).filter(([key, _]) => key !== "x") as [string, Cars][])
+      .sort(([a, _a], [b, _b]) => order[a] - order[b])
+      .map(([car, cars], i) => [car, { ...cars, colour: COLOURS[i] }]),
     minmax: [0, timeseries.x.length - 1],
   });
+
+  const CAR_OPTIONS = useMemo<Array<OptionType & Omit<Car, "colour">>>(() => {
+    return (data.options as Car[]).map(({ maker, model }) => ({
+      label: model !== undefined ? `${maker} ${model}` : maker,
+      value:
+        model !== undefined ? `${maker.toLowerCase()}-${model.toLowerCase()}` : maker.toLowerCase(),
+      maker,
+      model: model !== undefined ? model : undefined,
+    }));
+  }, [data.options]);
+
+  const search = useCallback(
+    debounce((query: string) => {
+      get("explorer?explorer=car_popularity" + query)
+        .then(({ data }) => setData("options", data))
+        .catch(e => {
+          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+          console.error(e);
+        })
+        .finally(() => setData("optionsLoading", false));
+    }, 300),
+    []
+  );
+
+  const selected_type: string = `selected_${data.type === "makers" ? "makers" : "models"}`;
+  const selected: Array<OptionType & Car> = data[selected_type];
+
+  const COLOUR_OPTIONS = useMemo<string[]>(() => {
+    const selected_colours = selected.map(({ colour }) => colour);
+    return COLOURS.filter(col => !selected_colours.includes(col));
+  }, [selected]);
+
+  const compare = (makers: string[], models?: string[]) => {
+    setData("loading", true);
+
+    get(
+      "explorer/?explorer=car_popularity&maker_id=" +
+        makers.join("&maker_id=") +
+        (models && models.length > 0 && !models.some(e => e === undefined)
+          ? `&model_id=${models.join("&model_id=")}`
+          : "")
+    )
+      .then(({ data }) => {
+        setData(
+          "x",
+          Object.entries(data.timeseries).filter(([key, _]) => key === "x")
+        );
+        const order: Record<string, number> = {},
+          sortOrder = selected.map(({ label }) => label);
+        for (let i = 0; i < sortOrder.length; i++) order[sortOrder[i]] = i;
+        setData(
+          "cars",
+          (Object.entries(data.timeseries).filter(([key, _]) => key !== "x") as [string, Car][])
+            .sort(([a, _a], [b, _b]) => order[a] - order[b])
+            .map(([car, cars], i) => [car, { ...cars, colour: selected[i].colour }])
+        );
+      })
+      .catch(e => {
+        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
+        console.error(e);
+      })
+      .finally(() => setData("loading", false));
+  };
 
   const LATEST_TIMESTAMP = timeseries.x[timeseries.x.length - 1];
   const month = new Date(LATEST_TIMESTAMP).getMonth() + 1;
@@ -93,7 +161,7 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
   const CARS = data.cars as [string, Cars][];
 
   const past_5yrs = useMemo<number>(() => {
-    return CARS.length === 1 ? CARS[0][1].cars.slice(-60).reduce((a, b) => a + b) : 0;
+    return CARS.length === 1 ? CARS[0][1].cars.slice(-(60 + month)).reduce((a, b) => a + b) : 0;
   }, [CARS]);
 
   const leader = useCallback<(months: number) => Lead>(
@@ -115,29 +183,6 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
     [CARS]
   );
 
-  const search = useCallback(
-    debounce((query: string) => {
-      get("explorer?explorer=car_popularity" + query)
-        .then(({ data }) => setData("options", data))
-        .catch(e => {
-          toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-          console.error(e);
-        })
-        .finally(() => setData("optionsLoading", false));
-    }, 300),
-    []
-  );
-
-  const CAR_OPTIONS = useMemo<Array<OptionType & Omit<Car, "colour">>>(() => {
-    return (data.options as Car[]).map(({ maker, model }) => ({
-      label: model !== undefined ? `${maker} ${model}` : maker,
-      value:
-        model !== undefined ? `${maker.toLowerCase()}-${model.toLowerCase()}` : maker.toLowerCase(),
-      maker,
-      model: model !== undefined ? model : undefined,
-    }));
-  }, [data.options]);
-
   const { coordinate } = useSlice(
     Object.fromEntries(
       CARS.map(([car, { cars, cars_cumul }]) => [
@@ -148,58 +193,19 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
     data.minmax
   );
 
-  const selected_type: string = `selected_${data.type === "makers" ? "makers" : "models"}`;
-  const selected: Array<OptionType & Car> = data[selected_type];
-
-  const COLOUR_OPTIONS = useMemo<string[]>(() => {
-    const selected_colours = selected.map(({ colour }) => colour);
-    return COLOURS.filter(col => !selected_colours.includes(col));
-  }, [selected]);
-
   const datasets = useMemo<ChartDataset<"line">[]>(() => {
-    const order: Record<string, number> = {},
-      sortOrder = selected.map(({ label }) => label);
-    for (let i = 0; i < sortOrder.length; i++) order[sortOrder[i]] = i;
-
-    return CARS.sort(([a, _a], [b, _b]) => order[a] - order[b]).map(([car, _], index) => {
+    return CARS.map(([car, { colour }]) => {
       return {
         type: "line",
         data: coordinate[car],
         label: car,
         fill: CARS.length === 1,
-        backgroundColor: (selected[index].colour ?? AKSARA_COLOR.DIM).concat("1A"),
-        borderColor: selected[index].colour ?? AKSARA_COLOR.DIM,
+        backgroundColor: (colour ?? AKSARA_COLOR.DIM).concat("1A"),
+        borderColor: colour ?? AKSARA_COLOR.DIM,
         borderWidth: 1.5,
       };
     });
   }, [CARS, data.minmax, data.period, data.type]);
-
-  const compare = (makers: string[], models?: string[]) => {
-    setData("loading", true);
-
-    get(
-      "explorer/?explorer=car_popularity&maker_id=" +
-        makers.join("&maker_id=") +
-        (models && models.length > 0 && !models.some(e => e === undefined)
-          ? `&model_id=${models.join("&model_id=")}`
-          : "")
-    )
-      .then(({ data }) => {
-        setData(
-          "x",
-          Object.entries(data.timeseries).filter(([key, _]) => key === "x")
-        );
-        setData(
-          "cars",
-          Object.entries(data.timeseries).filter(([key, _]) => key !== "x")
-        );
-      })
-      .catch(e => {
-        toast.error(t("common:error.toast.request_failure"), t("common:error.toast.try_again"));
-        console.error(e);
-      })
-      .finally(() => setData("loading", false));
-  };
 
   return (
     <>
