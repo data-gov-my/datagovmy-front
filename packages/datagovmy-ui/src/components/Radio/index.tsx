@@ -6,7 +6,7 @@ interface RadioProps extends LabelProps {
   className?: string;
   name: string;
   options: OptionType[];
-  value: OptionType;
+  value?: OptionType;
   disabled?: boolean;
   onChange?: (value: OptionType) => void;
 }
