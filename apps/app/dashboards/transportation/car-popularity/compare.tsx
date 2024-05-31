@@ -152,12 +152,9 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
   const selected: Array<OptionType & Car> = data[selected_type];
 
   const COLOUR_OPTIONS = useMemo<string[]>(() => {
-    console.log(selected);
-    // const selected_colours = selected.map(({ colour }) => colour)
-    // return COLOURS.filter(col => !selected_colours.includes(col));
-    return COLOURS;
+    const selected_colours = selected.map(({ colour }) => colour);
+    return COLOURS.filter(col => !selected_colours.includes(col));
   }, [selected]);
-  console.log(COLOUR_OPTIONS);
 
   const datasets = useMemo<ChartDataset<"line">[]>(() => {
     const order: Record<string, number> = {},
@@ -203,7 +200,7 @@ const CarPopularityCompare: FunctionComponent<CarPopularityProps> = ({
       })
       .finally(() => setData("loading", false));
   };
-  console.log(selected);
+
   return (
     <>
       {/* How popular is your car? Compare it against others!*/}
