@@ -61,7 +61,7 @@ const WeatherandClimate: FunctionComponent<WeatherandClimateProps> = ({
   }));
   const { data, setData } = useData({
     station: params.slug,
-    minmax: [timeseries.data.daily_7d.x.length - 366, timeseries.data.daily_7d.x.length - 1],
+    minmax: [0, timeseries.data.daily_7d.x.length - 1],
     tab: 0,
   });
 

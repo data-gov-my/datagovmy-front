@@ -1,6 +1,6 @@
 import {
   ForwardRefExoticComponent,
-  ForwardedRef,
+  LegacyRef,
   Fragment,
   ReactNode,
   forwardRef,
@@ -23,7 +23,7 @@ interface ModalProps {
   trigger?: (open: () => void) => ReactNode;
   children: (close: () => void) => ReactNode;
   title?: ReactNode;
-  ref?: ForwardedRef<ModalInterface>;
+  ref?: LegacyRef<ModalInterface>;
 }
 
 const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(

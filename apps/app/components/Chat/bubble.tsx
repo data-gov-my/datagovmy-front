@@ -1,10 +1,10 @@
 import { BoltIcon, UserIcon } from "@heroicons/react/24/outline";
 import { Markdown } from "datagovmy-ui/components";
 import { clx } from "datagovmy-ui/helpers";
-import { ForwardRefExoticComponent, ForwardedRef, forwardRef, useEffect, useState } from "react";
+import { ForwardRefExoticComponent, LegacyRef, forwardRef, useEffect, useState } from "react";
 
 interface ChatInterface {
-  ref?: ForwardedRef<HTMLDivElement>;
+  ref?: LegacyRef<HTMLDivElement>;
   from: "user" | "assistant";
   children: string;
 }

@@ -3,7 +3,7 @@ import { useData, useSessionStorage, useTranslation } from "datagovmy-ui/hooks";
 import {
   Dispatch,
   ForwardRefExoticComponent,
-  ForwardedRef,
+  LegacyRef,
   ReactNode,
   SetStateAction,
   createContext,
@@ -33,7 +33,7 @@ interface ChatProviderProps {
   model: string;
   children: ReactNode;
   chain: "main" | "docs";
-  ref?: ForwardedRef<ChatInterface>;
+  ref?: LegacyRef<ChatInterface>;
 }
 
 export type ChatType = {

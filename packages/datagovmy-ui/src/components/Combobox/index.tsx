@@ -257,7 +257,7 @@ const ComboBox = <T extends unknown>({
                       top: 0,
                       left: 0,
                       width: "100%",
-                      transform: `translateY(${rowVirtualizer.getVirtualItems()[0].start}px)`,
+                      transform: `translateY(${rowVirtualizer.getVirtualItems()[0]?.start || 0}px)`,
                     }}
                   >
                     {rowVirtualizer.getVirtualItems().map((virtualItem: any) => {

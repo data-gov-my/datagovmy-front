@@ -16,6 +16,7 @@ import { Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useMemo } from "react";
 import { AxiosResponse } from "axios";
+import { groupBy } from "lodash";
 
 const CatalogueEmbed: Page = ({
   params,
@@ -26,6 +27,16 @@ const CatalogueEmbed: Page = ({
   const data = variable as DCVariable;
 
   const extractChartDataset = (table_data: Record<string, any>[], currentViz: DCDataViz) => {
+    if (query.date_slider) {
+      const groupedData = groupBy(table_data, currentViz.config.slider?.key);
+      const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
+        recurDataMapping(key, value, groupedData[query.date_slider])
+      );
+      return {
+        ...Object.fromEntries(set.map(array => [array[0][0], array[0][1]])),
+      };
+    }
+
     const set = Object.entries(currentViz?.config.format).map(([key, value]) =>
       recurDataMapping(key, value, table_data)
     );

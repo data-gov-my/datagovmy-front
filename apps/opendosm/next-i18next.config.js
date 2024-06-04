@@ -9,6 +9,7 @@ const namespaces = [
   "dashboard-composite-index",
   "dashboard-consumer-prices",
   "dashboard-construction-statistics",
+  "dashboard-digital-economy",
   "dashboard-household-income-expenditure",
   "dashboard-iip",
   "dashboard-industrial-production",

@@ -13,12 +13,24 @@ const ActiveLink = ({ className, ...props }: ComponentProps<"a">) => {
 
   const routes = asPath.split("/");
 
+  const findRouteLang = (routes: Array<string>) => {
+    return routes.includes("en_US")
+      ? routes.indexOf("en_US")
+      : routes.includes("ms_MY")
+        ? routes.indexOf("ms_MY")
+        : -1;
+  };
+
   useEffect(() => {
     // Check if the router fields are updated client-side
     if (isReady) {
       setLegacyPath(
         `https://archive.data.gov.my/data/${
-          i18n.language === "en-GB" ? "en_US" : "ms_MY"
+          findRouteLang(routes) !== -1
+            ? routes[findRouteLang(routes)]
+            : i18n.language === "en-GB"
+              ? "en_US"
+              : "ms_MY"
         }/dataset/${routes[routes.length - 1]}`
       );
     }

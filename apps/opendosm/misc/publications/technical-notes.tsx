@@ -8,7 +8,6 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
-import { get, post } from "datagovmy-ui/api";
 import { Button, Container, Input, Section, Spinner, toast } from "datagovmy-ui/components";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
@@ -17,7 +16,7 @@ import { DateTime } from "luxon";
 
 /**
  * Technical Notes
- * @overview Status: In-development
+ * @overview Status: Live
  */
 
 interface TechnicalNotesProps {
@@ -109,10 +108,11 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
         <div className="relative mx-auto mb-12 mt-6 w-full select-none overflow-hidden rounded-full border border-outline shadow-button hover:border-outlineHover focus:outline-none focus-visible:ring-0 dark:border-washed-dark dark:hover:border-outlineHover-dark sm:w-[500px]">
           <Input
             className="w-full truncate border-none bg-white py-3 pl-12 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black hover:dark:bg-washed-dark/50 focus:dark:bg-washed-dark"
-            placeholder={t("select_publication")}
+            placeholder={t("search_publication")}
             value={filter.search}
             onChange={e => {
               setFilter("search", e);
+              setFilter("page", "1");
               setData("loading", true);
             }}
           />

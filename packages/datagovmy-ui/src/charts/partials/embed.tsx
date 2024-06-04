@@ -4,7 +4,7 @@ import { useData, useTranslation, useWatch } from "../../hooks";
 import { languages } from "../../lib/options";
 import {
   ForwardRefExoticComponent,
-  ForwardedRef,
+  LegacyRef,
   forwardRef,
   useImperativeHandle,
   useMemo,
@@ -24,7 +24,7 @@ interface CatalogueEmbedProps {
   defaultOption?: any;
   translations?: any;
   selectedVizKey: string;
-  ref: ForwardedRef<EmbedInterface>;
+  ref: LegacyRef<EmbedInterface>;
 }
 
 const CatalogueEmbed: ForwardRefExoticComponent<CatalogueEmbedProps> = forwardRef(

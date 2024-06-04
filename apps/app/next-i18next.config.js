@@ -46,6 +46,7 @@ const namespaces = [
   "community-products",
   "data-request",
   "odin",
+  "validations",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards"]);
+module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "validations"]);
