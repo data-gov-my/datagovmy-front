@@ -45,6 +45,7 @@ const namespaces = [
   "gui-opendosm-pub",
   "community-products",
   "data-request",
+  "odin",
   "validations",
 ];
 

@@ -28,6 +28,7 @@ export const routes = {
   GUI: "/gui",
   GUI_OPENDOSM_PUB: "/gui/opendosm-pub",
   GUI_CATALOGUE: "/gui/catalogue",
+  ODIN: "/odin-self-assessment",
 };
 
 export const static_routes: string[] = (() => {
