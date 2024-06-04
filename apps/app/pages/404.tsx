@@ -17,8 +17,8 @@ const ActiveLink = ({ className, ...props }: ComponentProps<"a">) => {
     return routes.includes("en_US")
       ? routes.indexOf("en_US")
       : routes.includes("ms_MY")
-      ? routes.indexOf("ms_MY")
-      : -1;
+        ? routes.indexOf("ms_MY")
+        : -1;
   };
 
   useEffect(() => {
@@ -29,8 +29,8 @@ const ActiveLink = ({ className, ...props }: ComponentProps<"a">) => {
           findRouteLang(routes) !== -1
             ? routes[findRouteLang(routes)]
             : i18n.language === "en-GB"
-            ? "en_US"
-            : "ms_MY"
+              ? "en_US"
+              : "ms_MY"
         }/dataset/${routes[routes.length - 1]}`
       );
     }

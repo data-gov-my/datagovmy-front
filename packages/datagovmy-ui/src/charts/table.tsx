@@ -302,8 +302,8 @@ const Table: FunctionComponent<TableProps> = ({
                             header.subHeaders.length < 1
                               ? "flex select-none items-center justify-between gap-1 px-2 text-left text-sm"
                               : !header.column.columnDef.header
-                              ? "hidden"
-                              : "pr-2 text-end",
+                                ? "hidden"
+                                : "pr-2 text-end",
                             header.column.getCanSort() ? "cursor-pointer" : ""
                           )}
                           onClick={

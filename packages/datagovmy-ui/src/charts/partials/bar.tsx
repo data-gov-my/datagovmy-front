@@ -52,8 +52,8 @@ const CatalogueBar: FunctionComponent<CatalogueBarProps> = ({
         className
           ? className
           : bar_layout === "vertical"
-          ? "h-[350px] w-full lg:h-[450px]"
-          : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
+            ? "h-[350px] w-full lg:h-[450px]"
+            : "mx-auto h-[500px] w-full lg:h-[600px] lg:w-3/4"
       )}
       type="category"
       enableStack={dataset.type === "STACKED_BAR"}
