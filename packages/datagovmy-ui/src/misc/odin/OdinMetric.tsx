@@ -54,7 +54,12 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
   }
 
   return (
-    <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
+    <Section
+      className="scroll-mt-14 py-8 lg:py-12"
+      ref={ref => {
+        scrollRef && (scrollRef.current[title] = ref);
+      }}
+    >
       <div className="flex flex-col gap-6">
         <h4>{title}</h4>
 
@@ -117,7 +122,10 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                       </thead>
                       <tbody>
                         {table[indicator].coverage.map((row: TableRow, i: number) => (
-                          <tr className={clx(classNames.tr, "border-b")}>
+                          <tr
+                            key={`coverage.${row.subelement}${i}`}
+                            className={clx(classNames.tr, "border-b")}
+                          >
                             {i === 0 ? (
                               <th
                                 rowSpan={5}
@@ -145,7 +153,10 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                           </tr>
                         ))}
                         {table[indicator].openness.map((row: TableRow, i: number) => (
-                          <tr className={clx(classNames.tr, "border-b")}>
+                          <tr
+                            key={`openness.${row.subelement}${i}`}
+                            className={clx(classNames.tr, "border-b")}
+                          >
                             {i === 0 ? (
                               <th
                                 rowSpan={5}
@@ -191,9 +202,10 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                       {Object.keys(links).map(curr_indicator => {
                         if (indicator !== "overall" && indicator !== curr_indicator) return;
                         return (
-                          <div className="flex gap-3">
+                          <div key={curr_indicator} className="flex gap-3">
                             {links[curr_indicator].map(l => (
                               <At
+                                key={l.link_title}
                                 className="link-primary text-sm font-normal underline"
                                 href={l.url}
                                 target="_blank"

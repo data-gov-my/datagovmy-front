@@ -64,7 +64,12 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
   };
 
   return (
-    <Section className="scroll-mt-14 py-8 lg:py-12" ref={ref => (scrollRef.current[title] = ref)}>
+    <Section
+      className="scroll-mt-14 py-8 lg:py-12"
+      ref={ref => {
+        scrollRef && (scrollRef.current[title] = ref);
+      }}
+    >
       <div className="flex flex-col gap-6">
         <div className={className.titles}>
           <h4>{title}:</h4>
@@ -130,6 +135,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
           {["coverage", "openness"].map((score, i) => (
             <Bar
+              key={i}
               title={t("breakdown_" + score)}
               id={`bar-${score}-score-breakdown`}
               className="h-[280px] w-full"

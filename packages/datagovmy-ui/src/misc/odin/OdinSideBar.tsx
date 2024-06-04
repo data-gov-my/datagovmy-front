@@ -102,6 +102,7 @@ const OdinSidebar: FunctionComponent<OdinSidebarProps> = ({
               subcategories.length > 0 &&
               subcategories.map(subcategory => (
                 <OdinMetric
+                  key={subcategory}
                   links={links[category][subcategory]}
                   scores={keystats[category][subcategory]}
                   table={table[category][subcategory]}
