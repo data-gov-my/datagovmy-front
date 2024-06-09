@@ -275,7 +275,7 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
                     return {
                       label: CountryAndStates[choropleth.data.x[position]],
                       value: choropleth.data.y[choropleth_filter][position]
-                        ? numFormat(choropleth.data.y[choropleth_filter][position], "standard", 1)
+                        ? numFormat(choropleth.data.y[choropleth_filter][position], "standard", 0)
                         : "-",
                     };
                   }}
