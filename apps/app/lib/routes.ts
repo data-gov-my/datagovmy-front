@@ -18,6 +18,7 @@ export const routes = {
   FLOOD_WARNING: "/dashboard/flood-warning",
   GOVERNMENT_SITE_TRACKER: "/dashboard/government-site-tracker",
   HOUSEHOLD_DEBT: "/dashboard/household-debt",
+  HOUSE_PRICES: "/dashboard/house-prices",
   IMMIGRATION: "/dashboard/immigration",
   INCOME_TAXATION: "/dashboard/income-taxation",
   INISIATIF_PENDAPATAN_RAKYAT: "/dashboard/inisiatif-pendapatan-rakyat",

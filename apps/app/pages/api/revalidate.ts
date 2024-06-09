@@ -64,10 +64,12 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
       case "/dashboard/drug-addiction":
       case "/dashboard/fire-and-rescue":
       case "/dashboard/jobless-claims":
+      case "/dashboard/house-prices":
       case "/ms-MY/dashboard/business-creation-destruction":
       case "/ms-MY/dashboard/drug-addiction":
       case "/ms-MY/dashboard/fire-and-rescue":
       case "/ms-MY/dashboard/jobless-claims":
+      case "ms-MY/dashboard/house-prices":
         await res.revalidate(route);
         const result = revalidateWithStates(res, route);
         routes.push.apply(routes, result);

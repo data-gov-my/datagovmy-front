@@ -39,6 +39,7 @@ const namespaces = [
   "dashboard-sekolahku",
   "dashboard-weather-and-climate",
   "dashboard-household-debt",
+  "dashboard-house-prices",
   "dashboard-business-creation-destruction",
   "dashboard-electronic-payments",
   "helpdesk",
