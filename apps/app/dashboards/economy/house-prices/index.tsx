@@ -120,6 +120,7 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
               date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
             }),
             value: [
+              filter === "avg_price" ? "RM " : "",
               numFormat(
                 Math.abs(timeseries_callout.data[filter][name].latest),
                 "standard",
@@ -128,6 +129,7 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
                 i18n.language,
                 true
               ),
+              filter === "growth_qoq" || filter === "growth_yoy" ? "%" : "",
             ].join(""),
           },
         ],
@@ -144,6 +146,8 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
           }
           className="h-[350px] w-full"
           interval={"quarter"}
+          prefixY={filter === "avg_price" ? "RM" : ""}
+          unitY={filter === "growth_qoq" || filter === "growth_yoy" ? "%" : ""}
           enableAnimation={!play}
           precision={filter === "avg_price" ? 0 : 1}
           axisY={{
@@ -272,7 +276,7 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
               <Choropleth
                 className="h-[400px] w-auto rounded-b lg:h-[600px] lg:w-full"
                 color="blues"
-                precision={1}
+                precision={0}
                 data={{
                   labels: choropleth.data.x.map((state: string) => CountryAndStates[state]),
                   values: choropleth.data.y[choropleth_filter],
