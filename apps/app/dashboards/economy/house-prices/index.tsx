@@ -196,7 +196,13 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
         last_updated={last_updated}
         next_update={next_update}
         agencyBadge={<AgencyBadge agency="napic" />}
-        action={<StateDropdown url={routes.HOUSE_PRICES} currentState={params.state} />}
+        action={
+          <StateDropdown
+            url={routes.HOUSE_PRICES}
+            currentState={params.state}
+            exclude={["lbn", "pjy"]}
+          />
+        }
       />
       <Container className="min-h-screen">
         <Section

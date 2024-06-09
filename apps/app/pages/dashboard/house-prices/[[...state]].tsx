@@ -55,6 +55,7 @@ HousePrices.layout = (page, props) => {
             url={routes.HOUSE_PRICES}
             currentState={props.params.state}
             hideOnScroll
+            exclude={["lbn", "pjy"]}
           />
         }
       >
