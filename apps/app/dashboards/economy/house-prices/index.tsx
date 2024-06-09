@@ -135,7 +135,13 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
       return (
         <Timeseries
           key={title}
-          title={name === "high_rise" ? <h5 className="italic">{title}</h5> : title}
+          title={
+            name === "high_rise" && i18n.language === "ms-MY" ? (
+              <h5 className="italic">{title}</h5>
+            ) : (
+              title
+            )
+          }
           className="h-[350px] w-full"
           interval={"quarter"}
           enableAnimation={!play}
