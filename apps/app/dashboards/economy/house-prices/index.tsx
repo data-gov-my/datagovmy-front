@@ -123,7 +123,7 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
               numFormat(
                 Math.abs(timeseries_callout.data[filter][name].latest),
                 "standard",
-                0,
+                filter === "avg_price" ? 0 : 1,
                 "long",
                 i18n.language,
                 true
@@ -135,10 +135,11 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
       return (
         <Timeseries
           key={title}
-          title={title}
+          title={name === "high_rise" ? <h5 className="italic">{title}</h5> : title}
           className="h-[350px] w-full"
           interval={"quarter"}
           enableAnimation={!play}
+          precision={filter === "avg_price" ? 0 : 1}
           axisY={{
             y2: {
               display: false,
@@ -191,8 +192,8 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
               <Dropdown
                 anchor="left"
                 options={FILTER_OPTIONS}
-                selected={FILTER_OPTIONS.find(option => data.filter === option.value)}
-                onChange={e => setData("options", e.value)}
+                selected={FILTER_OPTIONS.find(option => filter === option.value)}
+                onChange={e => setData("filter", e.value)}
               />
             </div>
           }
