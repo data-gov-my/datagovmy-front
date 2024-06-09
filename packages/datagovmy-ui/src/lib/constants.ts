@@ -241,6 +241,7 @@ export const AgencyLink: Record<Agency, string> = {
   "moh": "https://www.moh.gov.my",
   "mot": "https://www.mot.gov.my/en/",
   "ntrc": "https://www.dermaorgan.gov.my/ntrc",
+  "napic": "https://napic2.jpph.gov.my",
   "pdn": "https://pdn.gov.my/v2/",
   "pdrm": "https://www.rmp.gov.my/",
   "perkeso": "https://www.perkeso.gov.my/en/",
