@@ -117,7 +117,11 @@ const HousePricesDashboard: FunctionComponent<HousePricesProp> = ({
         stats: [
           {
             title: t("common:common.latest", {
-              date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+              date: toDate(
+                LATEST_TIMESTAMP,
+                `${i18n.language === "ms-MY" ? "'ST'" : ""}q${i18n.language === "ms-MY" ? "" : "Q"} yyyy`,
+                i18n.language
+              ),
             }),
             value: [
               filter === "avg_price" ? "RM " : "",
