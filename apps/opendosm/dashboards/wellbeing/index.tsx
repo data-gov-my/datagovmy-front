@@ -7,9 +7,10 @@ import {
   Markdown,
   Section,
   Slider,
+  StateDropdown,
   Tooltip,
 } from "datagovmy-ui/components";
-import { AKSARA_COLOR, BREAKPOINTS } from "datagovmy-ui/constants";
+import { AKSARA_COLOR, BREAKPOINTS, CountryAndStates } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { numFormat, toDate } from "datagovmy-ui/helpers";
@@ -19,6 +20,7 @@ import dynamic from "next/dynamic";
 import { FunctionComponent, useContext } from "react";
 import WellbeingHeatmap, { WellbeingHeatmapProps } from "./heatmap";
 import WellbeingChoropleth, { WellbeingChoroplethProps } from "./choropleth";
+import { routes } from "@lib/routes";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
@@ -26,14 +28,6 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
  * Wellbeing Dashboard
  * @overview Status: Live
  */
-
-interface TimeseriesChartData {
-  title: string;
-  label: string;
-  data: number[];
-  fill: boolean;
-  stats: Array<{ title: string; value: string }>;
-}
 
 export const TIMESERIES_KEYS = [
   "x",
@@ -74,6 +68,7 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
   next_update,
   choropleth,
   heatmap,
+  state,
   timeseries,
   timeseries_callout,
 }) => {
@@ -104,24 +99,7 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
     const isMain = (key: string) => ["overall", "economy", "social"].includes(key);
 
     return charts.map(key => {
-      const { title, label, data, fill, stats }: TimeseriesChartData = {
-        title: t(`keys.${key}`),
-        label: t(`keys.${key}`),
-        data: isMain(key) ? coordinate[key] : breakdown_coords[key],
-        fill: true,
-        stats: [
-          {
-            title: t("common:common.latest", {
-              date: toDate(LATEST_TIMESTAMP, "yyyy", i18n.language),
-            }),
-            value: numFormat(timeseries_callout.data[key].index, "compact", 1),
-          },
-          {
-            title: t("keys.growth_yoy"),
-            value: numFormat(timeseries_callout.data[key].growth_yoy, "compact", 1) + "%",
-          },
-        ],
-      };
+      const label = t(`keys.${key}`);
 
       return (
         <Timeseries
@@ -130,16 +108,16 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
             <div className="flex items-center gap-2">
               <Tooltip
                 anchor="bottom"
-                className="lg:max-h-96 lg:max-w-72"
+                className="lg:max-h-96 sm:max-w-72"
                 disableArrowTip={true}
                 tip={<Markdown className="tooltip-list">{t(`tooltip.${key}`)}</Markdown>}
               >
                 {open => (
                   <h5
-                    onClick={size.width < BREAKPOINTS.SM ? open : null}
+                    onClick={size.width < BREAKPOINTS.LG ? open : null}
                     className="underline decoration-dashed decoration-from-font [text-underline-position:from-font]"
                   >
-                    {title}
+                    {label}
                   </h5>
                 )}
               </Tooltip>
@@ -156,15 +134,26 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
               {
                 type: "line",
                 label,
-                data,
+                data: isMain(key) ? coordinate[key] : breakdown_coords[key],
                 backgroundColor: AKSARA_COLOR.PRIMARY_H,
                 borderColor: AKSARA_COLOR.PRIMARY,
-                fill,
+                fill: true,
                 borderWidth: 1.5,
               },
             ],
           }}
-          stats={stats}
+          stats={[
+            {
+              title: t("common:common.latest", {
+                date: toDate(LATEST_TIMESTAMP, "yyyy", i18n.language),
+              }),
+              value: numFormat(timeseries_callout.data[key].index, "compact", 1),
+            },
+            {
+              title: t("keys.growth_yoy"),
+              value: numFormat(timeseries_callout.data[key].growth_yoy, "compact", 1) + "%",
+            },
+          ]}
         />
       );
     });
@@ -179,13 +168,14 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
         description={[t("description")]}
         last_updated={last_updated}
         next_update={next_update}
+        action={<StateDropdown url={routes.WELLBEING} currentState={state} />}
         agencyBadge={
           <AgencyBadge name={t("division:bptms.full")} icon={<SocietyIcon />} isDivision />
         }
       />
       <Container className="min-h-screen">
         <Section
-          title={t("section_timeseries.title")}
+          title={t("section_timeseries.title", { state: CountryAndStates[state] })}
           description={
             <div className="flex flex-col gap-4">
               <div className="mt-2 grid grid-cols-2 gap-4 lg:flex lg:flex-row">

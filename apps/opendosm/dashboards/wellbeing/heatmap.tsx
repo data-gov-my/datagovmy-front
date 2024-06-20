@@ -1,4 +1,4 @@
-import { FunctionComponent, useMemo } from "react";
+import { FunctionComponent } from "react";
 import dynamic from "next/dynamic";
 import { WithData } from "datagovmy-ui/types";
 import { HeatmapData, HeatmapDatum } from "datagovmy-ui/charts/heatmap";
@@ -19,32 +19,6 @@ export interface WellbeingHeatmapProps {
 const WellbeingHeatmap: FunctionComponent<WellbeingHeatmapProps> = ({ heatmap }) => {
   const { t } = useTranslation("dashboard-wellbeing");
 
-  const data = useMemo<HeatmapData>(
-    () =>
-      heatmap.data
-        .sort((a, b) => {
-          if (a.y === b.y) {
-            return b.z - a.z;
-          } else {
-            return (b.y as number) - (a.y as number);
-          }
-        })
-        .map((item: HeatmapDatum) => ({
-          x: item.y,
-          y: t(`keys.${(item.x as string).slice(3)}`),
-          z: item.z,
-        })),
-    []
-  );
-  function componentToHex(c: number) {
-    var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
-  }
-
-  function rgbToHex(r: number, g: number, b: number) {
-    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
-  }
-
   return (
     <Section title={t("heatmap_title")} date={heatmap.data_as_of}>
       <Heatmap
@@ -53,7 +27,19 @@ const WellbeingHeatmap: FunctionComponent<WellbeingHeatmapProps> = ({ heatmap })
         height={720}
         color="blues"
         precision={1}
-        data={data}
+        data={heatmap.data
+          .sort((a, b) => {
+            if (a.y === b.y) {
+              return b.z - a.z;
+            } else {
+              return (b.y as number) - (a.y as number);
+            }
+          })
+          .map((item: HeatmapDatum) => ({
+            x: item.y,
+            y: t(`keys.${(item.x as string).slice(3)}`),
+            z: item.z,
+          }))}
       />
     </Section>
   );
