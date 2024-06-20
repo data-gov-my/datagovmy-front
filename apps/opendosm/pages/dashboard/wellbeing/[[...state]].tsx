@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-wellbeing",
   async ({ params }) => {
     const state = params?.state ? params.state[0] : "mys";
-    const { data } = await get("/dashboard", { dashboard: "wellbeing_state", state });
+    const { data } = await get("/dashboard", { dashboard: "wellbeing", state });
 
     return {
       notFound: false,
