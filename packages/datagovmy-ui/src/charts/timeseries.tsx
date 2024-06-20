@@ -355,6 +355,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             borderDash: [5, 10],
           },
           ticks: {
+            autoSkipPadding: 10,
             source: tickSource,
             callback: tickXCallback,
             major: {
