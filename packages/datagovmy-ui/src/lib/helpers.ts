@@ -340,7 +340,7 @@ export const exportAs = async (
  * @returns {string | ReactElement[]} string | React elements
  */
 export const interpolate = (raw_text: string): string | ReactElement[] => {
-  const delimiter = /\[(.*?)\)/;
+  const delimiter = /\[(.+?)\]\((.+?)\)/;
   let matches = raw_text.split(delimiter);
 
   if (matches.length <= 1) return raw_text;

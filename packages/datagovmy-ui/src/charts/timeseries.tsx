@@ -389,6 +389,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             },
           },
           ticks: {
+            autoSkipPadding: 10,
             precision: Array.isArray(precision) ? precision[1] : precision,
             stepSize: stepSize,
             padding: 6,
