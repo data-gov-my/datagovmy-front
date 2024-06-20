@@ -28,7 +28,13 @@ const WellbeingChoropleth: FunctionComponent<WellbeingChoroplethProps> = ({ chor
   const [filter, setFilter] = useState("overall");
 
   const FILTER_OPTIONS: Array<OptionType> = TIMESERIES_KEYS.filter(e => e !== "x").map(type => ({
-    label: t(`keys.${type}`),
+    label: `${
+      ["overall", "economy", "social"].includes(type)
+        ? ""
+        : type.startsWith("economy")
+        ? t("economic") + ": "
+        : t("social") + ": "
+    }${t(`keys.${type}`)}`,
     value: type,
   }));
 
@@ -49,7 +55,6 @@ const WellbeingChoropleth: FunctionComponent<WellbeingChoroplethProps> = ({ chor
               <p className="whitespace-pre-line text-dim">{t("wellbeing.by_state_desc")}</p>
               <div className="flex space-x-3">
                 <Dropdown
-                  width="w-full lg:max-w-[200px]"
                   anchor="left"
                   placeholder={t("common:common.select")}
                   options={FILTER_OPTIONS}
