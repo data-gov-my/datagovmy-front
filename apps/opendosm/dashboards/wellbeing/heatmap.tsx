@@ -22,7 +22,7 @@ const WellbeingHeatmap: FunctionComponent<WellbeingHeatmapProps> = ({ heatmap })
   return (
     <Section title={t("heatmap_title")} date={heatmap.data_as_of}>
       <Heatmap
-        className="flex h-full lg:justify-center"
+        className="flex h-full xl:justify-center"
         width={1280}
         height={720}
         color="blues"

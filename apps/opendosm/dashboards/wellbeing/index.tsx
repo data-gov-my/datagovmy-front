@@ -177,17 +177,13 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
         <Section
           title={t("section_timeseries.title", { state: CountryAndStates[state] })}
           description={
-            <div className="flex flex-col gap-4">
-              <div className="mt-2 grid grid-cols-2 gap-4 lg:flex lg:flex-row">
-                <Dropdown
-                  width="min-w-[150px]"
-                  anchor="left"
-                  options={OPTIONS}
-                  selected={OPTIONS.find(option => data.options === option.value)}
-                  onChange={e => setData("options", e.value)}
-                />
-              </div>
-            </div>
+            <Dropdown
+              width="min-w-[150px]"
+              anchor="left"
+              options={OPTIONS}
+              selected={OPTIONS.find(option => data.options === option.value)}
+              onChange={e => setData("options", e.value)}
+            />
           }
           date={timeseries.data_as_of}
         >
@@ -215,6 +211,7 @@ const Wellbeing: FunctionComponent<WellbeingProps> = ({
         <WellbeingHeatmap heatmap={heatmap} />
 
         <WellbeingChoropleth choropleth={choropleth} />
+
         <SliderProvider>
           {play => (
             <Section

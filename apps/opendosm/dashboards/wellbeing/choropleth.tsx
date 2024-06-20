@@ -53,15 +53,13 @@ const WellbeingChoropleth: FunctionComponent<WellbeingChoroplethProps> = ({ chor
                 </span>
               </div>
               <p className="whitespace-pre-line text-dim">{t("wellbeing.by_state_desc")}</p>
-              <div className="flex space-x-3">
-                <Dropdown
-                  anchor="left"
-                  placeholder={t("common:common.select")}
-                  options={FILTER_OPTIONS}
-                  selected={FILTER_OPTIONS.find(e => e.value === filter)}
-                  onChange={e => setFilter(e.value)}
-                />
-              </div>
+              <Dropdown
+                anchor="left"
+                placeholder={t("common:common.select")}
+                options={FILTER_OPTIONS}
+                selected={FILTER_OPTIONS.find(e => e.value === filter)}
+                onChange={e => setFilter(e.value)}
+              />
             </div>
             <RankList
               id="wellbeing-by-state"
