@@ -23,6 +23,7 @@ export { default as Markdown } from "./Markdown";
 export { default as Megamenu } from "./Nav/megamenu";
 export { default as Metadata } from "./Metadata";
 export { default as Modal } from "./Modal";
+export { default as MultipleComboBox } from "./Combobox/multiple";
 export { default as Nav } from "./Nav";
 export { default as Progress } from "./Progress";
 export { default as NumberedPagination } from "./Pagination/NumberedPagination";

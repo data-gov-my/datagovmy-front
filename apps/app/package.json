@@ -28,7 +28,7 @@
     "chartjs-adapter-luxon": "^1.2.0",
     "chartjs-chart-geo": "3.10.0",
     "chartjs-chart-matrix": "^2.0.1",
-    "chartjs-plugin-annotation": "^2.0.1",
+    "chartjs-plugin-annotation": "^2.2.1",
     "chartjs-plugin-crosshair": "^1.2.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "d3-scale-chromatic": "^3.0.0",

@@ -3,27 +3,12 @@ import { Button, Spinner } from "..";
 import { useTranslation } from "../../hooks/useTranslation";
 import { clx } from "../../lib/helpers";
 import { MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/solid";
-import {
-  autoUpdate,
-  FloatingFocusManager,
-  FloatingPortal,
-  offset,
-  size,
-  useDismiss,
-  useFloating,
-  useInteractions,
-  useListNavigation,
-  useRole,
-} from "@floating-ui/react";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { body } from "../../configs/font";
+import { useCombobox } from "downshift";
 import { matchSorter, MatchSorterOptions } from "match-sorter";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useRef, useState } from "react";
+import { useVirtual } from "react-virtual";
 
-type ComboBoxProps<T> = Omit<
-  ComboOptionProps<T>,
-  "option" | "style" | "isSelected" | "active" | "index" | "setSize" | "total"
-> & {
+type ComboBoxProps<T> = Pick<ComboOptionProps<T>, "format" | "image"> & {
   options: ComboOptionProp<T>[];
   selected?: ComboOptionProp<T> | null;
   onChange: (option?: ComboOptionProp<T>) => void;
@@ -31,6 +16,7 @@ type ComboBoxProps<T> = Omit<
   placeholder?: string;
   loading?: boolean;
   config?: MatchSorterOptions<ComboOptionProp<T>>;
+  className?: string;
 };
 
 const ComboBox = <T extends unknown>({
@@ -43,257 +29,156 @@ const ComboBox = <T extends unknown>({
   image,
   loading = false,
   config = { keys: ["label"] },
+  className,
 }: ComboBoxProps<T>) => {
   const { t } = useTranslation();
-  const [query, setQuery] = useState<string>(selected ? selected.label : "");
+  const [items, setItems] = useState(options);
 
-  useEffect(() => {
-    setQuery(selected ? selected.label : "");
-  }, [selected]);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const listRef = useRef<HTMLUListElement | null>(null);
 
-  const filteredOptions = useMemo<ComboOptionProp<T>[]>(
-    () => matchSorter(options, query, config),
-    [options, query, config]
-  );
-
-  const ITEMS_COUNT = filteredOptions.length;
-  const ITEM_HEIGHT = 36;
-  const overflowPadding = 10;
-
-  const [open, setOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  // The initial max-height is what `react-virtual` uses to know how many
-  // items to render. This needs to be a smaller value so it doesn't try
-  // to render every single item on mount.
-  const [maxHeight, setMaxHeight] = useState(240);
-  const listRef = useRef<Array<HTMLElement | null>>([]);
-
-  const { refs, floatingStyles, context } = useFloating<HTMLInputElement>({
-    placement: "bottom-start",
-    whileElementsMounted: autoUpdate,
-    open,
-    onOpenChange: setOpen,
-    middleware: [
-      size({
-        apply({ rects, elements }) {
-          Object.assign(elements.floating.style, {
-            width: `${rects.reference.width}px`,
-          });
-        },
-        padding: overflowPadding,
-      }),
-      offset(4),
-    ],
-  });
-
-  const rowVirtualizer = useVirtualizer({
-    count: ITEMS_COUNT,
-    getScrollElement: () => refs.floating.current,
-    estimateSize: () => ITEM_HEIGHT,
+  const rowVirtualizer = useVirtual({
+    size: items.length,
+    parentRef: listRef,
+    estimateSize: useCallback(() => 36, []),
     overscan: 15,
   });
 
-  const role = useRole(context, { role: "listbox" });
-  const dismiss = useDismiss(context);
-  const listNav = useListNavigation(context, {
-    listRef,
-    activeIndex,
-    onNavigate: setActiveIndex,
-    virtual: true,
-    loop: true,
+  const {
+    getInputProps,
+    getItemProps,
+    getLabelProps,
+    getMenuProps,
+    highlightedIndex,
+    inputValue,
+    isOpen,
+    openMenu,
+    reset,
+    selectItem,
+    selectedItem,
+    setInputValue,
+  } = useCombobox({
+    defaultSelectedItem: selected,
+    items,
+    itemToString: item => (item ? item.label : ""),
+    onInputValueChange: ({ inputValue }) => setItems(matchSorter(options, inputValue, config)),
+    onHighlightedIndexChange: ({ highlightedIndex, type }) => {
+      if (type !== useCombobox.stateChangeTypes.MenuMouseLeave) {
+        rowVirtualizer.scrollToIndex(highlightedIndex!);
+      }
+    },
+    onSelectedItemChange: ({ selectedItem }) => {
+      if (selectedItem) onChange(selectedItem);
+    },
   });
 
-  const { getReferenceProps, getFloatingProps, getItemProps } = useInteractions([
-    role,
-    dismiss,
-    listNav,
-  ]);
-
   return (
-    <div
-      ref={refs.setReference}
-      onClick={() => setOpen(!open)}
-      className="border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark shadow-button relative flex w-full select-none overflow-hidden rounded-full border focus:outline-none focus-visible:ring-0"
-    >
-      <span className="ml-4 flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
-        {image && selected ? (
-          image(selected.value)
-        ) : (
-          <MagnifyingGlassIcon className="dark:text-dim h-5 w-5 text-black" />
-        )}
-      </span>
-      <input
-        className={clx(
-          "w-full truncate border-none bg-white py-3 pl-2 pr-10 text-base focus:outline-none focus:ring-0 dark:bg-black"
-        )}
-        spellCheck={false}
-        {...getReferenceProps({
-          "onChange": (event: React.ChangeEvent<HTMLInputElement>) => {
-            const value = event.target.value;
-            setQuery(value);
-            if (onSearch) onSearch(value);
-            if (rowVirtualizer.getVirtualItems().length !== 0) rowVirtualizer.scrollToIndex(0);
-
-            if (value) {
-              setOpen(true);
-              setActiveIndex(0);
-            } else {
-              onChange(undefined);
-              setOpen(false);
-            }
-          },
-          "value": query,
-          "placeholder": placeholder,
-          "aria-autocomplete": "list",
-          "onKeyDown"(event) {
-            if (event.key === "Enter" && activeIndex != null && filteredOptions[activeIndex]) {
-              onChange(filteredOptions[activeIndex]);
-              setQuery(filteredOptions[activeIndex].label);
-              setActiveIndex(null);
-              setOpen(false);
-            }
-          },
-        })}
-      />
-
-      {(query.length > 0 || selected) && (
-        <Button
-          className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-2 top-2 flex h-8 w-8 items-center rounded-full"
-          onClick={() => {
-            setQuery("");
-            setOpen(true);
-            onChange(undefined);
-            setActiveIndex(null);
-            (refs.reference.current as HTMLInputElement).focus();
-          }}
+    <div className="relative">
+      <div>
+        <label {...getLabelProps()} />
+        <div
+          className={clx(
+            "border-outline dark:border-washed-dark hover:border-outlineHover dark:hover:border-outlineHover-dark shadow-button relative flex w-full select-none items-center overflow-visible rounded-full border bg-white pl-4 focus:outline-none focus-visible:ring-0 dark:bg-black",
+            className
+          )}
         >
-          <XMarkIcon className="text-dim absolute right-1.5 h-5 w-5 group-hover:text-black dark:group-hover:text-white" />
-        </Button>
-      )}
-      {open && (
-        <FloatingPortal>
-          <FloatingFocusManager context={context} initialFocus={-1} visuallyHiddenDismiss>
-            <div
-              className={clx(
-                body.variable,
-                "font-body border-outline dark:border-washed-dark shadow-floating absolute z-20 max-h-60 w-full overflow-auto rounded-md border bg-white text-sm focus:outline-none dark:bg-black"
-              )}
-              ref={refs.setFloating}
-              tabIndex={-1}
-              style={{
-                ...floatingStyles,
-                maxHeight,
+          <span className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
+            {image && selectedItem ? (
+              image(selectedItem.value)
+            ) : (
+              <MagnifyingGlassIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-500" />
+            )}
+          </span>
+
+          <input
+            {...getInputProps({
+              "aria-autocomplete": "list",
+              "placeholder": placeholder,
+              "ref": inputRef,
+              "spellCheck": false,
+              "type": "text",
+              "onChange": (event: ChangeEvent<HTMLInputElement>) => {
+                if (onSearch) onSearch(event.target.value);
+              },
+            })}
+            className="w-full truncate rounded-r-full border-none bg-white py-3 pl-2 pr-0 focus:outline-none focus:ring-0 dark:bg-black"
+          />
+          {inputValue && (
+            <Button
+              variant="ghost"
+              className="mr-2 flex h-8 w-8 justify-center rounded-full px-1.5"
+              onClick={() => {
+                reset();
+                selectItem(null);
+                setInputValue("");
+                openMenu();
+                inputRef.current && inputRef.current.focus();
               }}
             >
-              {filteredOptions.length <= 150 ? (
-                <>
-                  {loading ? (
-                    <div className="text-dim flex cursor-default select-none items-center gap-2 px-4 py-2">
-                      <Spinner loading={loading} /> {t("common:placeholder.loading")}
-                    </div>
-                  ) : filteredOptions.length === 0 && query !== "" ? (
-                    <p className="text-dim cursor-default select-none px-4 py-2">
-                      {t("common:placeholder.no_results")}
-                    </p>
-                  ) : (
-                    filteredOptions.map((option, i) => {
-                      return (
-                        <ComboOption<T>
-                          {...getItemProps({
-                            key: i,
-                            ref(node) {
-                              listRef.current[i] = node;
-                            },
-                            onClick() {
-                              onChange(option);
-                              setQuery(option.label);
-                              setActiveIndex(null);
-                              setOpen(false);
-                              refs.domReference.current?.focus();
-                            },
-                          })}
-                          total={ITEMS_COUNT}
-                          option={option}
-                          format={format}
-                          image={image}
-                          isSelected={selected?.value === option.value}
-                          active={i === activeIndex}
-                          index={i}
-                        />
-                      );
-                    })
-                  )}
-                </>
-              ) : (
-                <div
-                  className="relative w-full outline-none"
-                  style={{
-                    height: rowVirtualizer.getTotalSize(),
-                  }}
-                  // Some screen readers do not like any wrapper tags inside
-                  // of the element with the role, so we spread it onto the
-                  // virtualizer wrapper.
-                  {...getFloatingProps({
-                    onKeyDown(e) {
-                      if (
-                        e.key === "Enter" &&
-                        activeIndex != null &&
-                        filteredOptions[activeIndex]
-                      ) {
-                        onChange(filteredOptions[activeIndex]);
-                        setQuery(filteredOptions[activeIndex].label);
-                        setActiveIndex(null);
-                        setOpen(false);
-                      }
-                    },
+              <XMarkIcon className="size-5" />
+            </Button>
+          )}
+        </div>
+      </div>
+      <div className="absolute left-0 top-[54px] z-10 w-full">
+        <ul
+          {...getMenuProps({ ref: listRef })}
+          className={clx(
+            "border-outline dark:border-washed-dark shadow-floating relative max-h-60 max-w-full overflow-y-auto rounded-md border bg-white text-sm dark:bg-black",
+            !(isOpen && items.length) && "hidden"
+          )}
+        >
+          {loading ? (
+            <li className="flex cursor-default select-none items-center gap-2 px-4 py-2 text-zinc-500">
+              <Spinner loading={loading} /> {t("placeholder.loading")}
+            </li>
+          ) : items.length === 0 && inputValue !== "" ? (
+            <li className="cursor-default select-none px-4 py-2 text-zinc-500">
+              {t("placeholder.no_results")}
+            </li>
+          ) : items.length > 100 ? (
+            <>
+              <li key="total-size" style={{ height: rowVirtualizer.totalSize }} />
+              {rowVirtualizer.virtualItems.map(virtualRow => (
+                <ComboOption<T>
+                  option={items[virtualRow.index]}
+                  total={options.length}
+                  format={format}
+                  image={image}
+                  isSelected={selectedItem?.value === items[virtualRow.index].value}
+                  active={highlightedIndex === virtualRow.index}
+                  index={virtualRow.index}
+                  {...getItemProps({
+                    index: virtualRow.index,
+                    item: items[virtualRow.index],
                   })}
-                  // Ensure this element receives focus upon open so keydowning works.
-                  tabIndex={0}
-                >
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      transform: `translateY(${rowVirtualizer.getVirtualItems()[0]?.start || 0}px)`,
-                    }}
-                  >
-                    {rowVirtualizer.getVirtualItems().map((virtualItem: any) => {
-                      const option = filteredOptions[virtualItem.index];
-                      return (
-                        <ComboOption
-                          {...getItemProps({
-                            key: virtualItem.index,
-                            ref(node) {
-                              listRef.current[virtualItem.index] = node;
-                            },
-                            onClick() {
-                              onChange(option);
-                              setQuery(option.label);
-                              setActiveIndex(null);
-                              setOpen(false);
-                              refs.domReference.current?.focus();
-                            },
-                          })}
-                          total={ITEMS_COUNT}
-                          option={option}
-                          format={format}
-                          image={image}
-                          isSelected={selected?.value === option.value}
-                          active={virtualItem.index === activeIndex}
-                          index={virtualItem.index}
-                        />
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          </FloatingFocusManager>
-        </FloatingPortal>
-      )}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: virtualRow.size,
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                />
+              ))}
+            </>
+          ) : (
+            items.map((item, index) => (
+              <ComboOption<T>
+                option={item}
+                total={options.length}
+                format={format}
+                image={image}
+                isSelected={selectedItem?.value === item.value}
+                active={highlightedIndex === index}
+                index={index}
+                {...getItemProps({ index, item })}
+              />
+            ))
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
