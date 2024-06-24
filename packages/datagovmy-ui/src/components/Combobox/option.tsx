@@ -69,7 +69,7 @@ function ComboOptionInner<T>(
 // Solution variant #2: Wrapping to make forwardRef work with generics
 // https://stackoverflow.com/questions/58469229/react-with-typescript-generics-while-using-react-forwardref
 const ComboOption = forwardRef(ComboOptionInner) as <T>(
-  props: ComboOptionProps<T> & { ref?: ForwardedRef<HTMLDivElement> }
+  props: ComboOptionProps<T> & { ref?: ForwardedRef<HTMLLIElement> }
 ) => ReturnType<typeof ComboOptionInner>;
 
 export default ComboOption;
