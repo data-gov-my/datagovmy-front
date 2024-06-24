@@ -23,7 +23,7 @@ import { FunctionComponent } from "react";
  */
 
 const VEHICLES = ["car", "motorcycle", "lorry", "van", "bus", "other"];
-const FUEL = ["petrol", "hybrid", "diesel", "greendiesel", "electric", "other"];
+const FUEL = ["petrol", "greendiesel", "diesel", "hybrid", "electric", "other"];
 
 type Vehicle = (typeof VEHICLES)[number];
 type Fuel = (typeof FUEL)[number];
