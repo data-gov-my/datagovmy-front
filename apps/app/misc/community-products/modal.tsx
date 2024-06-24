@@ -163,8 +163,8 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                           key === "email" && typeof value === "string"
                                             ? `mailto:${value}`
                                             : typeof value === "string" && value.startsWith("http")
-                                            ? value
-                                            : `https://${value}`
+                                              ? value
+                                              : `https://${value}`
                                         }
                                         className="group"
                                       >

@@ -50,7 +50,7 @@ const RankList: FunctionComponent<RankListProps> = ({
         <></>
       )}
       <ul
-        className="overflow-auto pt-1.5 [mask-image:linear-gradient(to_bottom,transparent,#000_7.5%,#000_92.5%,transparent),linear-gradient(to_left,#000,transparent_0%)]"
+        className="overflow-auto pt-1.5 [mask-image:linear-gradient(to_bottom,transparent,#000_5%,#000_95%,transparent),linear-gradient(to_left,#000,transparent_0%)]"
         data-testid={id || title}
       >
         {topStateIndices.slice(hasMsia ? 1 : 0).map((pos, i) => (

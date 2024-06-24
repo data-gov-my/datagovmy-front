@@ -32,7 +32,7 @@
 }
 
 .tooltip-list ul {
-  @apply list-inside list-disc space-y-0.5;
+  @apply ml-3 list-outside list-disc space-y-0.5;
 }
 
 .banner-markdown a {

@@ -1,9 +1,11 @@
+import { _DeepPartialObject } from "chart.js/types/utils";
 import type { Color } from "./hooks";
 import type { ChartOptions, ChartTypeRegistry } from "chart.js";
 import type { AnnotationPluginOptions } from "chartjs-plugin-annotation";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import type { ReactElement, ReactNode } from "react";
+import { Options } from "chartjs-plugin-datalabels/types/options";
 
 export type SiteName = "opendosm" | "kkmnow" | "datagovmy";
 
@@ -35,7 +37,7 @@ export type ChartCrosshairOption<T extends keyof ChartTypeRegistry> = ChartOptio
         }
       | false;
     annotation?: AnnotationPluginOptions | false;
-    datalabels?: any | false;
+    datalabels?: _DeepPartialObject<Options> | false;
   };
 };
 
