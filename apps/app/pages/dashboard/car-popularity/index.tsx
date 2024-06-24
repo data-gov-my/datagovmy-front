@@ -1,56 +1,55 @@
-import { GetStaticProps } from "next";
-import { InferGetStaticPropsType } from "next";
-import { get } from "datagovmy-ui/api";
-import { Page } from "datagovmy-ui/types";
-import { withi18n } from "datagovmy-ui/decorators";
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
 import CarPopularityDashboard from "@dashboards/transportation/car-popularity";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { slugify } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const CarPopularity: Page = ({
   last_updated,
   next_update,
+  cars,
   meta,
-  model,
-  queryOptions,
-  tableData,
   timeseries,
-  timeseries_callout,
+  tableData,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(["dashboard-car-popularity", "common"]);
+  const { t } = useTranslation("dashboards");
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={t("dashboards.car-popularity.name")}
+        description={t("dashboards.car-popularity.description")}
+      />
       <CarPopularityDashboard
         last_updated={last_updated}
         next_update={next_update}
-        model={model}
-        queryOptions={queryOptions}
-        tableData={tableData}
+        cars={cars}
         timeseries={timeseries}
-        timeseries_callout={timeseries_callout}
+        tableData={tableData}
       />
     </AnalyticsProvider>
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async () => {
+export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity", async ({}) => {
   try {
-    const [{ data: dropdown }, { data }, { data: model }] = await Promise.all([
-      get("/dropdown", {
-        dashboard: "car_popularity",
-      }),
+    const makers = ["Perodua", "Proton", "Honda"];
+    const maker_id = makers.map(maker => `maker_id=${maker}`).join("&");
+    const models = ["Myvi", "Saga", "City"];
+    const model_id = models.map(model => `model_id=${model}`).join("&");
+
+    const results = await Promise.allSettled([
       get("/dashboard", { dashboard: "car_popularity" }),
-      get("chart/", {
-        dashboard: "car_popularity",
-        chart_name: "timeseries",
-        maker: "PERODUA",
-        model: "MYVI",
-      }),
-    ]).catch(e => {
-      throw new Error("Error: " + e);
+      get(`/explorer?explorer=car_popularity&${maker_id}&${model_id}`),
+    ]);
+
+    const [data, explorer] = results.map(e => {
+      if (e.status === "rejected") return {};
+      else return e.value.data;
     });
 
     return {
@@ -64,11 +63,17 @@ export const getStaticProps: GetStaticProps = withi18n("dashboard-car-popularity
         },
         last_updated: data.data_last_updated,
         next_update: data.data_next_update,
-        model: model,
-        queryOptions: dropdown.data,
+        cars: makers.map((maker, i) => {
+          const label = `${maker} ${models[i]}`;
+          return {
+            label,
+            value: slugify(label),
+            maker,
+            model: models[i],
+          };
+        }),
         tableData: data,
-        timeseries: data.vehicle_timeseries,
-        timeseries_callout: data.vehicle_timeseries_callout,
+        timeseries: explorer.timeseries,
       },
     };
   } catch (error) {
