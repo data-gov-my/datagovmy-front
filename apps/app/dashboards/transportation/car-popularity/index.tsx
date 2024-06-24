@@ -1,5 +1,5 @@
 import { AgencyBadge, Container, Dropdown, Hero, Section } from "datagovmy-ui/components";
-import { clx } from "datagovmy-ui/helpers";
+import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType, WithData } from "datagovmy-ui/types";
 import { FunctionComponent } from "react";
@@ -30,7 +30,7 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
   tableData,
   timeseries,
 }) => {
-  const { t } = useTranslation("dashboard-car-popularity");
+  const { t, i18n } = useTranslation("dashboard-car-popularity");
 
   const YEAR_OPTIONS: OptionType[] = Object.keys(tableData.top_makers.data).map(val => {
     return { label: new Date(val).getFullYear().toString(), value: val };
@@ -70,6 +70,12 @@ const CarPopularity: FunctionComponent<CarPopularityProps> = ({
                 options={YEAR_OPTIONS.reverse()}
                 anchor="left"
               />
+            </div>
+
+            <div className="text-dim text-sm flex justify-center">
+              {t("common:common.data_of", {
+                date: toDate(tableData.top_models.data_as_of, "dd MMM yyyy, HH:mm", i18n.language),
+              })}
             </div>
 
             <div className="flex flex-col gap-12 lg:grid lg:grid-cols-12">
