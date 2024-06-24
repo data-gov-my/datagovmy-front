@@ -17,11 +17,14 @@ const CarPopularity: Page = ({
   timeseries,
   tableData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(["dashboard-car-popularity", "common"]);
+  const { t } = useTranslation("dashboards");
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} keywords={""} />
+      <Metadata
+        title={t("dashboards.car-popularity.name")}
+        description={t("dashboards.car-popularity.description")}
+      />
       <CarPopularityDashboard
         last_updated={last_updated}
         next_update={next_update}
@@ -37,9 +40,9 @@ export const getServerSideProps: GetServerSideProps = withi18n(
   "dashboard-car-popularity",
   async ({}) => {
     try {
-      const makers = ["PERODUA", "PROTON", "HONDA"];
+      const makers = ["Perodua", "Proton", "Honda"];
       const maker_id = makers.map(maker => `maker_id=${maker}`).join("&");
-      const models = ["MYVI", "SAGA", "CITY"];
+      const models = ["Myvi", "Saga", "City"];
       const model_id = models.map(model => `model_id=${model}`).join("&");
 
       const results = await Promise.allSettled([

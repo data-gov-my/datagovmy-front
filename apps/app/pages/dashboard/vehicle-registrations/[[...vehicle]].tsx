@@ -19,11 +19,14 @@ const VehicleRegistrations: Page = ({
   fuel_timeseries,
   fuel_timeseries_callout,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(["dashboard-vehicle-registrations", "common"]);
+  const { t } = useTranslation("dashboards");
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("header")} description={t("description")} />
+      <Metadata
+        title={t("dashboards.vehicle-registrations.name")}
+        description={t("dashboards.vehicle-registrations.description")}
+      />
       <VehicleRegistrationsDashboard
         last_updated={last_updated}
         next_update={next_update}
