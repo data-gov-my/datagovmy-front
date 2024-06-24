@@ -1,12 +1,11 @@
-import { GetServerSideProps } from "next";
-import { InferGetServerSidePropsType } from "next";
-import { get } from "datagovmy-ui/api";
-import { Page } from "datagovmy-ui/types";
-import { withi18n } from "datagovmy-ui/decorators";
-import { Metadata } from "datagovmy-ui/components";
-import { useTranslation } from "datagovmy-ui/hooks";
 import VehicleRegistrationsDashboard from "@dashboards/transportation/vehicle-registrations";
+import { get } from "datagovmy-ui/api";
+import { Metadata } from "datagovmy-ui/components";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
+import { withi18n } from "datagovmy-ui/decorators";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Page } from "datagovmy-ui/types";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
 const VehicleRegistrations: Page = ({
   last_updated,
@@ -18,7 +17,7 @@ const VehicleRegistrations: Page = ({
   vehicle_timeseries_callout,
   fuel_timeseries,
   fuel_timeseries_callout,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboards");
 
   return (
@@ -41,7 +40,14 @@ const VehicleRegistrations: Page = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withi18n(
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+};
+
+export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-vehicle-registrations",
   async ({ params }) => {
     const type = params?.vehicle ? params.vehicle[0] : "all";
