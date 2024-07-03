@@ -345,8 +345,6 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
         payload: JSON.stringify(payload),
       };
 
-      console.log("Sending analytics data:", analyticsData);
-
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=opendata_analytics`,
         {
@@ -363,8 +361,6 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
       if (!response.ok) {
         throw new Error("Failed to send new analytics data");
       }
-
-      console.log("Analytics data sent successfully");
     } catch (error) {
       console.error("Error sending new analytics data:", error);
     }
