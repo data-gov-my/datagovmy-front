@@ -12,6 +12,7 @@ import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { matchSorter } from "match-sorter";
 import { Fragment, FunctionComponent, useContext, useMemo } from "react";
+import { AnalyticsContext } from "../../contexts/analytics";
 
 export type PubResource = {
   description: string;
@@ -46,6 +47,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   show,
   type,
 }) => {
+  const { send_new_analytics } = useContext(AnalyticsContext);
   const { t, i18n } = useTranslation(["publications", "common"]);
   const { size } = useContext(WindowContext);
   const { data, setData } = useData({
@@ -78,12 +80,24 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
       header: t("file_download"),
       enableSorting: false,
       cell: ({ row, getValue }) => {
+        const handleDownload = () => {
+          send_new_analytics(pub_id, "publication", "file_download", {
+            format: row.original.resource_type,
+            publication_id: pub_id,
+            resource_id: row.original.resource_id,
+          });
+          post(row.original.resource_id);
+        };
         return (
           <At
             external
             href={getValue()}
             className="link-primary font-normal"
-            onClick={() => post(row.original.resource_id)}
+            onClick={e => {
+              e.preventDefault();
+              handleDownload();
+              window.open(getValue(), "_blank");
+            }}
           >
             {row.original.resource_type === "excel" ? (
               <ExcelIcon className="inline h-5 w-5 pr-1 text-black dark:text-white" />

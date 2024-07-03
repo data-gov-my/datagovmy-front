@@ -33,6 +33,7 @@ import { FunctionComponent, useContext, useEffect, useMemo, useState } from "rea
 import { DateTime } from "luxon";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { AnalyticsContext } from "datagovmy-ui/contexts/analytics";
 
 /**
  * Publications
@@ -58,6 +59,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
   query,
   total_pubs,
 }) => {
+  const { send_new_analytics } = useContext(AnalyticsContext);
   const { t, i18n } = useTranslation(["publications", "catalogue", "common"]);
   const { cache } = useCache();
   const { size } = useContext(WindowContext);
@@ -425,6 +427,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
                   <PublicationCard
                     key={item.publication_id}
                     publication={item}
+                    sendAnalytics={send_new_analytics}
                     onClick={() => {
                       setData("modal_loading", true);
                       setShow(true);
@@ -454,7 +457,7 @@ const BrowsePublicationsDashboard: FunctionComponent<BrowsePublicationsProps> = 
         )}
 
         <PublicationModal
-          type={"/"}
+          type="/"
           pub_id={params.pub_id}
           post={resource_id => postDownload(resource_id)}
           publication={data.pub}

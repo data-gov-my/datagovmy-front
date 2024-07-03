@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useEffect, useRef, useState, useContext } from "react";
 import { Catalogue } from "../../../types/data-catalogue";
 import { At, Card, Tooltip } from "datagovmy-ui/components";
 import { BuildingLibraryIcon } from "@heroicons/react/20/solid";
@@ -6,6 +6,7 @@ import { clx, toDate, numFormat } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { DownloadOption } from "../../../types";
 import Image from "next/image";
+import { AnalyticsContext } from "../../contexts/analytics";
 
 interface CatalogueCardProps {
   dataset: Catalogue;
@@ -104,6 +105,7 @@ export default CatalogueCard;
 
 interface DownloadCard extends DownloadOption {
   views?: number;
+  catalogueId: string;
 }
 
 export const DownloadCard: FunctionComponent<DownloadCard> = ({
@@ -114,10 +116,20 @@ export const DownloadCard: FunctionComponent<DownloadCard> = ({
   icon,
   id,
   views,
+  catalogueId,
 }) => {
+  const { send_new_analytics } = useContext(AnalyticsContext);
+  const handleClick = () => {
+    send_new_analytics(catalogueId, "data-catalogue", "file_download", {
+      format: id,
+    });
+  };
   return (
     <Card
-      onClick={href}
+      onClick={() => {
+        handleClick();
+        if (typeof href === "function") href();
+      }}
       className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
     >
       <div className="gap-4.5 flex items-center">

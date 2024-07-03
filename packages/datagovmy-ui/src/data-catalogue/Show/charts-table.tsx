@@ -21,6 +21,7 @@ import dynamic from "next/dynamic";
 import { UNIVERSAL_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "../../lib/constants";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
+import { AnalyticsContext } from "../../contexts/analytics";
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 const CatalogueTimeseries = dynamic(() => import("datagovmy-ui/dc-charts/timeseries"), {
@@ -194,6 +195,26 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
     parquet: data.link_parquet,
   };
 
+  const { send_new_analytics } = useContext(AnalyticsContext);
+
+  const handleDownload = (e: { value: string }) => {
+    if (e.value === "embed") {
+      embedRef.current?.open();
+      return;
+    }
+
+    // downloads
+    const action = _downloads.find(({ id }) => e.value === id);
+    if (!action) return;
+
+    // Send analytics data
+    send_new_analytics(dataset.meta.unique_id, "data-catalogue", "file_download", {
+      format: e.value,
+    });
+
+    return action.href();
+  };
+
   return (
     <>
       {/* Chart & Table */}
@@ -223,17 +244,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                   value: item.id,
                 }))
                 .concat({ label: t("embed"), value: "embed" })}
-              onChange={e => {
-                // embed
-                if (e.value === "embed") {
-                  embedRef.current?.open();
-                  return;
-                }
-                // downloads
-                const action = _downloads.find(({ id }) => e.value === id);
-                if (!action) return;
-                return action.href();
-              }}
+              onChange={handleDownload}
             />
             <Dropdown
               className={"hidden lg:flex"}
@@ -247,17 +258,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                   value: item.id,
                 }))
                 .concat({ label: t("embed"), value: "embed" })}
-              onChange={e => {
-                // embed
-                if (e.value === "embed") {
-                  embedRef.current?.open();
-                  return;
-                }
-                // downloads
-                const action = _downloads.find(({ id }) => e.value === id);
-                if (!action) return;
-                return action.href();
-              }}
+              onChange={handleDownload}
             />
           </>
         }

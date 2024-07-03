@@ -11,8 +11,9 @@ import { routes } from "@lib/routes";
 import { Button, Container, Input, Section, Spinner, toast } from "datagovmy-ui/components";
 import { useData, useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { useRouter } from "next/router";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState, useContext } from "react";
 import { DateTime } from "luxon";
+import { AnalyticsContext } from "datagovmy-ui/contexts/analytics";
 
 /**
  * Technical Notes
@@ -34,6 +35,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
   query,
   total_pubs,
 }) => {
+  const { send_new_analytics } = useContext(AnalyticsContext);
   const { t } = useTranslation(["publications", "common"]);
   const { push, events } = useRouter();
   const [show, setShow] = useState<boolean>(false);
@@ -135,6 +137,7 @@ const TechnicalNotesDashboard: FunctionComponent<TechnicalNotesProps> = ({
               <PublicationCard
                 key={item.publication_id}
                 publication={item}
+                sendAnalytics={send_new_analytics}
                 onClick={() => {
                   setData("modal_loading", true);
                   setShow(true);
