@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           language: locale,
           ...query,
         }),
-        fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_pub_dls_by_pub_resource.json`, {
+        fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/publication_dls_by_pub_res.json`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -89,7 +89,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
                   downloads:
                     total_downloads.find(
                       list =>
-                        list.publication_id === pub_id && list.resource_id === resource.resource_id
+                        list.publication_id === pub_id &&
+                        Number(list.resource_id) === resource.resource_id
                     )?.total_downloads ?? 0,
                 })),
               }
