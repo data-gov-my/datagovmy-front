@@ -79,7 +79,8 @@ export const getServerSideProps: GetServerSideProps = withi18n(
                 downloads:
                   total_downloads.find(
                     list =>
-                      list.publication_id === pub_id && list.resource_id === resource.resource_id
+                      list.publication_id === pub_id &&
+                      Number(list.resource_id) === resource.resource_id
                   )?.total_downloads ?? 0,
               })),
             }
