@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     const pub_id = params.pub_id ? params.pub_id[0] : "";
     const [{ data }, response] = await Promise.all([
       get("/pub-docs/technical-note", { language: locale, ...query }),
-      fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_pub_dls_by_pub_resource.json`, {
+      fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/publication_dls_by_pub_res.json`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

@@ -53,7 +53,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           language: locale,
           ...query,
         }),
-        fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_pub_dls_by_pub_resource.json`, {
+        fetch(`${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/publication_dls_by_pub_res.json`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
