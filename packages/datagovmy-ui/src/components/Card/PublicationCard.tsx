@@ -30,9 +30,7 @@ const PublicationCard: FunctionComponent<PublicationCardProps> = ({
 
   const handleClick = () => {
     onClick();
-    if (typeof sendAnalytics === "function") {
-      sendAnalytics(publication.publication_id, "publication", "page_view");
-    }
+    sendAnalytics(publication.publication_id, "publication", "page_view");
   };
 
   return (
