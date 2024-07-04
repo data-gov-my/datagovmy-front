@@ -30,7 +30,7 @@ export default {
       ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
     return {
-      titleTemplate: `%s - Open API Docs`,
+      titleTemplate: `%s - Malaysia's Official Open API`,
       description: description[lang],
       openGraph: {
         description: description[lang],

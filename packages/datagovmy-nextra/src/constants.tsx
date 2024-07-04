@@ -266,7 +266,7 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
       <>
         <meta name="msapplication-TileColor" content="#fff" />
         <meta httpEquiv="Content-Language" content="en" />
-        <meta name="apple-mobile-web-app-title" content="Open API Docs" />
+        <meta name="apple-mobile-web-app-title" content="Malaysia's Official Open API" />
       </>
     ),
     i18n: [],
