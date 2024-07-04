@@ -15,8 +15,11 @@ import { DateTime } from "luxon";
 import GUIOpenDOSMPubForms from "misc/gui/opendosm-pub/forms";
 import { downloadJSON } from "misc/gui/opendosm-pub/functions";
 import ModalAsCard from "misc/gui/opendosm-pub/ModalCard";
+import { useContext } from "react";
+import { AnalyticsContext } from "datagovmy-ui/contexts/analytics";
 
 const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { send_new_analytics } = useContext(AnalyticsContext);
   const { t } = useTranslation(["gui-opendosm-pub", "catalogue", "publications"]);
   const { data, setData } = useData({
     release_date: DateTime.now().toISODate(),
@@ -157,6 +160,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                 <div className="flex flex-col items-center space-y-6 lg:flex-row lg:space-x-6 lg:space-y-0">
                   {/* Publication Card English */}
                   <PublicationCard
+                    sendAnalytics={send_new_analytics}
                     onClick={() => null}
                     publication={{
                       publication_id: data.publication,
@@ -173,6 +177,7 @@ const GUIOpendosmPub: Page = ({ meta }: InferGetStaticPropsType<typeof getStatic
                   />
                   {/* Publication Card BM */}
                   <PublicationCard
+                    sendAnalytics={send_new_analytics}
                     onClick={() => null}
                     publication={{
                       publication_id: data.publication,
