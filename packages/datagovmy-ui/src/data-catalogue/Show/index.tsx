@@ -275,6 +275,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                             result ? result[`download_${props.id as "png" | "svg"}`] : undefined
                           }
                           {...props}
+                          catalogueId={dataset.meta.unique_id}
                         />
                       ))}
                     </div>
@@ -291,6 +292,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                             result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
                           }
                           {...props}
+                          catalogueId={dataset.meta.unique_id}
                         />
                       ))}
                     </div>

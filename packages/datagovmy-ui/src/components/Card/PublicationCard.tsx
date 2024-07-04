@@ -17,18 +17,28 @@ export type Publication = {
 interface PublicationCardProps {
   onClick: () => void;
   publication: Publication;
+  sendAnalytics: (id: string, type: string, event: string) => void;
 }
 
-const PublicationCard: FunctionComponent<PublicationCardProps> = ({ onClick, publication }) => {
+const PublicationCard: FunctionComponent<PublicationCardProps> = ({
+  onClick,
+  publication,
+  sendAnalytics,
+}) => {
   const { t, i18n } = useTranslation(["publications", "common"]);
   const diffInDays = DateTime.now().diff(DateTime.fromISO(publication.release_date), ["days"]);
+
+  const handleClick = () => {
+    onClick();
+    sendAnalytics(publication.publication_id, "publication", "page_view");
+  };
 
   return (
     <Button
       variant="reset"
       key={publication.publication_id}
       className="hover:border-outlineHover hover:bg-background dark:border-washed-dark dark:hover:border-outlineHover-dark dark:hover:bg-washed-dark/50 group flex w-full flex-col space-y-3 rounded-xl border p-6 transition"
-      onClick={onClick}
+      onClick={handleClick}
     >
       <div className="relative flex w-full items-center justify-between">
         <p className="text-dim text-sm font-medium uppercase">
