@@ -23,14 +23,26 @@ export default {
     </>
   ),
   useNextSeoProps: () => {
-    const { defaultLocale, locale } = useRouter();
+    const { asPath, defaultLocale, locale } = useRouter();
     const lang = locale || defaultLocale || "en";
     const description: Record<string, string> = {
       en: "OpenAPI Documentation helps you to explore the extensive array of open datasets and realtime information produced by the Malaysian government via APIs. ",
       ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
+
+    let titleTemplate;
+    if (asPath === "/") {
+      titleTemplate = "Malaysia's Official Open API";
+    } else if (asPath === "/realtime-api/gtfs-static") {
+      titleTemplate = "GTFS Static - Malaysia's Official Open API";
+    } else if (asPath === "/realtime-api/gtfs-realtime") {
+      titleTemplate = "GTFS Realtime - Malaysia's Official Open API";
+    } else {
+      titleTemplate = `%s - Malaysia's Official Open API`;
+    }
+
     return {
-      titleTemplate: `%s - Malaysia's Official Open API`,
+      titleTemplate,
       description: description[lang],
       openGraph: {
         description: description[lang],
