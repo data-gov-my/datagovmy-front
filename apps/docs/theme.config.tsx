@@ -31,22 +31,26 @@ export default {
     };
 
     let pageTitle = "Malaysia's Official Open API";
-    let fullTitle = "Malaysia's Official Open API";
 
     if (asPath === "/realtime-api/gtfs-static") {
       pageTitle = "GTFS Static";
-      fullTitle = "GTFS Static - Malaysia's Official Open API";
     } else if (asPath === "/realtime-api/gtfs-realtime") {
       pageTitle = "GTFS Realtime";
-      fullTitle = "GTFS Realtime - Malaysia's Official Open API";
     } else if (asPath !== "/") {
-      pageTitle = "%s";
-      fullTitle = "%s - Malaysia's Official Open API";
+      pageTitle =
+        asPath
+          .split("/")
+          .pop()
+          ?.split("-")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ") || "Malaysia's Official Open API";
     }
+
+    const fullTitle = asPath === "/" ? pageTitle : `${pageTitle} - Malaysia's Official Open API`;
 
     return {
       title: pageTitle,
-      titleTemplate: fullTitle,
+      titleTemplate: `%s - Malaysia's Official Open API`,
       description: description[lang],
       openGraph: {
         title: fullTitle,
