@@ -30,23 +30,26 @@ export default {
       ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
 
-    let title;
-    if (asPath === "/") {
-      title = "Malaysia's Official Open API";
-    } else if (asPath === "/realtime-api/gtfs-static") {
-      title = "GTFS Static - Malaysia's Official Open API";
+    let pageTitle = "Malaysia's Official Open API";
+    let fullTitle = "Malaysia's Official Open API";
+
+    if (asPath === "/realtime-api/gtfs-static") {
+      pageTitle = "GTFS Static";
+      fullTitle = "GTFS Static - Malaysia's Official Open API";
     } else if (asPath === "/realtime-api/gtfs-realtime") {
-      title = "GTFS Realtime - Malaysia's Official Open API";
-    } else {
-      title = `%s - Malaysia's Official Open API`;
+      pageTitle = "GTFS Realtime";
+      fullTitle = "GTFS Realtime - Malaysia's Official Open API";
+    } else if (asPath !== "/") {
+      pageTitle = "%s";
+      fullTitle = "%s - Malaysia's Official Open API";
     }
 
     return {
-      title,
-      titleTemplate: title,
+      title: pageTitle,
+      titleTemplate: fullTitle,
       description: description[lang],
       openGraph: {
-        title,
+        title: fullTitle,
         description: description[lang],
         images: [
           {
