@@ -19,14 +19,20 @@ export function Head(): ReactElement {
     typeof hue === "number" ? { dark: hue, light: hue } : hue;
   const frontMatter = config.frontMatter as NextSeoProps;
 
+  const nextSeoProps = config.useNextSeoProps?.() || {};
+
   return (
     <>
       <NextSeo
-        title={config.title}
-        description={frontMatter.description}
-        canonical={frontMatter.canonical}
-        openGraph={frontMatter.openGraph}
-        {...config.useNextSeoProps?.()}
+        title={nextSeoProps.title || config.title}
+        titleTemplate={nextSeoProps.titleTemplate}
+        description={nextSeoProps.description || frontMatter.description}
+        canonical={nextSeoProps.canonical || frontMatter.canonical}
+        openGraph={{
+          ...frontMatter.openGraph,
+          ...nextSeoProps.openGraph,
+        }}
+        {...nextSeoProps}
       />
       <NextHead>
         {config.faviconGlyph ? (
