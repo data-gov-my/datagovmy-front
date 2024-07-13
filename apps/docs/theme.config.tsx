@@ -48,18 +48,17 @@ export default {
           .join(" ") || "Malaysia's Official Open API";
     }
 
-    const fullTitle =
-      cleanPath === "/" || cleanPath.length <= 1
-        ? pageTitle
-        : `${pageTitle} - Malaysia's Official Open API`;
+    const fullTitle = cleanPath === "/" ? pageTitle : `${pageTitle} - Malaysia's Official Open API`;
 
     return {
       title: pageTitle,
-      titleTemplate: `%s - Malaysia's Official Open API`,
+      titleTemplate: cleanPath === "/" ? "%s" : "%s - Malaysia's Official Open API",
       description: description[lang],
       openGraph: {
         title: fullTitle,
         description: description[lang],
+        type: "website",
+        url: `${process.env.NEXT_PUBLIC_APP_URL}${cleanPath}`,
         images: [
           {
             url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/og_${lang}.png`,
@@ -83,4 +82,10 @@ export default {
     { locale: "en", text: "English" },
     { locale: "ms", text: "Bahasa Melayu" },
   ],
+  head: (
+    <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta property="og:title" content="" />
+    </>
+  ),
 } satisfies DocsThemeConfig;
