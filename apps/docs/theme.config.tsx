@@ -30,32 +30,41 @@ export default {
       ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
 
-    const cleanPath = asPath.split(/[?#]/)[0];
+    const cleanPath = asPath.split(/[?#]/)[0].replace(/\.(en|ms)$/, "");
+    const baseTitle = "Malaysia's Official Open API";
+    const isHomePage = cleanPath === "/" || cleanPath === "/index";
 
-    let pageTitle = "Malaysia's Official Open API";
-
-    if (cleanPath === "/realtime-api/gtfs-static") {
-      pageTitle = "GTFS Static";
-    } else if (cleanPath === "/realtime-api/gtfs-realtime") {
-      pageTitle = "GTFS Realtime";
-    } else if (cleanPath !== "/" && cleanPath.length > 1) {
-      pageTitle =
-        cleanPath
-          .split("/")
-          .pop()
-          ?.split("-")
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ") || "Malaysia's Official Open API";
+    let pageTitle = baseTitle;
+    if (!isHomePage) {
+      switch (cleanPath) {
+        case "/realtime-api/gtfs-static":
+          pageTitle = "GTFS Static";
+          break;
+        case "/realtime-api/gtfs-realtime":
+          pageTitle = "GTFS Realtime";
+          break;
+        case "/static-api/opendosm":
+          pageTitle = "OpenDOSM";
+          break;
+        case "/faq":
+          pageTitle = "FAQ";
+          break;
+        default:
+          pageTitle =
+            cleanPath
+              .split("/")
+              .pop()
+              ?.split("-")
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(" ") || baseTitle;
+      }
     }
 
-    const fullTitle =
-      cleanPath === "/" || cleanPath.length <= 1
-        ? pageTitle
-        : `${pageTitle} - Malaysia's Official Open API`;
+    const fullTitle = isHomePage ? baseTitle : `${pageTitle} - ${baseTitle}`;
 
     return {
-      title: pageTitle,
-      titleTemplate: `%s - Malaysia's Official Open API`,
+      title: fullTitle,
+      titleTemplate: fullTitle,
       description: description[lang],
       openGraph: {
         title: fullTitle,
