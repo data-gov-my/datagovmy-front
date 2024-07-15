@@ -31,22 +31,37 @@ export default {
     };
 
     const cleanPath = asPath.split(/[?#]/)[0];
-    const isHomePage = cleanPath === "/" || cleanPath === "/index.en" || cleanPath === "/index.ms";
-    const pageTitle = "Malaysia's Official Open API";
+    const baseTitle = "Malaysia's Official Open API";
+
+    const isHomePage = cleanPath === "/" || /^\/index\.(en|ms)$/.test(cleanPath);
+
+    let pageTitle = baseTitle;
+    if (!isHomePage) {
+      pageTitle =
+        cleanPath
+          .split("/")
+          .pop()
+          ?.replace(/\.(en|ms)$/, "") // Remove .en or .ms at the end
+          ?.split("-")
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ") || baseTitle;
+    }
+
+    const fullTitle = isHomePage ? baseTitle : `${pageTitle} - ${baseTitle}`;
 
     console.log("SEO Props:", {
       path: cleanPath,
       isHomePage,
       pageTitle,
-      titleTemplate: isHomePage ? pageTitle : `%s - ${pageTitle}`,
+      fullTitle,
     });
 
     return {
-      title: isHomePage ? pageTitle : undefined,
-      titleTemplate: isHomePage ? pageTitle : `%s - ${pageTitle}`,
+      title: fullTitle,
+      titleTemplate: fullTitle,
       description: description[lang],
       openGraph: {
-        title: pageTitle,
+        title: fullTitle,
         description: description[lang],
         images: [
           {
