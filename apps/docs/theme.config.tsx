@@ -37,18 +37,27 @@ export default {
 
     let pageTitle = baseTitle;
     if (!isHomePage) {
-      if (cleanPath === "/realtime-api/gtfs-static") {
-        pageTitle = "GTFS Static";
-      } else if (cleanPath === "/realtime-api/gtfs-realtime") {
-        pageTitle = "GTFS Realtime";
-      } else {
-        pageTitle =
-          cleanPath
-            .split("/")
-            .pop()
-            ?.split("-")
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" ") || baseTitle;
+      switch (cleanPath) {
+        case "/realtime-api/gtfs-static":
+          pageTitle = "GTFS Static";
+          break;
+        case "/realtime-api/gtfs-realtime":
+          pageTitle = "GTFS Realtime";
+          break;
+        case "/static-api/opendosm":
+          pageTitle = "OpenDOSM";
+          break;
+        case "/faq":
+          pageTitle = "FAQ";
+          break;
+        default:
+          pageTitle =
+            cleanPath
+              .split("/")
+              .pop()
+              ?.split("-")
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(" ") || baseTitle;
       }
     }
 
