@@ -30,11 +30,23 @@ export default {
       ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
 
+    const cleanPath = asPath.split(/[?#]/)[0];
+    const isHomePage = cleanPath === "/" || cleanPath === "/index.en" || cleanPath === "/index.ms";
+    const pageTitle = "Malaysia's Official Open API";
+
+    console.log("SEO Props:", {
+      path: cleanPath,
+      isHomePage,
+      pageTitle,
+      titleTemplate: isHomePage ? pageTitle : `%s - ${pageTitle}`,
+    });
+
     return {
-      titleTemplate:
-        asPath === "/" ? "Malaysia's Official Open API" : `%s - Malaysia's Official Open API`,
+      title: isHomePage ? pageTitle : undefined,
+      titleTemplate: isHomePage ? pageTitle : `%s - ${pageTitle}`,
       description: description[lang],
       openGraph: {
+        title: pageTitle,
         description: description[lang],
         images: [
           {
