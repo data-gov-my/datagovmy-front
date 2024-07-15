@@ -23,7 +23,7 @@ export default {
     </>
   ),
   useNextSeoProps: () => {
-    const { defaultLocale, locale } = useRouter();
+    const { asPath, defaultLocale, locale } = useRouter();
     const lang = locale || defaultLocale || "en";
     const description: Record<string, string> = {
       en: "OpenAPI Documentation helps you to explore the extensive array of open datasets and realtime information produced by the Malaysian government via APIs. ",
@@ -31,7 +31,8 @@ export default {
     };
 
     return {
-      titleTemplate: `%s - Malaysia's Official Open API`,
+      titleTemplate:
+        asPath === "/" ? "Malaysia's Official Open API" : `%s - Malaysia's Official Open API`,
       description: description[lang],
       openGraph: {
         description: description[lang],
