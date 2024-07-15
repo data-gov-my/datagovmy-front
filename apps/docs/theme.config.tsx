@@ -32,7 +32,6 @@ export default {
 
     const cleanPath = asPath.split(/[?#]/)[0].replace(/\.(en|ms)$/, "");
     const baseTitle = "Malaysia's Official Open API";
-
     const isHomePage = cleanPath === "/" || cleanPath === "/index";
 
     let pageTitle = baseTitle;
@@ -62,13 +61,6 @@ export default {
     }
 
     const fullTitle = isHomePage ? baseTitle : `${pageTitle} - ${baseTitle}`;
-
-    console.log("SEO Props:", {
-      path: cleanPath,
-      isHomePage,
-      pageTitle,
-      fullTitle,
-    });
 
     return {
       title: fullTitle,
