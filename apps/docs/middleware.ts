@@ -15,7 +15,7 @@ export const middleware = async (request: NextRequest) => {
   const token = await get<string>("ROLLING_TOKEN");
 
   // Development / Production
-  if (["development", "production"].includes(process.env.NEXT_PUBLIC_APP_ENV))
+  if (["development", "production", "staging"].includes(process.env.NEXT_PUBLIC_APP_ENV))
     return _locale(request, token || "missing token");
 
   // Staging
