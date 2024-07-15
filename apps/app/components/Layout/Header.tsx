@@ -47,30 +47,18 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
                   onClick={close}
                   external
                 />
-                {/* TODO: Remove when formally launch */}
-                {process.env.NEXT_PUBLIC_APP_ENV !== "production" && (
-                  <Nav.Item
-                    title={t("common:nav.data_request")}
-                    key="/data-request"
-                    link="/data-request"
-                    onClick={close}
-                  />
-                )}
+                <Nav.Item
+                  title={t("common:nav.data_request")}
+                  key="/data-request"
+                  link="/data-request"
+                  onClick={close}
+                />
                 <Nav.Item
                   title={t("common:nav.community")}
                   key="/community"
                   link="/community"
                   onClick={close}
                 />
-                {/* TODO: Remove when formally launch */}
-                {process.env.NEXT_PUBLIC_APP_ENV === "production" && (
-                  <Nav.Item
-                    title={t("common:nav.helpdesk")}
-                    key="/helpdesk"
-                    link="/helpdesk"
-                    onClick={close}
-                  />
-                )}
                 <Nav.Item
                   title={t("common:nav.legacy")}
                   key="/legacy"
