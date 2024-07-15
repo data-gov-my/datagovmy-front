@@ -15,21 +15,21 @@ export const middleware = async (request: NextRequest) => {
   const token = await get<string>("ROLLING_TOKEN");
 
   // Development / Production
-  if (["development", "production", "staging"].includes(process.env.NEXT_PUBLIC_APP_ENV))
+  if (["development", "production"].includes(process.env.NEXT_PUBLIC_APP_ENV))
     return _locale(request, token || "missing token");
 
   // Staging
-  //   const basicAuth = request.headers.get("authorization");
-  //   if (basicAuth) {
-  //     const authValue = basicAuth.split(" ")[1];
-  //     const [user, password] = atob(authValue).split(":");
-  //     if (user === "admin" && password === process.env.AUTH_TOKEN)
-  //       return _locale(request, token || "missing token");
-  //   }
-  //   return new NextResponse("Auth required", {
-  //     status: 401,
-  //     headers: { "WWW-Authenticate": `Basic realm="Secure Area"` },
-  //   });
+  const basicAuth = request.headers.get("authorization");
+  if (basicAuth) {
+    const authValue = basicAuth.split(" ")[1];
+    const [user, password] = atob(authValue).split(":");
+    if (user === "admin" && password === process.env.AUTH_TOKEN)
+      return _locale(request, token || "missing token");
+  }
+  return new NextResponse("Auth required", {
+    status: 401,
+    headers: { "WWW-Authenticate": `Basic realm="Secure Area"` },
+  });
 };
 
 // Bug: withLocales (nextra) does not seem work. Cannot set cookies. Modified from source code
