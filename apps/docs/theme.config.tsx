@@ -30,21 +30,26 @@ export default {
       ms: "Dokumentasi OpenAPI sedia membantu anda meneroka pelbagai set data terbuka dan maklumat masa nyata yang dihasilkan oleh kerajaan Malaysia melalui API",
     };
 
-    const cleanPath = asPath.split(/[?#]/)[0];
+    const cleanPath = asPath.split(/[?#]/)[0].replace(/\.(en|ms)$/, "");
     const baseTitle = "Malaysia's Official Open API";
 
-    const isHomePage = cleanPath === "/" || /^\/index\.(en|ms)$/.test(cleanPath);
+    const isHomePage = cleanPath === "/" || cleanPath === "/index";
 
     let pageTitle = baseTitle;
     if (!isHomePage) {
-      pageTitle =
-        cleanPath
-          .split("/")
-          .pop()
-          ?.replace(/\.(en|ms)$/, "") // Remove .en or .ms at the end
-          ?.split("-")
-          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" ") || baseTitle;
+      if (cleanPath === "/realtime-api/gtfs-static") {
+        pageTitle = "GTFS Static";
+      } else if (cleanPath === "/realtime-api/gtfs-realtime") {
+        pageTitle = "GTFS Realtime";
+      } else {
+        pageTitle =
+          cleanPath
+            .split("/")
+            .pop()
+            ?.split("-")
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ") || baseTitle;
+      }
     }
 
     const fullTitle = isHomePage ? baseTitle : `${pageTitle} - ${baseTitle}`;
