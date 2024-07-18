@@ -67,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       props: {
         meta: {
           id: "publications",
-          type: "publication",
+          type: "dashboard",
           category: null,
           agency: "DOSM",
         },
