@@ -10,6 +10,7 @@ import { MetaPage } from "../../types";
 import { existsSync } from "fs";
 import { resolve } from "path";
 import { I18nConfig } from "../../types/i18n";
+import { pathToFileURL } from "url";
 
 type Context = Parameters<GetStaticProps | GetServerSideProps>[0];
 type ResolvedProps<T> = GetStaticPropsResult<T> & GetServerSidePropsResult<T>;
@@ -38,8 +39,8 @@ export const withi18n = <T extends Context>(
       namespace === null
         ? autoloadNs
         : Array.isArray(namespace)
-        ? namespace.concat(autoloadNs)
-        : [namespace].concat(autoloadNs);
+          ? namespace.concat(autoloadNs)
+          : [namespace].concat(autoloadNs);
 
     const [i18n, props] = await Promise.all([
       serverSideTranslations(context.locale!, namespaces, userConfig),
@@ -62,6 +63,8 @@ const readNextI18nConfig = async (): Promise<I18nConfig | undefined> => {
   const path = resolve(DEFAULT_CONFIG_PATH);
 
   if (existsSync(path))
-    return import(/* webpackIgnore: true */ path).then(config => config.default);
+    return import(/* webpackIgnore: true */ pathToFileURL(path).href).then(
+      config => config.default
+    );
   return undefined;
 };
