@@ -146,6 +146,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
             onClose={() => {
               hide();
               setData("query", "");
+              setData("cite", false);
             }}
           >
             <Transition.Child
