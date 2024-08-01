@@ -1,7 +1,7 @@
-import { ExcelIcon, PDFIcon } from "../../icons";
+import { ExcelIcon, PDFIcon, QuoteIcon } from "../../icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { BookOpenIcon, DocumentDuplicateIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { DocumentDuplicateIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { At, Button, Search, Spinner } from "datagovmy-ui/components";
@@ -56,11 +56,11 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
 
   const TAB_OPTIONS: Array<OptionType> = [
     {
-      label: "Copy Citation",
+      label: t("citation.copy_citation"),
       value: "citation",
     },
     {
-      label: "Copy BibTex",
+      label: t("citation.copy_bibtex"),
       value: "bibtex",
     },
   ];
@@ -69,8 +69,8 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
     copied: false,
     query: "",
     tab_index: TAB_OPTIONS[0].value,
+    cite: false,
   });
-  const { query, ...router } = useRouter();
 
   const filteredRes = useMemo(
     () =>
@@ -181,7 +181,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                       <div className="flex h-[300px] w-full items-center justify-center">
                         <Spinner loading={loading} />
                       </div>
-                    ) : !query.cite ? (
+                    ) : !data.cite ? (
                       <>
                         <Dialog.Title
                           as="div"
@@ -226,15 +226,11 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                                 "text-primary dark:text-primary-dark"
                               )}
                               onClick={() => {
-                                const params = new URLSearchParams();
-                                params.set("cite", "true");
-                                router.replace(`${router.asPath}?${params.toString()}`, undefined, {
-                                  scroll: false,
-                                });
+                                setData("cite", true);
                               }}
                             >
-                              <BookOpenIcon className="size-4.5" />
-                              Cite This
+                              <QuoteIcon className="size-4.5" />
+                              {t("cite_button")}
                             </Button>
                           </div>
                           <Button
@@ -280,21 +276,15 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                                 "flex gap-1.5 pt-1 text-sm text-dim hover:bg-background h-fit"
                               )}
                               onClick={() => {
-                                const params = new URLSearchParams();
-                                params.delete("cite");
-                                if (query.pub_id) {
-                                  router.replace(`/publications/${query.pub_id[0]}`, undefined, {
-                                    scroll: false,
-                                  });
-                                }
+                                setData("cite", false);
                               }}
                             >
                               <ChevronLeftIcon className="size-6" />
                             </Button>
                             <div>
-                              <span className="text-lg font-bold">Citation</span>
+                              <span className="text-lg font-bold">{t("citation.title")}</span>
 
-                              <p className="text-sm">You can cite this publication.</p>
+                              <p className="text-sm">{t("citation.description")}</p>
                             </div>
                           </div>
                         </Dialog.Title>
@@ -315,7 +305,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                                           : "text-dim"
                                       )}
                                     >
-                                      <span className="whitespace-nowrap text-base font-medium">
+                                      <span className="whitespace-nowrap text-sm font-medium">
                                         {tab.label}
                                       </span>
                                     </div>
@@ -434,7 +424,7 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
         };
       case "bibtex":
         return {
-          name: "BibTex",
+          name: "BibTeX",
           citation: (
             <>
               @misc{"{"}
@@ -485,12 +475,12 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
           return (
             <div
               className={clx(
-                "py-5 flex flex-col gap-3 relative",
+                "py-5 flex flex-col gap-2 relative",
                 arr.length - 1 !== index && "border-b border-outline"
               )}
             >
               <p className="text-sm font-medium">{meta.name}</p>
-              <p id={`citation-${list}`} className="text-base text-dim break-words">
+              <p id={`citation-${list}`} className="text-sm text-dim break-words">
                 {meta?.citation}
               </p>
               <Button
@@ -534,12 +524,12 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
           return (
             <div
               className={clx(
-                "py-5 flex flex-col gap-3 relative",
+                "py-5 flex flex-col gap-2 relative",
                 arr.length - 1 !== index && "border-b border-outline"
               )}
             >
               <p className="text-sm font-medium">{meta.name}</p>
-              <p id={`citation-${list}`} className="text-base text-dim break-words">
+              <p id={`citation-${list}`} className="text-sm text-dim break-words">
                 {meta?.citation}
               </p>
               <Button
