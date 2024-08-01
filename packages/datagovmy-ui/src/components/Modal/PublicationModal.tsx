@@ -356,15 +356,15 @@ interface CitationBlockProps {
 }
 const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
   const { t, i18n } = useTranslation(["publications", "common", "agencies"]);
-  console.log(resource);
-  const { asPath } = useRouter();
+  const { asPath, query } = useRouter();
 
   const citationList = ["harvard", "chicago", "mla", "apa", "vancouver"] as const;
+  const bibtexList = ["bibtex"] as const;
 
   const siteName = "OpenDOSM";
   const path = asPath.split("?")[0];
 
-  const getCitationData = (type: (typeof citationList)[number]) => {
+  const getCitationData = (type: (typeof citationList)[number] | (typeof bibtexList)[number]) => {
     switch (type) {
       case "harvard":
         return {
@@ -432,6 +432,42 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
             </>
           ),
         };
+      case "bibtex":
+        return {
+          name: "BibTex",
+          citation: (
+            <>
+              @misc{"{"}
+              {query.pub_id && query.pub_id[0]},
+              <br />
+              &nbsp;&nbsp;author = {"{{"}
+              {t("agencies:dosm.full")}
+              {"}}"},
+              <br />
+              &nbsp;&nbsp;title = {"{"}
+              {resource.title}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;year = {"{"}
+              {DateTime.now().year}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;url = {"{"}
+              {`${process.env.NEXT_PUBLIC_APP_URL}${path}`}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;urldate = {"{"}
+              {DateTime.now().toISODate()}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;publisher = {"{"}
+              {siteName}
+              {"}"}
+              <br />
+              {"}"}
+            </>
+          ),
+        };
 
       default:
         return {};
@@ -442,6 +478,55 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
     return (
       <div className="flex flex-col">
         {citationList.map((list, index, arr) => {
+          const { data, setData } = useData({
+            copied: false,
+          });
+          const meta = getCitationData(list);
+          return (
+            <div
+              className={clx(
+                "py-5 flex flex-col gap-3 relative",
+                arr.length - 1 !== index && "border-b border-outline"
+              )}
+            >
+              <p className="text-sm font-medium">{meta.name}</p>
+              <p id={`citation-${list}`} className="text-base text-dim break-words">
+                {meta?.citation}
+              </p>
+              <Button
+                variant="reset"
+                onClick={async () => {
+                  const str = document.getElementById(`citation-${list}`)?.innerText || "";
+                  navigator.clipboard.writeText(str);
+                  setData("copied", true);
+                  setTimeout(() => setData("copied", false), 1000);
+                }}
+                className={clx(
+                  "flex items-center text-sm absolute right-0",
+                  data.copied ? "text-success" : "text-primary dark:text-primary-dark"
+                )}
+              >
+                {data.copied ? (
+                  <>
+                    <CheckCircleIcon className="size-5" />
+                  </>
+                ) : (
+                  <>
+                    <DocumentDuplicateIcon className="size-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (type === "bibtex") {
+    return (
+      <div className="flex flex-col">
+        {bibtexList.map((list, index, arr) => {
           const { data, setData } = useData({
             copied: false,
           });
