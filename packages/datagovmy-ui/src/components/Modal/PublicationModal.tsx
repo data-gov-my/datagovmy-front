@@ -1,7 +1,7 @@
-import { ExcelIcon, PDFIcon } from "../../icons";
+import { ExcelIcon, PDFIcon, QuoteIcon } from "../../icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { DocumentDuplicateIcon } from "@heroicons/react/24/solid";
+import { DocumentDuplicateIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { At, Button, Search, Spinner } from "datagovmy-ui/components";
@@ -11,8 +11,11 @@ import { WindowContext } from "datagovmy-ui/contexts/window";
 import { clx, toDate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { matchSorter } from "match-sorter";
-import { Fragment, FunctionComponent, useContext, useMemo } from "react";
+import { FC, Fragment, FunctionComponent, useContext, useMemo } from "react";
 import { AnalyticsContext } from "../../contexts/analytics";
+import { useRouter } from "next/router";
+import { OptionType } from "../../../types";
+import { DateTime } from "luxon";
 
 export type PubResource = {
   description: string;
@@ -50,9 +53,23 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
   const { send_new_analytics } = useContext(AnalyticsContext);
   const { t, i18n } = useTranslation(["publications", "common"]);
   const { size } = useContext(WindowContext);
+
+  const TAB_OPTIONS: Array<OptionType> = [
+    {
+      label: t("citation.copy_citation"),
+      value: "citation",
+    },
+    {
+      label: t("citation.copy_bibtex"),
+      value: "bibtex",
+    },
+  ];
+
   const { data, setData } = useData({
     copied: false,
     query: "",
+    tab_index: TAB_OPTIONS[0].value,
+    cite: false,
   });
 
   const filteredRes = useMemo(
@@ -129,6 +146,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
             onClose={() => {
               hide();
               setData("query", "");
+              setData("cite", false);
             }}
           >
             <Transition.Child
@@ -164,7 +182,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                       <div className="flex h-[300px] w-full items-center justify-center">
                         <Spinner loading={loading} />
                       </div>
-                    ) : (
+                    ) : !data.cite ? (
                       <>
                         <Dialog.Title
                           as="div"
@@ -175,33 +193,47 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                           </span>
                           <span className="text-lg font-bold">{publication.title}</span>
                           <p className="text-sm">{publication.description}</p>
-
-                          <Button
-                            variant="reset"
-                            onClick={() => {
-                              navigator.clipboard.writeText(
-                                `https://open.dosm.gov.my/publications${type}${pub_id}`
-                              );
-                              setData("copied", true);
-                              setTimeout(() => setData("copied", false), 1000);
-                            }}
-                            className={clx(
-                              "flex items-center gap-1.5 pt-1.5 text-sm",
-                              data.copied ? "text-success" : "text-primary dark:text-primary-dark"
-                            )}
-                          >
-                            {data.copied ? (
-                              <>
-                                <CheckCircleIcon className="h-4.5 w-4.5" />
-                                {t("common:common.copied")}
-                              </>
-                            ) : (
-                              <>
-                                <DocumentDuplicateIcon className="h-4.5 w-4.5" />
-                                {t("copy_publication_link")}
-                              </>
-                            )}
-                          </Button>
+                          <div className="flex items-center gap-4">
+                            <Button
+                              variant="reset"
+                              onClick={() => {
+                                navigator.clipboard.writeText(
+                                  `https://open.dosm.gov.my/publications${type}${pub_id}`
+                                );
+                                setData("copied", true);
+                                setTimeout(() => setData("copied", false), 1000);
+                              }}
+                              className={clx(
+                                "flex items-center gap-1.5 pt-1.5 text-sm",
+                                data.copied ? "text-success" : "text-primary dark:text-primary-dark"
+                              )}
+                            >
+                              {data.copied ? (
+                                <>
+                                  <CheckCircleIcon className="h-4.5 w-4.5" />
+                                  {t("common:common.copied")}
+                                </>
+                              ) : (
+                                <>
+                                  <DocumentDuplicateIcon className="h-4.5 w-4.5" />
+                                  {t("copy_publication_link")}
+                                </>
+                              )}
+                            </Button>
+                            <Button
+                              variant="reset"
+                              className={clx(
+                                "flex items-center gap-1.5 pt-1.5 text-sm",
+                                "text-primary dark:text-primary-dark"
+                              )}
+                              onClick={() => {
+                                setData("cite", true);
+                              }}
+                            >
+                              <QuoteIcon className="size-4.5" />
+                              {t("cite_button")}
+                            </Button>
+                          </div>
                           <Button
                             variant="reset"
                             className="hover:bg-washed dark:hover:bg-washed-dark group absolute right-4 top-4 h-9 w-9 rounded-full"
@@ -220,6 +252,7 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                               className="border-outline text-dim dark:border-outlineHover-dark w-full rounded-md border sm:w-[300px]"
                               placeholder={t("search_subject")}
                               onChange={q => setData("query", q)}
+                              query={data.query}
                             />
                           )}
                         </div>
@@ -230,6 +263,69 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
                           config={config}
                           precision={0}
                         />
+                      </>
+                    ) : (
+                      <>
+                        <Dialog.Title
+                          as="div"
+                          className="flex flex-col gap-y-1.5 text-black dark:text-white"
+                        >
+                          <div className="flex gap-3">
+                            <Button
+                              variant="reset"
+                              className={clx(
+                                "flex gap-1.5 pt-1 text-sm text-dim hover:bg-background h-fit"
+                              )}
+                              onClick={() => {
+                                setData("cite", false);
+                              }}
+                            >
+                              <ChevronLeftIcon className="size-6" />
+                            </Button>
+                            <div>
+                              <span className="text-lg font-bold">{t("citation.title")}</span>
+
+                              <p className="text-sm">{t("citation.description")}</p>
+                            </div>
+                          </div>
+                        </Dialog.Title>
+                        <nav className="flex overflow-hidden border-b border-b-outline bg-white dark:border-b-washed-dark dark:bg-black pt-6">
+                          <div className="hide-scrollbar max-[420px]:justify-start, flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto max-sm:justify-start">
+                            {TAB_OPTIONS.map(tab => (
+                              <div key={tab.value} className="snap-start">
+                                <div
+                                  className="flex h-full min-w-[56px] cursor-pointer items-center justify-center outline-none"
+                                  onClick={() => setData("tab_index", tab.value)}
+                                >
+                                  <div className="relative flex h-full flex-col items-center justify-center px-2 py-4">
+                                    <div
+                                      className={clx(
+                                        "flex items-center gap-2",
+                                        data.tab_index === tab.value
+                                          ? "text-black dark:text-white"
+                                          : "text-dim"
+                                      )}
+                                    >
+                                      <span className="whitespace-nowrap text-sm font-medium">
+                                        {tab.label}
+                                      </span>
+                                    </div>
+                                    {data.tab_index === tab.value && (
+                                      <div className="absolute bottom-0 inline-flex h-[2px] w-full min-w-[56px] rounded-full bg-primary dark:bg-primary-dark" />
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </nav>
+
+                        {data.tab_index === "citation" && (
+                          <CitationBlock type="citation" resource={publication} />
+                        )}
+                        {data.tab_index === "bibtex" && (
+                          <CitationBlock type="bibtex" resource={publication} />
+                        )}
                       </>
                     )}
                   </Dialog.Panel>
@@ -244,3 +340,228 @@ const PublicationModal: FunctionComponent<PublicationModalProps> = ({
 };
 
 export default PublicationModal;
+
+interface CitationBlockProps {
+  type: "citation" | "bibtex";
+  resource: PubResource;
+}
+const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
+  const { t, i18n } = useTranslation(["publications", "common", "agencies"]);
+  const { asPath, query } = useRouter();
+
+  const citationList = ["harvard", "chicago", "mla", "apa", "vancouver"] as const;
+  const bibtexList = ["bibtex"] as const;
+
+  const siteName = "OpenDOSM";
+  const path = asPath.split("?")[0];
+
+  const getCitationData = (type: (typeof citationList)[number] | (typeof bibtexList)[number]) => {
+    switch (type) {
+      case "harvard":
+        return {
+          name: "Harvard",
+          citation: (
+            <>
+              {t("agencies:dosm.full")}, {DateTime.now().year}.{" "}
+              <span className="italic">{resource.title}</span>. {siteName}.{" "}
+              {t("common:common.available_at")}:{" "}
+              <span className="link-primary underline">{`${process.env.NEXT_PUBLIC_APP_URL}${path}`}</span>{" "}
+              [{t("common:common.accessed")} {DateTime.now().toFormat("d MMMM yyyy")}].
+            </>
+          ),
+        };
+      case "chicago":
+        return {
+          name: "Chicago",
+          citation: (
+            <>
+              {t("agencies:dosm.full")}. "{resource.title}."{" "}
+              <span className="italic">{siteName}.</span> {t("common:common.last_modified")}{" "}
+              {DateTime.fromISO(resource.release_date).toFormat("MMMM d, yyyy")}.{" "}
+              <span className="link-primary underline">{`${process.env.NEXT_PUBLIC_APP_URL}${path}`}</span>
+              .
+            </>
+          ),
+        };
+      case "mla":
+        return {
+          name: "MLA",
+          citation: (
+            <>
+              {t("agencies:dosm.full")}. "{resource.title}."{" "}
+              <span className="italic">{siteName}</span>,{" "}
+              {DateTime.fromISO(resource.release_date).toFormat("d MMM yyyy")}.{" "}
+              <span className="link-primary underline">{`${process.env.NEXT_PUBLIC_APP_URL}${path}`}</span>
+              .
+            </>
+          ),
+        };
+      case "apa":
+        return {
+          name: "APA",
+          citation: (
+            <>
+              {t("agencies:dosm.full")}. (
+              {DateTime.fromISO(resource.release_date).toFormat("yyyy, MMMM d")}).{" "}
+              <span className="italic">{resource.title}</span>. {siteName}.{" "}
+              <span className="link-primary underline">{`${process.env.NEXT_PUBLIC_APP_URL}${path}`}</span>
+              .
+            </>
+          ),
+        };
+      case "vancouver":
+        return {
+          name: "Vancouver",
+          citation: (
+            <>
+              {t("agencies:dosm.full")}. {resource.title} [Internet]. {t("agencies:dosm.full")};{" "}
+              {DateTime.fromISO(resource.release_date).toFormat("yyyy MMM d")} [
+              {t("common:common.cited")} {DateTime.now().toFormat("yyyy MMM d")}]{" "}
+              {t("common:common.available_from")}:{" "}
+              <span className="link-primary underline">{`${process.env.NEXT_PUBLIC_APP_URL}${path}`}</span>
+              .
+            </>
+          ),
+        };
+      case "bibtex":
+        return {
+          name: "BibTeX",
+          citation: (
+            <>
+              @misc{"{"}
+              {query.pub_id && query.pub_id[0]},
+              <br />
+              &nbsp;&nbsp;author = {"{{"}
+              {t("agencies:dosm.full")}
+              {"}}"},
+              <br />
+              &nbsp;&nbsp;title = {"{"}
+              {resource.title}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;year = {"{"}
+              {DateTime.now().year}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;url = {"{"}
+              {`${process.env.NEXT_PUBLIC_APP_URL}${path}`}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;urldate = {"{"}
+              {DateTime.now().toISODate()}
+              {"}"},
+              <br />
+              &nbsp;&nbsp;publisher = {"{"}
+              {siteName}
+              {"}"}
+              <br />
+              {"}"}
+            </>
+          ),
+        };
+
+      default:
+        return {};
+    }
+  };
+
+  if (type === "citation") {
+    return (
+      <div className="flex flex-col">
+        {citationList.map((list, index, arr) => {
+          const { data, setData } = useData({
+            copied: false,
+          });
+          const meta = getCitationData(list);
+          return (
+            <div
+              className={clx(
+                "py-5 flex flex-col gap-2 relative",
+                arr.length - 1 !== index && "border-b border-outline"
+              )}
+            >
+              <p className="text-sm font-medium">{meta.name}</p>
+              <p id={`citation-${list}`} className="text-sm text-dim break-words">
+                {meta?.citation}
+              </p>
+              <Button
+                variant="reset"
+                onClick={async () => {
+                  const str = document.getElementById(`citation-${list}`)?.innerText || "";
+                  navigator.clipboard.writeText(str);
+                  setData("copied", true);
+                  setTimeout(() => setData("copied", false), 1000);
+                }}
+                className={clx(
+                  "flex items-center text-sm absolute right-0",
+                  data.copied ? "text-success" : "text-primary dark:text-primary-dark"
+                )}
+              >
+                {data.copied ? (
+                  <>
+                    <CheckCircleIcon className="size-5" />
+                  </>
+                ) : (
+                  <>
+                    <DocumentDuplicateIcon className="size-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (type === "bibtex") {
+    return (
+      <div className="flex flex-col">
+        {bibtexList.map((list, index, arr) => {
+          const { data, setData } = useData({
+            copied: false,
+          });
+          const meta = getCitationData(list);
+          return (
+            <div
+              className={clx(
+                "py-5 flex flex-col gap-2 relative",
+                arr.length - 1 !== index && "border-b border-outline"
+              )}
+            >
+              <p className="text-sm font-medium">{meta.name}</p>
+              <p id={`citation-${list}`} className="text-sm text-dim break-words">
+                {meta?.citation}
+              </p>
+              <Button
+                variant="reset"
+                onClick={async () => {
+                  const str = document.getElementById(`citation-${list}`)?.innerText || "";
+                  navigator.clipboard.writeText(str);
+                  setData("copied", true);
+                  setTimeout(() => setData("copied", false), 1000);
+                }}
+                className={clx(
+                  "flex items-center text-sm absolute right-0",
+                  data.copied ? "text-success" : "text-primary dark:text-primary-dark"
+                )}
+              >
+                {data.copied ? (
+                  <>
+                    <CheckCircleIcon className="size-5" />
+                  </>
+                ) : (
+                  <>
+                    <DocumentDuplicateIcon className="size-5" />
+                  </>
+                )}
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  return null;
+};

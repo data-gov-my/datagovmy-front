@@ -164,12 +164,6 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
       );
     };
 
-    sendNewAnalytics(
-      meta.id,
-      meta.type as "dashboard" | "data-catalogue" | "publication",
-      "page_view"
-    );
-
     router.events.on("routeChangeComplete", handleRouteChange);
     return () => {
       router.events.off("routeChangeComplete", handleRouteChange);
