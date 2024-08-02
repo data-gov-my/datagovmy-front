@@ -525,7 +525,7 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
           return (
             <div
               className={clx(
-                "py-5 flex flex-col gap-2 relative",
+                "py-5 flex flex-col gap-2 relative bg-background dark:bg-background-dark px-2 font-mono",
                 arr.length - 1 !== index && "border-b border-outline"
               )}
             >
@@ -542,7 +542,7 @@ const CitationBlock: FC<CitationBlockProps> = ({ type, resource }) => {
                   setTimeout(() => setData("copied", false), 1000);
                 }}
                 className={clx(
-                  "flex items-center text-sm absolute right-0",
+                  "flex items-center text-sm absolute right-2",
                   data.copied ? "text-success" : "text-primary dark:text-primary-dark"
                 )}
               >
