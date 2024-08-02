@@ -1,11 +1,12 @@
-import { FunctionComponent, MutableRefObject, useContext } from "react";
-import { Card, Section, Tooltip } from "../../components";
+import { FunctionComponent, MutableRefObject, useContext, useState, useEffect } from "react";
+import { Card, Section, Tooltip, Dropdown } from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { interpolate, toDate } from "../../lib/helpers";
 import Table from "../../charts/table";
 import { METADATA_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { DCVariable } from "../../../types/data-catalogue";
 import { CatalogueContext } from "../../contexts/catalogue";
+import { OptionType } from "../../../types";
 
 type MetadataGUI =
   | {
@@ -31,6 +32,7 @@ type MetadataProps = MetadataGUI & {
     | "data_source"
     | "link_csv"
     | "link_parquet"
+    | "link_editions"
   >;
 };
 
@@ -43,6 +45,21 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { dataset } = useContext(CatalogueContext);
   const { track } = useAnalytics(dataset);
+  const [selectedEdition, setSelectedEdition] = useState<OptionType | undefined>(
+    metadata.link_editions && metadata.link_editions.length > 0
+      ? { label: metadata.link_editions[0], value: metadata.link_editions[0] }
+      : undefined
+  );
+
+  useEffect(() => {
+    if (metadata.link_editions && metadata.link_editions.length > 0) {
+      setSelectedEdition({ label: metadata.link_editions[0], value: metadata.link_editions[0] });
+    }
+  }, [metadata.link_editions]);
+
+  const getUrl = (url: string) => {
+    return selectedEdition ? url.replace("YYYY-MM-DD", selectedEdition.value as string) : url;
+  };
 
   return (
     <>
@@ -137,26 +154,62 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
             {/* URLs to dataset */}
             <div className="space-y-3">
               <h5>{t("meta_url")}</h5>
-              <ul className="text-dim ml-6 list-outside list-disc">
-                {Object.entries({
-                  csv: metadata.link_csv,
-                  parquet: metadata.link_parquet,
-                }).map(([key, url]: [string, unknown]) =>
-                  url ? (
-                    <li key={url as string}>
-                      <a
-                        href={url as string}
-                        className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
-                        onClick={() =>
-                          track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
-                        }
-                      >
-                        {url as string}
-                      </a>
-                    </li>
-                  ) : undefined
-                )}
-              </ul>
+              {metadata.link_editions && metadata.link_editions.length > 0 ? (
+                <div className="space-y-3">
+                  <Dropdown
+                    options={metadata.link_editions.map(edition => ({
+                      label: edition,
+                      value: edition,
+                    }))}
+                    selected={selectedEdition}
+                    onChange={selected => setSelectedEdition(selected as OptionType)}
+                    placeholder={t("common:common.select_edition")}
+                    className="w-fit"
+                    width="w-fit"
+                  />
+                  <ul className="text-dim ml-6 list-outside list-disc">
+                    {Object.entries({
+                      csv: metadata.link_csv,
+                      parquet: metadata.link_parquet,
+                    }).map(([key, url]: [string, unknown]) =>
+                      url ? (
+                        <li key={url as string}>
+                          <a
+                            href={getUrl(url as string)}
+                            className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
+                            onClick={() =>
+                              track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
+                            }
+                          >
+                            {getUrl(url as string)}
+                          </a>
+                        </li>
+                      ) : null
+                    )}
+                  </ul>
+                </div>
+              ) : (
+                <ul className="text-dim ml-6 list-outside list-disc">
+                  {Object.entries({
+                    csv: metadata.link_csv,
+                    parquet: metadata.link_parquet,
+                  }).map(([key, url]: [string, unknown]) =>
+                    url ? (
+                      <li key={url as string}>
+                        <a
+                          href={url as string}
+                          className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
+                          onClick={() =>
+                            track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
+                          }
+                        >
+                          {url as string}
+                        </a>
+                      </li>
+                    ) : null
+                  )}
+                </ul>
+              )}
             </div>
             {/* License */}
             <div
