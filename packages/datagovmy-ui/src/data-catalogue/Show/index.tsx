@@ -253,6 +253,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 data_source: data.data_source,
                 link_csv: data.link_csv,
                 link_parquet: data.link_parquet,
+                link_editions: data.link_editions,
               }}
             />
             {/* Download */}
