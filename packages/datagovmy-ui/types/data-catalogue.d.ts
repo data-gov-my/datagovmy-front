@@ -72,6 +72,7 @@ export type DCVariable = {
   link_parquet: string;
   link_csv: string;
   link_preview: string;
+  link_editions?: string[];
   frequency: keyof typeof SHORT_PERIOD;
   data_source: Array<string>;
   fields: Array<DCField>;
