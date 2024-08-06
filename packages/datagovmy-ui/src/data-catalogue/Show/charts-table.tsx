@@ -64,6 +64,7 @@ type ChartTableProps = {
   setFilter: (key: string, value: any) => void;
   sliderOptions: Array<string> | null;
   slider: string | null;
+  selectedEdition: string | undefined;
 };
 
 const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
@@ -75,6 +76,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   setFilter,
   sliderOptions,
   slider,
+  selectedEdition,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { downloads, dataset } = useContext(CatalogueContext);
@@ -198,9 +200,8 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   const { send_new_analytics } = useContext(AnalyticsContext);
 
   const getUrl = (baseUrl: string) => {
-    if (data.link_editions && data.link_editions.length > 0) {
-      const latestEdition = data.link_editions[0];
-      return baseUrl.replace("YYYY-MM-DD", latestEdition);
+    if (data.link_editions && data.link_editions.length > 0 && selectedEdition) {
+      return baseUrl.replace("YYYY-MM-DD", selectedEdition);
     }
     return baseUrl;
   };
@@ -211,6 +212,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
       return;
     }
 
+    // Find the download action based on the selected value
     const action = _downloads.find(({ id }) => e.value === id);
     if (!action) return;
 

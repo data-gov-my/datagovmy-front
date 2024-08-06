@@ -103,14 +103,15 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
 
 export default CatalogueCard;
 
-interface DownloadCard extends DownloadOption {
+interface DownloadCardProps extends DownloadOption {
   views?: number;
   catalogueId: string;
   link_editions?: string[];
   baseUrl?: string;
+  selectedEdition?: string;
 }
 
-export const DownloadCard: FunctionComponent<DownloadCard> = ({
+export const DownloadCard: FunctionComponent<DownloadCardProps> = ({
   href,
   image,
   title,
@@ -121,24 +122,27 @@ export const DownloadCard: FunctionComponent<DownloadCard> = ({
   catalogueId,
   link_editions,
   baseUrl,
+  selectedEdition,
 }) => {
   const { send_new_analytics } = useContext(AnalyticsContext);
+
   const handleClick = () => {
     send_new_analytics(catalogueId, "data-catalogue", "file_download", { format: id });
 
     let constructedUrl: string | undefined;
 
     if (baseUrl && link_editions && link_editions.length > 0) {
-      const latestEdition = link_editions[0];
-      constructedUrl = baseUrl.replace("YYYY-MM-DD", latestEdition);
+      const editionToUse = selectedEdition || link_editions[0];
+      constructedUrl = baseUrl.replace("YYYY-MM-DD", editionToUse);
     }
 
     if (constructedUrl) {
       window.open(constructedUrl, "_blank");
+    } else {
+      href();
     }
-
-    href();
   };
+
   return (
     <Card
       onClick={handleClick}

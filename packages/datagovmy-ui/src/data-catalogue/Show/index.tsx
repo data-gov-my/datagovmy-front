@@ -190,6 +190,10 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const { downloads, dataset } = useContext(CatalogueContext);
   const { result } = useAnalytics(dataset);
 
+  const [selectedEdition, setSelectedEdition] = useState<string | undefined>(
+    data.link_editions && data.link_editions.length > 0 ? data.link_editions[0] : undefined
+  );
+
   const urls = {
     csv: data.link_csv,
     parquet: data.link_parquet,
@@ -227,6 +231,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               setFilter={setFilter}
               sliderOptions={sliderOptions}
               slider={slider}
+              selectedEdition={selectedEdition}
             />
 
             {/* Methodology */}
@@ -255,6 +260,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 link_parquet: data.link_parquet,
                 link_editions: data.link_editions,
               }}
+              selectedEdition={selectedEdition}
+              setSelectedEdition={setSelectedEdition}
             />
             {/* Download */}
             <Section
@@ -279,6 +286,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           catalogueId={dataset.meta.unique_id}
                           link_editions={data.link_editions}
                           baseUrl={props.id === "csv" ? data.link_csv : data.link_parquet}
+                          selectedEdition={selectedEdition}
                         />
                       ))}
                     </div>
@@ -298,6 +306,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           catalogueId={dataset.meta.unique_id}
                           link_editions={data.link_editions}
                           baseUrl={props.id === "csv" ? data.link_csv : data.link_parquet}
+                          selectedEdition={selectedEdition}
                         />
                       ))}
                     </div>

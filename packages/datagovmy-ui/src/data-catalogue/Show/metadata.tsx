@@ -1,4 +1,4 @@
-import { FunctionComponent, MutableRefObject, useContext, useState } from "react";
+import { FunctionComponent, MutableRefObject, useContext } from "react";
 import { Card, Section, Tooltip, Dropdown } from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { interpolate, toDate } from "../../lib/helpers";
@@ -6,7 +6,6 @@ import Table from "../../charts/table";
 import { METADATA_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { DCVariable } from "../../../types/data-catalogue";
 import { CatalogueContext } from "../../contexts/catalogue";
-import { OptionType } from "../../../types";
 
 type MetadataGUI =
   | {
@@ -34,6 +33,8 @@ type MetadataProps = MetadataGUI & {
     | "link_parquet"
     | "link_editions"
   >;
+  selectedEdition: string | undefined;
+  setSelectedEdition: (edition: string) => void;
 };
 
 const DCMetadata: FunctionComponent<MetadataProps> = ({
@@ -41,22 +42,17 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   scrollRef,
   setMetadata,
   metadata,
+  selectedEdition,
+  setSelectedEdition,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { dataset } = useContext(CatalogueContext);
   const { track } = useAnalytics(dataset);
 
   const hasEditions = metadata.link_editions != undefined && metadata.link_editions.length > 0;
-  const [selectedEdition, setSelectedEdition] = useState<OptionType | undefined>(() =>
-    hasEditions && metadata.link_editions
-      ? { label: metadata.link_editions[0], value: metadata.link_editions[0] }
-      : undefined
-  );
 
   const getUrl = (url: string) => {
-    return hasEditions && selectedEdition
-      ? url.replace("YYYY-MM-DD", selectedEdition.value as string)
-      : url;
+    return hasEditions && selectedEdition ? url.replace("YYYY-MM-DD", selectedEdition) : url;
   };
 
   return (
@@ -154,12 +150,14 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
               <h5>{t("meta_url")}</h5>
               {hasEditions && metadata.link_editions && (
                 <Dropdown
-                  options={metadata.link_editions!.map(edition => ({
+                  options={metadata.link_editions.map(edition => ({
                     label: edition,
                     value: edition,
                   }))}
-                  selected={selectedEdition}
-                  onChange={selected => setSelectedEdition(selected as OptionType)}
+                  selected={
+                    selectedEdition ? { label: selectedEdition, value: selectedEdition } : undefined
+                  }
+                  onChange={selected => setSelectedEdition(selected.value as string)}
                   placeholder={t("common:common.select_edition")}
                   className="w-fit"
                   width="w-fit"
