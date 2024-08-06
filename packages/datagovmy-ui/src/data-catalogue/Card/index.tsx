@@ -103,15 +103,14 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
 
 export default CatalogueCard;
 
-interface ExtendedDownloadCard extends Omit<DownloadOption, "href"> {
-  href: string | (() => string) | (() => void);
+interface DownloadCard extends DownloadOption {
   views?: number;
   catalogueId: string;
   link_editions?: string[];
   baseUrl?: string;
 }
 
-export const DownloadCard: FunctionComponent<ExtendedDownloadCard> = ({
+export const DownloadCard: FunctionComponent<DownloadCard> = ({
   href,
   image,
   title,
