@@ -124,33 +124,21 @@ export const DownloadCard: FunctionComponent<DownloadCard> = ({
 }) => {
   const { send_new_analytics } = useContext(AnalyticsContext);
   const handleClick = () => {
-    send_new_analytics(catalogueId, "data-catalogue", "file_download", {
-      format: id,
-    });
+    send_new_analytics(catalogueId, "data-catalogue", "file_download", { format: id });
 
-    let url: string | undefined;
+    let constructedUrl: string | undefined;
 
     if (baseUrl && link_editions && link_editions.length > 0) {
       const latestEdition = link_editions[0];
-      url = baseUrl.replace("YYYY-MM-DD", latestEdition);
-    } else if (typeof href === "function") {
-      const result = href();
-      if (typeof result === "string") {
-        url = result;
-      } else {
-        return;
-      }
-    } else if (typeof href === "string") {
-      url = href;
+      constructedUrl = baseUrl.replace("YYYY-MM-DD", latestEdition);
     }
 
-    if (url) {
-      window.open(url, "_blank");
-    } else {
-      console.error("No valid URL found for download");
+    if (constructedUrl) {
+      window.open(constructedUrl, "_blank");
     }
+
+    href();
   };
-
   return (
     <Card
       onClick={handleClick}
