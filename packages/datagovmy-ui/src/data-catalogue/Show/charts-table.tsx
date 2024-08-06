@@ -197,13 +197,20 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
 
   const { send_new_analytics } = useContext(AnalyticsContext);
 
+  const getUrl = (baseUrl: string) => {
+    if (data.link_editions && data.link_editions.length > 0) {
+      const latestEdition = data.link_editions[0];
+      return baseUrl.replace("YYYY-MM-DD", latestEdition);
+    }
+    return baseUrl;
+  };
+
   const handleDownload = (e: { value: string }) => {
     if (e.value === "embed") {
       embedRef.current?.open();
       return;
     }
 
-    // downloads
     const action = _downloads.find(({ id }) => e.value === id);
     if (!action) return;
 
@@ -212,7 +219,13 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
       format: e.value,
     });
 
-    return action.href();
+    if (e.value === "csv") {
+      window.open(getUrl(data.link_csv), "_blank");
+    } else if (e.value === "parquet") {
+      window.open(getUrl(data.link_parquet), "_blank");
+    } else {
+      action.href();
+    }
   };
 
   return (

@@ -277,6 +277,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           }
                           {...props}
                           catalogueId={dataset.meta.unique_id}
+                          link_editions={data.link_editions}
+                          baseUrl={props.id === "csv" ? data.link_csv : data.link_parquet}
                         />
                       ))}
                     </div>
@@ -294,6 +296,8 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           }
                           {...props}
                           catalogueId={dataset.meta.unique_id}
+                          link_editions={data.link_editions}
+                          baseUrl={props.id === "csv" ? data.link_csv : data.link_parquet}
                         />
                       ))}
                     </div>

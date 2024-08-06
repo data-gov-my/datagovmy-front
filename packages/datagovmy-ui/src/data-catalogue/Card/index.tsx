@@ -103,12 +103,15 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
 
 export default CatalogueCard;
 
-interface DownloadCard extends DownloadOption {
+interface ExtendedDownloadCard extends Omit<DownloadOption, "href"> {
+  href: string | (() => string) | (() => void);
   views?: number;
   catalogueId: string;
+  link_editions?: string[];
+  baseUrl?: string;
 }
 
-export const DownloadCard: FunctionComponent<DownloadCard> = ({
+export const DownloadCard: FunctionComponent<ExtendedDownloadCard> = ({
   href,
   image,
   title,
@@ -117,19 +120,41 @@ export const DownloadCard: FunctionComponent<DownloadCard> = ({
   id,
   views,
   catalogueId,
+  link_editions,
+  baseUrl,
 }) => {
   const { send_new_analytics } = useContext(AnalyticsContext);
   const handleClick = () => {
     send_new_analytics(catalogueId, "data-catalogue", "file_download", {
       format: id,
     });
+
+    let url: string | undefined;
+
+    if (baseUrl && link_editions && link_editions.length > 0) {
+      const latestEdition = link_editions[0];
+      url = baseUrl.replace("YYYY-MM-DD", latestEdition);
+    } else if (typeof href === "function") {
+      const result = href();
+      if (typeof result === "string") {
+        url = result;
+      } else {
+        return;
+      }
+    } else if (typeof href === "string") {
+      url = href;
+    }
+
+    if (url) {
+      window.open(url, "_blank");
+    } else {
+      console.error("No valid URL found for download");
+    }
   };
+
   return (
     <Card
-      onClick={() => {
-        handleClick();
-        if (typeof href === "function") href();
-      }}
+      onClick={handleClick}
       className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
     >
       <div className="gap-4.5 flex items-center">
