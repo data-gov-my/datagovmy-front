@@ -153,7 +153,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     }
 
     return { desktop: chunk(desktop, 7), mobile }; // chunk into arrays of size 7
-  }, [data.month, i18n.language]);
+  }, [cal_pubs, data.month, i18n.language]);
 
   const config: TableConfig[] = [
     {

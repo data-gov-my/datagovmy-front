@@ -4,12 +4,7 @@ import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
 import { useRouter } from "next/router";
 import { FunctionComponent, ReactNode } from "react";
-import {
-  BookOpenIcon,
-  CalendarIcon,
-  DocumentTextIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/20/solid";
+import { CalendarIcon, DocumentTextIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 /**
  * Publications Layout
