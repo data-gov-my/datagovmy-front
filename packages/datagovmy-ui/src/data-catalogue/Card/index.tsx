@@ -138,9 +138,8 @@ export const DownloadCard: FunctionComponent<DownloadCardProps> = ({
 
     if (constructedUrl) {
       window.open(constructedUrl, "_blank");
-    } else {
-      href();
     }
+    href();
   };
 
   return (
