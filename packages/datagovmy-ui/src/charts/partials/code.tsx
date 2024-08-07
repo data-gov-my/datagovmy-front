@@ -54,7 +54,7 @@ if 'date' in df.columns: df['date'] = pd.to_datetime(df['date'])
 
 print(df)`;
     }
-  }, [type]);
+  }, [type, url]);
 
   const juliaTemplate = useMemo(() => {
     switch (type) {
@@ -63,7 +63,7 @@ print(df)`;
       default: // TIMESERIES | CHOROPLETH | TABLE
         return ``;
     }
-  }, [type]);
+  }, [type, url]);
 
   const rTemplate = useMemo(() => {
     switch (type) {
@@ -86,7 +86,7 @@ plot(spdf, col="grey")
 library(arrow)
 read_parquet("${url}")`;
     }
-  }, [type]);
+  }, [type, url]);
 
   return <CodeBlock event={{ url }}>{{ python: pythonTemplate, r: rTemplate }}</CodeBlock>;
 };
