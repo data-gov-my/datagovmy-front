@@ -20,8 +20,6 @@
     "*.{js,ts,tsx,css,md}": "prettier --write"
   },
   "devDependencies": {
-    "@types/ua-parser-js": "^0.7.39",
-    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.4.14",
     "eslint-config-datagovmy": "*",
     "husky": ">=6",
@@ -37,8 +35,5 @@
   "engines": {
     "node": ">=14.0.0"
   },
-  "packageManager": "yarn@1.22.19",
-  "dependencies": {
-    "ua-parser-js": "^1.0.38"
-  }
+  "packageManager": "yarn@1.22.19"
 }

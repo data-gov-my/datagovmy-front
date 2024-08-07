@@ -165,7 +165,8 @@
     "react-virtual": "^2.10.4",
     "react-window": "^1.8.9",
     "sonner": "^0.4.0",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "ua-parser-js": "^1.0.38"
   },
   "devDependencies": {
     "@types/cookie": "^0.5.1",
@@ -183,6 +184,8 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@types/react-window": "^1.8.5",
+    "@types/ua-parser-js": "^0.7.39",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "autoprefixer": "^10.4.7",

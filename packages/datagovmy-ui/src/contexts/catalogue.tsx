@@ -171,7 +171,7 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
                 icon: <DocumentArrowDownIcon className="text-dim h-6 min-w-[24px]" />,
                 href: () => {
                   download(urls.link_geojson, dataset.meta.unique_id.concat(".geojson"));
-                  track("parquet");
+                  track("parquet"); // TODO: Fix GeoJSON analytics
                 },
               },
             ],

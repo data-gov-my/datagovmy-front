@@ -203,16 +203,14 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
       return;
     }
 
-    // downloads
+    // Find the download action based on the selected value
     const action = _downloads.find(({ id }) => e.value === id);
     if (!action) return;
 
-    // Send analytics data
-    send_new_analytics(dataset.meta.unique_id, "data-catalogue", "file_download", {
-      format: e.value,
-    });
-
-    return action.href();
+    // TODO: Refactor. Both opens download link in new tab but
+    // following stop-gap solution is used as `url` in href() does not update with selected date
+    window.open(e.value === "csv" ? data.link_csv : data.link_parquet, "_blank");
+    action.href();
   };
 
   return (

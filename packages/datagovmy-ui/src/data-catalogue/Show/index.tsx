@@ -190,10 +190,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const { downloads, dataset } = useContext(CatalogueContext);
   const { result } = useAnalytics(dataset);
 
-  const urls = {
-    csv: data.link_csv,
-    parquet: data.link_parquet,
-  };
+  const [selectedEdition, setSelectedEdition] = useState<string>(
+    data.link_editions && data.link_editions.length > 0 ? data.link_editions[0] : ""
+  );
+
+  const getURL = (url: string, edition: string) =>
+    edition ? url.replace("YYYY-MM-DD", edition) : url;
+
+  const [urls, setURLs] = useState(
+    data.link_editions && data.link_editions.length > 0
+      ? {
+          csv: getURL(data.link_csv, selectedEdition),
+          parquet: getURL(data.link_parquet, selectedEdition),
+        }
+      : { csv: data.link_csv, parquet: data.link_parquet }
+  );
 
   return (
     <div>
@@ -220,7 +231,11 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             {/* Chart & Table */}
             <DCChartsAndTable
               scrollRef={scrollRef}
-              data={data}
+              data={{
+                ...data,
+                link_csv: urls.csv,
+                link_parquet: urls.parquet,
+              }}
               selectedViz={selectedViz}
               setSelectedViz={setSelectedViz}
               filter={filter}
@@ -251,9 +266,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 last_updated: data.last_updated,
                 next_update: data.next_update,
                 data_source: data.data_source,
-                link_csv: data.link_csv,
-                link_parquet: data.link_parquet,
+                link_csv: urls.csv,
+                link_parquet: urls.parquet,
                 link_editions: data.link_editions,
+              }}
+              selectedEdition={selectedEdition}
+              setSelectedEdition={edition => {
+                setSelectedEdition(edition);
+                setURLs({
+                  csv: getURL(data.link_csv, edition),
+                  parquet: getURL(data.link_parquet, edition),
+                });
               }}
             />
             {/* Download */}
@@ -275,8 +298,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           views={
                             result ? result[`download_${props.id as "png" | "svg"}`] : undefined
                           }
+                          link_editions={data.link_editions}
+                          url={props.id === "csv" ? urls.csv : urls.parquet}
                           {...props}
-                          catalogueId={dataset.meta.unique_id}
                         />
                       ))}
                     </div>
@@ -292,8 +316,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           views={
                             result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
                           }
+                          link_editions={data.link_editions}
+                          url={props.id === "csv" ? urls.csv : urls.parquet}
                           {...props}
-                          catalogueId={dataset.meta.unique_id}
                         />
                       ))}
                     </div>
