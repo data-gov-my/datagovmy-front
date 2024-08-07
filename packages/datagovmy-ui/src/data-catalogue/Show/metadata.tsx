@@ -6,6 +6,7 @@ import Table from "../../charts/table";
 import { METADATA_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { DCVariable } from "../../../types/data-catalogue";
 import { CatalogueContext } from "../../contexts/catalogue";
+import { OptionType } from "../../../types";
 
 type MetadataGUI =
   | {
@@ -48,6 +49,19 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { dataset } = useContext(CatalogueContext);
   const { track } = useAnalytics(dataset);
+
+  const hasEditions = metadata.link_editions != undefined && metadata.link_editions.length > 0;
+  const [selectedEdition, setSelectedEdition] = useState<OptionType | undefined>(() =>
+    hasEditions && metadata.link_editions
+      ? { label: metadata.link_editions[0], value: metadata.link_editions[0] }
+      : undefined
+  );
+
+  const getUrl = (url: string) => {
+    return hasEditions && selectedEdition
+      ? url.replace("YYYY-MM-DD", selectedEdition.value as string)
+      : url;
+  };
 
   return (
     <>
