@@ -105,10 +105,8 @@ export default CatalogueCard;
 
 interface DownloadCardProps extends DownloadOption {
   views?: number;
-  catalogueId: string;
   link_editions?: string[];
-  baseUrl?: string;
-  selectedEdition?: string;
+  url?: string;
 }
 
 export const DownloadCard: FunctionComponent<DownloadCardProps> = ({
@@ -119,25 +117,14 @@ export const DownloadCard: FunctionComponent<DownloadCardProps> = ({
   icon,
   id,
   views,
-  catalogueId,
   link_editions,
-  baseUrl,
-  selectedEdition,
+  url,
 }) => {
-  const { send_new_analytics } = useContext(AnalyticsContext);
-
   const handleClick = () => {
-    send_new_analytics(catalogueId, "data-catalogue", "file_download", { format: id });
-
-    let constructedUrl: string | undefined;
-
-    if (baseUrl && link_editions && link_editions.length > 0) {
-      const editionToUse = selectedEdition || link_editions[0];
-      constructedUrl = baseUrl.replace("YYYY-MM-DD", editionToUse);
-    }
-
-    if (constructedUrl) {
-      window.open(constructedUrl, "_blank");
+    // TODO: Refactor. Both opens download link in new tab but
+    // following stop-gap solution is used as `url` in href() does not update with selected date
+    if (link_editions && link_editions.length > 0) {
+      window.open(url, "_blank");
     }
     href();
   };

@@ -190,14 +190,21 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
   const { downloads, dataset } = useContext(CatalogueContext);
   const { result } = useAnalytics(dataset);
 
-  const [selectedEdition, setSelectedEdition] = useState<string | undefined>(
-    data.link_editions && data.link_editions.length > 0 ? data.link_editions[0] : undefined
+  const [selectedEdition, setSelectedEdition] = useState<string>(
+    data.link_editions && data.link_editions.length > 0 ? data.link_editions[0] : ""
   );
 
-  const urls = {
-    csv: data.link_csv,
-    parquet: data.link_parquet,
-  };
+  const getURL = (url: string, edition: string) =>
+    edition ? url.replace("YYYY-MM-DD", edition) : url;
+
+  const [urls, setURLs] = useState(
+    data.link_editions && data.link_editions.length > 0
+      ? {
+          csv: getURL(data.link_csv, selectedEdition),
+          parquet: getURL(data.link_parquet, selectedEdition),
+        }
+      : { csv: data.link_csv, parquet: data.link_parquet }
+  );
 
   return (
     <div>
@@ -224,14 +231,17 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
             {/* Chart & Table */}
             <DCChartsAndTable
               scrollRef={scrollRef}
-              data={data}
+              data={{
+                ...data,
+                link_csv: urls.csv,
+                link_parquet: urls.parquet,
+              }}
               selectedViz={selectedViz}
               setSelectedViz={setSelectedViz}
               filter={filter}
               setFilter={setFilter}
               sliderOptions={sliderOptions}
               slider={slider}
-              selectedEdition={selectedEdition}
             />
 
             {/* Methodology */}
@@ -256,12 +266,18 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 last_updated: data.last_updated,
                 next_update: data.next_update,
                 data_source: data.data_source,
-                link_csv: data.link_csv,
-                link_parquet: data.link_parquet,
+                link_csv: urls.csv,
+                link_parquet: urls.parquet,
                 link_editions: data.link_editions,
               }}
               selectedEdition={selectedEdition}
-              setSelectedEdition={setSelectedEdition}
+              setSelectedEdition={edition => {
+                setSelectedEdition(edition);
+                setURLs({
+                  csv: getURL(data.link_csv, edition),
+                  parquet: getURL(data.link_parquet, edition),
+                });
+              }}
             />
             {/* Download */}
             <Section
@@ -282,11 +298,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           views={
                             result ? result[`download_${props.id as "png" | "svg"}`] : undefined
                           }
-                          {...props}
-                          catalogueId={dataset.meta.unique_id}
                           link_editions={data.link_editions}
-                          baseUrl={props.id === "csv" ? data.link_csv : data.link_parquet}
-                          selectedEdition={selectedEdition}
+                          url={props.id === "csv" ? urls.csv : urls.parquet}
+                          {...props}
                         />
                       ))}
                     </div>
@@ -302,11 +316,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                           views={
                             result ? result[`download_${props.id as "csv" | "parquet"}`] : undefined
                           }
-                          {...props}
-                          catalogueId={dataset.meta.unique_id}
                           link_editions={data.link_editions}
-                          baseUrl={props.id === "csv" ? data.link_csv : data.link_parquet}
-                          selectedEdition={selectedEdition}
+                          url={props.id === "csv" ? urls.csv : urls.parquet}
+                          {...props}
                         />
                       ))}
                     </div>

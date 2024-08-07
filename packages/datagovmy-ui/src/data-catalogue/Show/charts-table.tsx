@@ -64,7 +64,6 @@ type ChartTableProps = {
   setFilter: (key: string, value: any) => void;
   sliderOptions: Array<string> | null;
   slider: string | null;
-  selectedEdition: string | undefined;
 };
 
 const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
@@ -76,7 +75,6 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
   setFilter,
   sliderOptions,
   slider,
-  selectedEdition,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { downloads, dataset } = useContext(CatalogueContext);
@@ -199,13 +197,6 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
 
   const { send_new_analytics } = useContext(AnalyticsContext);
 
-  const getUrl = (baseUrl: string) => {
-    if (data.link_editions && data.link_editions.length > 0 && selectedEdition) {
-      return baseUrl.replace("YYYY-MM-DD", selectedEdition);
-    }
-    return baseUrl;
-  };
-
   const handleDownload = (e: { value: string }) => {
     if (e.value === "embed") {
       embedRef.current?.open();
@@ -216,18 +207,10 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
     const action = _downloads.find(({ id }) => e.value === id);
     if (!action) return;
 
-    // Send analytics data
-    send_new_analytics(dataset.meta.unique_id, "data-catalogue", "file_download", {
-      format: e.value,
-    });
-
-    if (e.value === "csv") {
-      window.open(getUrl(data.link_csv), "_blank");
-    } else if (e.value === "parquet") {
-      window.open(getUrl(data.link_parquet), "_blank");
-    } else {
-      action.href();
-    }
+    // TODO: Refactor. Both opens download link in new tab but
+    // following stop-gap solution is used as `url` in href() does not update with selected date
+    window.open(e.value === "csv" ? data.link_csv : data.link_parquet, "_blank");
+    action.href();
   };
 
   return (
