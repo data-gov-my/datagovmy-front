@@ -103,12 +103,13 @@ const CatalogueCard: FunctionComponent<CatalogueCardProps> = ({
 
 export default CatalogueCard;
 
-interface DownloadCard extends DownloadOption {
+interface DownloadCardProps extends DownloadOption {
   views?: number;
-  catalogueId: string;
+  link_editions?: string[];
+  url?: string;
 }
 
-export const DownloadCard: FunctionComponent<DownloadCard> = ({
+export const DownloadCard: FunctionComponent<DownloadCardProps> = ({
   href,
   image,
   title,
@@ -116,20 +117,21 @@ export const DownloadCard: FunctionComponent<DownloadCard> = ({
   icon,
   id,
   views,
-  catalogueId,
+  link_editions,
+  url,
 }) => {
-  const { send_new_analytics } = useContext(AnalyticsContext);
   const handleClick = () => {
-    send_new_analytics(catalogueId, "data-catalogue", "file_download", {
-      format: id,
-    });
+    // TODO: Refactor. Both opens download link in new tab but
+    // following stop-gap solution is used as `url` in href() does not update with selected date
+    if (link_editions && link_editions.length > 0) {
+      window.open(url, "_blank");
+    }
+    href();
   };
+
   return (
     <Card
-      onClick={() => {
-        handleClick();
-        if (typeof href === "function") href();
-      }}
+      onClick={handleClick}
       className="bg-background p-4.5 dark:border-outlineHover-dark dark:bg-washed-dark"
     >
       <div className="gap-4.5 flex items-center">

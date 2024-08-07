@@ -21,7 +21,6 @@ import dynamic from "next/dynamic";
 import { UNIVERSAL_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "../../lib/constants";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
-import { AnalyticsContext } from "../../contexts/analytics";
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 const CatalogueTimeseries = dynamic(() => import("datagovmy-ui/dc-charts/timeseries"), {
@@ -195,24 +194,20 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
     parquet: data.link_parquet,
   };
 
-  const { send_new_analytics } = useContext(AnalyticsContext);
-
   const handleDownload = (e: { value: string }) => {
     if (e.value === "embed") {
       embedRef.current?.open();
       return;
     }
 
-    // downloads
+    // Find the download action based on the selected value
     const action = _downloads.find(({ id }) => e.value === id);
     if (!action) return;
 
-    // Send analytics data
-    send_new_analytics(dataset.meta.unique_id, "data-catalogue", "file_download", {
-      format: e.value,
-    });
-
-    return action.href();
+    // TODO: Refactor. Both opens download link in new tab but
+    // following stop-gap solution is used as `url` in href() does not update with selected date
+    window.open(e.value === "csv" ? data.link_csv : data.link_parquet, "_blank");
+    action.href();
   };
 
   return (

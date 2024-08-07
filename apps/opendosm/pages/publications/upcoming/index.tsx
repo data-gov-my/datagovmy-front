@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           },
           cal_pubs: calendar ? transform(calendar) : {},
           list_pubs: list.results,
-          params: "page" in query || "pub_type" in query ? { tab_index: 1 } : { tab_index: 0 },
+          params: "page" in query || "search" in query ? { tab_index: 1 } : { tab_index: 0 },
           query: query ?? {},
           total_pubs: list.count,
         },

@@ -108,30 +108,30 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     let desktop: ScheduledPub[] = [];
     let mobile: ScheduledPub[] = [];
 
-    const daysInLastMonth = new Date(data.year, data.month, 0).getDate(); // for desktop, to get total days in prev month
-    const firstDay = new Date(data.year, data.month).getDay(); // to get day of week, 0 - 6 = Sun - Sat
-    const daysInCurrMonth = new Date(data.year, data.month + 1, 0).getDate(); // to get total days in curr month
-    const totalModuloSeven = (firstDay + daysInCurrMonth) % 7; // to get number of days in last week of curr month
-    const remaining = totalModuloSeven === 0 ? 0 : 7 - totalModuloSeven; // for desktop, num of days in next month needed to fill remainder
+    const firstDayOfWeek = new Date(data.year, data.month).getDay(); // day of week for first day in curr month, 0 - Sun, 6 - Sat
+    const numDaysPrevMonth = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // num of days for spaces before curr month for desktop
+    const totalDaysCurrMonth = new Date(data.year, data.month + 1, 0).getDate(); // total days in curr month
+    const totalDaysInLastWeek = (numDaysPrevMonth + totalDaysCurrMonth) % 7; // total days in last week of curr month
+    const numDaysNextMonth = totalDaysInLastWeek === 0 ? 0 : 7 - totalDaysInLastWeek; // num of days for spaces after curr month for desktop
 
     const toDate = (date: Date): string => {
       return date.toISOString().split("T")[0]; // get date in yyyy-mm-dd
     };
 
-    setFilter("start", toDate(new Date(data.year, data.month, -firstDay + 2, 8, 0, 0)));
-    setFilter("end", toDate(new Date(data.year, data.month + 1, remaining, 8, 0, 0)));
+    setFilter("start", toDate(new Date(data.year, data.month, -numDaysPrevMonth + 1, 8, 0, 0)));
+    setFilter("end", toDate(new Date(data.year, data.month + 1, numDaysNextMonth, 8, 0, 0)));
 
-    // for desktop only, prev month
-    for (let i = firstDay - 1; i > 0; i--) {
-      const date = toDate(new Date(data.year, data.month - 1, daysInLastMonth - i + 1, 8, 0, 0));
+    // prev month for desktop
+    for (let i = numDaysPrevMonth; i > 0; i--) {
+      const date = new Date(data.year, data.month, -i + 1, 8, 0, 0);
       desktop.push({
-        date: date, // to match for publications
-        day: daysInLastMonth - i + 1, // to display day in calendar
+        date: toDate(date), // to match for publications
+        day: date.getDate(), // to display day in calendar
         month: data.month - 1, // to match for current month
       });
     }
     // for curr month
-    for (let i = 1; i <= daysInCurrMonth; i++) {
+    for (let i = 1; i <= totalDaysCurrMonth; i++) {
       const date = toDate(new Date(data.year, data.month, i, 8, 0, 0));
       const pub: ScheduledPub = {
         date: date,
@@ -141,7 +141,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
       desktop.push(pub);
       mobile.push(pub);
     }
-    // for desktop only, next month
+    // next month for desktop
     for (let i = 1; i < 7; i++) {
       if (desktop.length % 7 === 0) break;
       const date = toDate(new Date(data.year, data.month + 1, i, 8, 0, 0));
@@ -153,7 +153,7 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
     }
 
     return { desktop: chunk(desktop, 7), mobile }; // chunk into arrays of size 7
-  }, [data.month, i18n.language]);
+  }, [cal_pubs, data.month, i18n.language]);
 
   const config: TableConfig[] = [
     {
@@ -208,14 +208,6 @@ const UpcomingPublicationsDashboard: FunctionComponent<UpcomingPublicationsProps
           title={<h4>{t("upcoming_publications")}</h4>}
           onChange={(index: number) => {
             setData("tab_index", index);
-            if (index === 1) {
-              setFilter("start", undefined);
-              setFilter("end", undefined);
-              setFilter("page", query.page ?? "1");
-            } else {
-              setFilter("page", undefined);
-              setFilter("search", "");
-            }
           }}
           current={data.tab_index}
         >

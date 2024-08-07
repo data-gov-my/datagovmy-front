@@ -1,4 +1,4 @@
-import { FunctionComponent, MutableRefObject, useContext, useState } from "react";
+import { FunctionComponent, MutableRefObject, useContext } from "react";
 import { Card, Section, Tooltip, Dropdown } from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { interpolate, toDate } from "../../lib/helpers";
@@ -34,6 +34,8 @@ type MetadataProps = MetadataGUI & {
     | "link_parquet"
     | "link_editions"
   >;
+  selectedEdition: string | undefined;
+  setSelectedEdition: (edition: string) => void;
 };
 
 const DCMetadata: FunctionComponent<MetadataProps> = ({
@@ -41,23 +43,12 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   scrollRef,
   setMetadata,
   metadata,
+  selectedEdition,
+  setSelectedEdition,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { dataset } = useContext(CatalogueContext);
   const { track } = useAnalytics(dataset);
-
-  const hasEditions = metadata.link_editions != undefined && metadata.link_editions.length > 0;
-  const [selectedEdition, setSelectedEdition] = useState<OptionType | undefined>(() =>
-    hasEditions && metadata.link_editions
-      ? { label: metadata.link_editions[0], value: metadata.link_editions[0] }
-      : undefined
-  );
-
-  const getUrl = (url: string) => {
-    return hasEditions && selectedEdition
-      ? url.replace("YYYY-MM-DD", selectedEdition.value as string)
-      : url;
-  };
 
   return (
     <>
@@ -152,14 +143,16 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
             {/* URLs to dataset */}
             <div className="space-y-3">
               <h5>{t("meta_url")}</h5>
-              {hasEditions && metadata.link_editions && (
+              {metadata.link_editions && metadata.link_editions.length > 0 && (
                 <Dropdown
-                  options={metadata.link_editions!.map(edition => ({
+                  options={metadata.link_editions.map(edition => ({
                     label: edition,
                     value: edition,
                   }))}
-                  selected={selectedEdition}
-                  onChange={selected => setSelectedEdition(selected as OptionType)}
+                  selected={
+                    selectedEdition ? { label: selectedEdition, value: selectedEdition } : undefined
+                  }
+                  onChange={selected => setSelectedEdition(selected.value as string)}
                   placeholder={t("common:common.select_edition")}
                   className="w-fit"
                   width="w-fit"
@@ -170,17 +163,20 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                 {Object.entries({
                   csv: metadata.link_csv,
                   parquet: metadata.link_parquet,
-                }).map(([key, url]: [string, unknown]) =>
+                }).map(([key, url]: [string, string]) =>
                   url ? (
-                    <li key={url as string}>
+                    <li key={url}>
                       <a
-                        href={getUrl(url as string)}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-primary dark:text-primary-dark break-all [text-underline-position:from-font] hover:underline"
                         onClick={() =>
-                          track(key === "link_geojson" ? "csv" : (key as "parquet" | "csv"))
+                          // TODO: Refactor GeoJSON analytics
+                          track(key === "link_geojson" ? "parquet" : (key as "parquet" | "csv"))
                         }
                       >
-                        {getUrl(url as string)}
+                        {url}
                       </a>
                     </li>
                   ) : null
