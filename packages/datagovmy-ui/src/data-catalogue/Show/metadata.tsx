@@ -50,19 +50,6 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   const { dataset } = useContext(CatalogueContext);
   const { track } = useAnalytics(dataset);
 
-  const hasEditions = metadata.link_editions != undefined && metadata.link_editions.length > 0;
-  const [selectedEdition, setSelectedEdition] = useState<OptionType | undefined>(() =>
-    hasEditions && metadata.link_editions
-      ? { label: metadata.link_editions[0], value: metadata.link_editions[0] }
-      : undefined
-  );
-
-  const getUrl = (url: string) => {
-    return hasEditions && selectedEdition
-      ? url.replace("YYYY-MM-DD", selectedEdition.value as string)
-      : url;
-  };
-
   return (
     <>
       <Section

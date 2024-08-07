@@ -21,7 +21,6 @@ import dynamic from "next/dynamic";
 import { UNIVERSAL_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { SHORT_PERIOD, SHORT_PERIOD_FORMAT } from "../../lib/constants";
 import { TableCellsIcon } from "@heroicons/react/24/outline";
-import { AnalyticsContext } from "../../contexts/analytics";
 
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 const CatalogueTimeseries = dynamic(() => import("datagovmy-ui/dc-charts/timeseries"), {
@@ -194,8 +193,6 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
     csv: data.link_csv,
     parquet: data.link_parquet,
   };
-
-  const { send_new_analytics } = useContext(AnalyticsContext);
 
   const handleDownload = (e: { value: string }) => {
     if (e.value === "embed") {
