@@ -68,7 +68,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
             <Panel key={indicator} name={t(`indicator.${indicator}`)}>
               <div className="flex flex-col gap-y-6">
                 {/* Scores */}
-                {scores[indicator] ? (
+                {scores && scores[indicator] ? (
                   <div className="flex flex-col gap-8 sm:flex-row sm:items-center">
                     <div className="text-dim flex w-full flex-col gap-y-1.5 max-sm:items-center">
                       <p className="font-medium uppercase">{t("overall_score")}</p>
@@ -109,7 +109,7 @@ const OdinMetric: FunctionComponent<OdinMetricProps> = ({
                 )}
 
                 {/* Table */}
-                {table[indicator] ? (
+                {table && table[indicator] ? (
                   <div className="max-w-[1000px] overflow-x-auto">
                     <table className="relative mx-auto table-auto border-spacing-0">
                       <thead>
