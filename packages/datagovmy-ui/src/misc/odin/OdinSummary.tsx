@@ -32,7 +32,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
   const { data, setData } = useData({
     category: "overall",
     subcategory: "",
-    score: undefined, //scores.overall.overall.overall,
+    score: scores.overall.overall.overall,
     bar: bar.overall.overall.overall,
   });
 
