@@ -32,7 +32,7 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
   const { data, setData } = useData({
     category: "overall",
     subcategory: "",
-    score: scores.overall.overall.overall,
+    score: undefined, //scores.overall.overall.overall,
     bar: bar.overall.overall.overall,
   });
 
@@ -101,72 +101,76 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
         </div>
 
         {/* Scores */}
-        <div className="flex flex-col gap-8 pb-6 sm:flex-row">
-          <div className={className.scores}>
-            <p className="font-medium uppercase">{t("overall_score")}</p>
-            <div className="flex items-center gap-1.5">
-              <p className="text-[42px] font-bold leading-[50px] text-black dark:text-white">
-                {numFormat(data.score.overall.overall, "standard", 0)}
-              </p>
-              <p>{t("out_of", { max: data.score.overall.maximum })}</p>
+        {data.score && (
+          <div className="flex flex-col gap-8 pb-6 sm:flex-row">
+            <div className={className.scores}>
+              <p className="font-medium uppercase">{t("overall_score")}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[42px] font-bold leading-[50px] text-black dark:text-white">
+                  {numFormat(data.score.overall.overall, "standard", 0)}
+                </p>
+                <p>{t("out_of", { max: data.score.overall.maximum })}</p>
+              </div>
+            </div>
+            <div className={className.scores}>
+              <p className="font-medium uppercase">{t("coverage_score")}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-[42px] font-bold leading-[50px] text-[#FF820E]">
+                  {numFormat(calcAvgScore(data.bar.coverage.overall), "standard", 0)}
+                </p>
+                <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
+              </div>
+            </div>
+            <div className={className.scores}>
+              <p className="font-medium uppercase">{t("openness_score")}</p>
+              <div className="flex items-center gap-1.5">
+                <p className="text-primary dark:text-primary-dark text-[42px] font-bold leading-[50px]">
+                  {numFormat(calcAvgScore(data.bar.openness.overall), "standard", 0)}
+                </p>
+                <p>{t("out_of", { max: data.score.openness.maximum })}</p>
+              </div>
             </div>
           </div>
-          <div className={className.scores}>
-            <p className="font-medium uppercase">{t("coverage_score")}</p>
-            <div className="flex items-center gap-1.5">
-              <p className="text-[42px] font-bold leading-[50px] text-[#FF820E]">
-                {numFormat(calcAvgScore(data.bar.coverage.overall), "standard", 0)}
-              </p>
-              <p>{t("out_of", { max: data.score.coverage.maximum })}</p>
-            </div>
-          </div>
-          <div className={className.scores}>
-            <p className="font-medium uppercase">{t("openness_score")}</p>
-            <div className="flex items-center gap-1.5">
-              <p className="text-primary dark:text-primary-dark text-[42px] font-bold leading-[50px]">
-                {numFormat(calcAvgScore(data.bar.openness.overall), "standard", 0)}
-              </p>
-              <p>{t("out_of", { max: data.score.openness.maximum })}</p>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Bar Chart */}
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
-          {["coverage", "openness"].map((score, i) => (
-            <Bar
-              key={i}
-              title={t("breakdown_" + score)}
-              id={`bar-${score}-score-breakdown`}
-              className="h-[280px] w-full"
-              layout="horizontal"
-              enableGridY={false}
-              enableGridX={true}
-              maxX={data.bar[score].maximum[0]}
-              precision={0}
-              data={{
-                labels: data.bar[score].subelement.map((e: string) => t(e)),
-                datasets: [
-                  {
-                    label: t("score"),
-                    data: data.bar[score].overall,
-                    barThickness: 32,
-                    backgroundColor: i === 0 ? AKSARA_COLOR.ORANGE_H : AKSARA_COLOR.PRIMARY_H,
-                    borderColor: i === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.PRIMARY,
-                    borderWidth: 0.5,
-                  },
-                ],
-              }}
-              datalabels={{
-                align: "start",
-                anchor: "end",
-                color: i === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.PRIMARY,
-                display: (context: any) => context.dataset.data[context.dataIndex] > 5,
-                formatter: value => numFormat(value, "standard", 0),
-              }}
-            />
-          ))}
-        </div>
+        {data.bar && (
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
+            {["coverage", "openness"].map((score, i) => (
+              <Bar
+                key={i}
+                title={t("breakdown_" + score)}
+                id={`bar-${score}-score-breakdown`}
+                className="h-[280px] w-full"
+                layout="horizontal"
+                enableGridY={false}
+                enableGridX={true}
+                maxX={data.bar[score].maximum[0]}
+                precision={0}
+                data={{
+                  labels: data.bar[score].subelement.map((e: string) => t(e)),
+                  datasets: [
+                    {
+                      label: t("score"),
+                      data: data.bar[score].overall,
+                      barThickness: 32,
+                      backgroundColor: i === 0 ? AKSARA_COLOR.ORANGE_H : AKSARA_COLOR.PRIMARY_H,
+                      borderColor: i === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.PRIMARY,
+                      borderWidth: 0.5,
+                    },
+                  ],
+                }}
+                datalabels={{
+                  align: "start",
+                  anchor: "end",
+                  color: i === 0 ? AKSARA_COLOR.ORANGE : AKSARA_COLOR.PRIMARY,
+                  display: (context: any) => context.dataset.data[context.dataIndex] > 5,
+                  formatter: value => numFormat(value, "standard", 0),
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </Section>
   );
