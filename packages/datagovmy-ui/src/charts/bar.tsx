@@ -156,7 +156,8 @@ const Bar: FunctionComponent<BarProps> = ({
             return `${item.dataset.label}: ${tip[layout]}`;
           },
           title(item) {
-            return formatX ? formatX(item[0].label) : item[0].label;
+            const label = item[0].label.trim();
+            return formatX ? formatX(label) : label;
           },
         },
       },

@@ -147,7 +147,6 @@ const OdinSummary: FunctionComponent<OdinSummaryProps> = ({ bar, scores, title, 
                   enableGridY={false}
                   enableGridX={true}
                   maxX={scores.maximum[i + 1]}
-                  formatX={string => string.trim()}
                   precision={0}
                   data={{
                     labels: scores.subelement.slice(1).map((e: string) => t(e)),
