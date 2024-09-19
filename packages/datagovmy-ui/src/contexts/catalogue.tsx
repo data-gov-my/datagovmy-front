@@ -79,33 +79,35 @@ export const CatalogueProvider: ForwardRefExoticComponent<CatalogueProviderProps
 
     const _dataset = useMemo(() => {
       if (["TIMESERIES", "STACKED_AREA", "INTRADAY"].includes(dataset.type)) {
-        const { x, ...y } = dataset.chart as Record<string, number[]> & { x: string[] };
+        const { x, ...y } = dataset.chart as Record<string, (number | null)[]> & { x: string[] };
 
         let x_vals = x;
         // trim null values off start and end
         const trimmed_y = Object.fromEntries(
-          Object.entries(y).map(([key, y_values], _, ori_arr) => {
-            let y_vals: number[] = y_values;
+          Object.entries(y).map(([key, y_values], index, ori_arr) => {
+            let y_vals = y_values;
 
             // loop from start
             for (let i = 0; i < y_values.length; i++) {
-              // if any y-value is not null, break loop and keep the values
-              if (ori_arr.some(([_, y_vals]) => y_vals[i] !== null)) break;
-              // else if all y-values are null, slice first value from array
-              else {
-                x_vals = x_vals.slice(i + 1);
-                y_vals = y_vals.slice(i + 1);
+              // check if y-value for each dataset is not null (y[i], y1[i], ...)
+              if (ori_arr.some(([_, y_vals]) => y_vals[i] !== null)) {
+                // slice previous null values and break loop
+                y_vals = y_vals.slice(i);
+                // only slice x-values for first dataset
+                if (index === 0) x_vals = x_vals.slice(i);
+                break;
               }
             }
 
             // loop from end
-            for (let i = y_vals.length - 1; i >= 0; i--) {
-              // if any y-value is not null, break loop and keep the values
-              if (ori_arr.some(([_, y_vals]) => y_vals[i] !== null)) break;
-              // else if all y-values are null, slice last value from array
-              else {
-                x_vals = x_vals.slice(0, i);
-                y_vals = y_vals.slice(0, i);
+            for (let i = y_values.length - 1; i >= 0; i--) {
+              // check if y-value for each dataset is not null (y[i], y1[i], ...)
+              if (ori_arr.some(([_, y_vals]) => y_vals[i] !== null)) {
+                // slice null values and break loop
+                y_vals = y_vals.slice(0, i + 1);
+                // only slice x-values for first dataset
+                if (index === 0) x_vals = x_vals.slice(0, i + 1);
+                break;
               }
             }
 
