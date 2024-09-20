@@ -39,8 +39,7 @@ export function Footer(): ReactElement {
               </a>
               <a
                 className={classes.link}
-                href="#"
-                //  TODO: add figma link (and open data links below)
+                href="https://www.figma.com/file/6iNojR8hO5bWvH0c3rvGD4"
                 target="_blank"
               >
                 {renderString(config.footer.uiux)}
@@ -48,7 +47,11 @@ export function Footer(): ReactElement {
             </div>
             <div className="flex w-full flex-col gap-2 md:w-[200px]">
               <p className="font-bold">{renderString(config.footer.openData)}</p>
-              <a className={classes.link} href="#" target="_blank">
+              <a
+                className={classes.link}
+                href="https://dasar.mampu.gov.my/search-g/download-file/25/7f821c650c868d025fb5351d7d45d001"
+                target="_blank"
+              >
                 {renderString(config.footer.guide)}
               </a>
               <a className={classes.link} href="#" target="_blank">
