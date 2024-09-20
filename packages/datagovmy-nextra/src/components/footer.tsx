@@ -39,8 +39,7 @@ export function Footer(): ReactElement {
               </a>
               <a
                 className={classes.link}
-                href="#"
-                //  TODO: add figma link (and open data links below)
+                href="https://www.figma.com/file/6iNojR8hO5bWvH0c3rvGD4"
                 target="_blank"
               >
                 {renderString(config.footer.uiux)}
