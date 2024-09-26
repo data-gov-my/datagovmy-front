@@ -6,9 +6,9 @@
  */
 export const getColor = (index: number, zero_index: number): string => {
   const gradient_palette = [
-    "#049f09", // dark green
-    "#091f12",
+    "#091f12", // dark green
     "#0d2f1b",
+    "#0f3620",
     "#123f24",
     "#164f2d",
     "#1b5e36",
