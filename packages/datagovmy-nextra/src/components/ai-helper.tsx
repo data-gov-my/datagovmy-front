@@ -111,7 +111,7 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
     };
 
     try {
-      const { body } = await stream("/stream", payload);
+      const { body } = await stream("/chat/stream", payload);
       if (body === null) {
         setFetching(false);
         throw new Error(t("ai.error"));
