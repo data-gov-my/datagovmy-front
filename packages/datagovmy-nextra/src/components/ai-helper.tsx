@@ -102,25 +102,25 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
     scrollToBottom();
     setFetching(true);
     const payload = {
-      model: "gpt-3.5-turbo",
-      chain_type: "docs",
-      messages: chats
-        ?.filter(chat => chat.content !== t("ai.error"))
-        .slice(-5)
-        .concat([{ role: "user", content: prompt }]) || [{ role: "user", content: prompt }],
-      max_tokens: 1000,
-      temperature: 0,
+      input: {
+        messages: chats
+          ?.filter(chat => chat.content !== t("ai.error"))
+          .slice(-5)
+          .concat([{ role: "user", content: prompt }]) || [{ role: "user", content: prompt }],
+      },
     };
 
     try {
-      const { body } = await stream("/chat", payload);
+      const { body } = await stream("/chat/stream", payload);
       if (body === null) {
         setFetching(false);
         throw new Error(t("ai.error"));
       }
 
-      const reader = body.pipeThrough(new TextDecoderStream()).getReader();
+      const reader = body.getReader();
+      const decoder = new TextDecoder();
       let _answer = "";
+
       while (true) {
         const { value, done } = await reader.read();
         if (done) {
@@ -129,8 +129,29 @@ const AIHelper: FunctionComponent<AIHelperProps> = () => {
           setAnswer("");
           break;
         }
-        setAnswer(answer => answer.concat(value));
-        _answer += value;
+
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = line.slice(6); // Remove 'data: ' prefix
+            if (data !== '""') {
+              // Ignore empty data events
+              try {
+                const parsedData = JSON.parse(data);
+                if (typeof parsedData !== "object" && parsedData !== null) {
+                  setAnswer(answer => answer + parsedData);
+                  _answer += parsedData;
+                }
+              } catch (e) {
+                // If it's not valid JSON, just append it as is
+                setAnswer(answer => answer + data);
+                _answer += data;
+              }
+            }
+          }
+        }
       }
     } catch (error: any) {
       setChats((chats: ChatType[]) => chats.concat({ role: "assistant", content: t("ai.error") }));
