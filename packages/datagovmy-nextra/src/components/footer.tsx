@@ -49,7 +49,7 @@ export function Footer(): ReactElement {
               <p className="font-bold">{renderString(config.footer.openData)}</p>
               <a
                 className={classes.link}
-                href="https://dasar.mampu.gov.my/search-g/download-file/25/7f821c650c868d025fb5351d7d45d001"
+                href="https://dasar.jdn.gov.my/search-g/download-file/25/7f821c650c868d025fb5351d7d45d001"
                 target="_blank"
               >
                 {renderString(config.footer.guide)}

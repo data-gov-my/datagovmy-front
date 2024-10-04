@@ -31,7 +31,7 @@ const DGMYFooter = () => {
         <At
           className="link-dim"
           external
-          href="https://dasar.mampu.gov.my/search-g/download-file/25/7f821c650c868d025fb5351d7d45d001"
+          href="https://dasar.jdn.gov.my/search-g/download-file/25/7f821c650c868d025fb5351d7d45d001"
         >
           {t("common:nav.guiding_principles")}
         </At>
