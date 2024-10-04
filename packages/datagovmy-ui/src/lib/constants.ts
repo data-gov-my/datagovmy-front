@@ -232,7 +232,7 @@ export const AgencyLink: Record<Agency, string> = {
   "ktmb": "https://www.ktmb.com.my/",
   "kwap": "https://www.kwap.gov.my/",
   "lhdn": "https://www.hasil.gov.my",
-  "mampu": "https://www.mampu.gov.my/",
+  "mampu": "https://www.jdn.gov.my/",
   "mcmc": "https://www.mcmc.gov.my/en/home",
   "mers-999": "https://999.gov.my/",
   "met": "https://www.met.gov.my/?lang=en",
