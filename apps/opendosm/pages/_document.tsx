@@ -66,6 +66,12 @@ class OpenDOSMDocument extends Document {
             }}
           />
 
+          {/* Google Site Verification */}
+          <meta
+            name="google-site-verification"
+            content="7VHyqegfI0Kuc2l5HJDkmApC8_OprG_ZJflTmAgmVds"
+          />
+
           {/* PWA setting */}
           <meta name="application-name" content="OpenDOSM" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
