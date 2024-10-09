@@ -66,6 +66,12 @@ class HTMLDocument extends Document {
             }}
           />
 
+          {/* Google Site Verification */}
+          <meta
+            name="google-site-verification"
+            content="Cr0KmLf_znexRulM3yFTueMuXSpD_NU9JlwKeyi2Sp8"
+          />
+
           {/* PWA setting */}
           <meta name="application-name" content="data.gov.my" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
