@@ -48,11 +48,10 @@ const Home: Page = ({
   const { t, i18n } = useTranslation("opendosm-home");
   const { theme } = useTheme();
 
-  const twoMonths = Math.ceil(
+  const oneYear = Math.ceil(
     Math.abs(
       DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000)
-        .minus({ months: 2 })
-        .startOf("month")
+        .minus({ years: 1 })
         .diff(DateTime.fromSeconds(timeseries.data.x[timeseries.data.x.length - 1] / 1000), [
           "days",
         ]).days
@@ -60,7 +59,7 @@ const Home: Page = ({
   );
 
   const { data, setData } = useData({
-    minmax: [timeseries.data.x.length - twoMonths, timeseries.data.x.length - 1],
+    minmax: [timeseries.data.x.length - oneYear, timeseries.data.x.length - 1],
     tabs_section_1: 0,
     tabs_section_2: 0,
   });
