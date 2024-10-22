@@ -212,7 +212,7 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({
   const reset = () => onSearch("");
 
   const filterSources: OptionType[] = dropdown.map(source => ({
-    label: t(`agencies:${source}.abbr`),
+    label: t(`agencies:${source}.full`),
     value: source,
   }));
 
