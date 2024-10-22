@@ -14,7 +14,7 @@ import {
   Section,
   Sidebar,
 } from "datagovmy-ui/components";
-import { BREAKPOINTS } from "datagovmy-ui/constants";
+import { BREAKPOINTS, SOURCE_TRANSLATIONS } from "datagovmy-ui/constants";
 import { WindowContext } from "datagovmy-ui/contexts/window";
 import { useFilter, useTranslation } from "datagovmy-ui/hooks";
 import { Agency, OptionType, SiteName } from "datagovmy-ui/types";
@@ -43,18 +43,27 @@ interface CatalogueIndexProps {
   site: SiteName;
 }
 
+const getSourceTranslation = (
+  source: string,
+  language: keyof (typeof SOURCE_TRANSLATIONS)[string]
+) => {
+  return SOURCE_TRANSLATIONS[source]?.[language] || source;
+};
+
 const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   query,
   collection,
   sources,
   site,
 }) => {
-  const { t } = useTranslation(["catalogue", "common"]);
+  const { t, i18n } = useTranslation(["catalogue", "common"]);
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);
+  const language = i18n.language; // Get the current language
+
   const sourceOptions = sources.map(source => ({
-    label: source,
+    label: getSourceTranslation(source, language as "ms-MY" | "en-GB"),
     value: source,
   }));
 
@@ -77,7 +86,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source ?? "",
+            agency: query.source
+              ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB")
+              : "",
             context: query.source ? "agency" : "",
           }),
           agency: "govt",
@@ -106,7 +117,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source ?? "",
+            agency: query.source
+              ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB")
+              : "",
             context: query.source ? "agency" : "",
           }),
           agency: "govt",
@@ -121,7 +134,9 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       <Hero
         background="blue"
         category={[text.category, "text-primary dark:text-primary-dark"]}
-        header={[`${query.source ? query.source.concat(":") : ""} ${t("header")}`]}
+        header={[
+          `${query.source ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB").concat(":") : ""} ${t("header")}`,
+        ]}
         description={[text.description]}
         action={
           sourceOptions.length > 0 && (
@@ -131,7 +146,14 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
               placeholder={t("placeholder.source")}
               anchor="left"
               options={sourceOptions}
-              selected={query.source ? { label: query.source, value: query.source } : undefined}
+              selected={
+                query.source
+                  ? {
+                      label: getSourceTranslation(query.source, language as "ms-MY" | "en-GB"),
+                      value: query.source,
+                    }
+                  : undefined
+              }
               onChange={e => filterRef.current?.setFilter("source", e)}
               enableSearch
               enableClear
