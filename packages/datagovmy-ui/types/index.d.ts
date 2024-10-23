@@ -176,7 +176,7 @@ export type Agency =
   | "sesb"
   | "span"
   | "st"
-  //| "swk energy"
+  | "swk-energy"
   | "spr"
   | "ssm"
   | "tnb"

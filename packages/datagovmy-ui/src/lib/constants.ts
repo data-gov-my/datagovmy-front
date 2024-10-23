@@ -266,7 +266,7 @@ export const AgencyLink: Record<Agency, string> = {
   "sesb": "https://www.sesb.com.my/",
   "span": "https://www.span.gov.my/",
   "st": "https://www.st.gov.my/",
-  //"swk energy": "https://www.sarawakenergy.com/",
+  "swk-energy": "https://www.sarawakenergy.com/",
   "spr": "https://www.spr.gov.my/",
   "ssm": "https://www.ssm.com.my/Pages/Home.aspx",
   "tnb": "https://www.tnb.com.my/",
@@ -348,6 +348,6 @@ export const SOURCE_TRANSLATIONS: Record<string, { "ms-MY": string; "en-GB": str
     "en-GB": "National Water Services Commission",
   },
   "ST": { "ms-MY": "Suruhanjaya Tenaga", "en-GB": "Energy Commission" },
-  "SWK ENERGY": { "ms-MY": "Sarawak Energy Berhad", "en-GB": "Sarawak Energy Berhad" },
+  "SWK-ENERGY": { "ms-MY": "Sarawak Energy Berhad", "en-GB": "Sarawak Energy Berhad" },
   "TNB": { "ms-MY": "Tenaga Nasional Berhad", "en-GB": "Tenaga Nasional Berhad" },
 };

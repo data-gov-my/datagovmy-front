@@ -1403,6 +1403,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({
     "tnb": JataNegara,
     "unhcr": UNHCRIcon,
     "kpdn": JataNegara,
+    "swk-energy": JataNegara,
   };
 
   const Icon = Components[agency];
