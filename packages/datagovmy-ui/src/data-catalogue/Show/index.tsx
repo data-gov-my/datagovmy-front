@@ -21,6 +21,7 @@ import { DownloadCard } from "../Card";
 import DCMetadata from "./metadata";
 import DCChartsAndTable from "./charts-table";
 import { groupBy } from "lodash";
+import { SOURCE_TRANSLATIONS } from "../../lib/constants"; // Import the full names
 
 /**
  * Catalogue Show
@@ -265,7 +266,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 fields: data.fields,
                 last_updated: data.last_updated,
                 next_update: data.next_update,
-                data_source: data.data_source,
+                data_source: data.data_source.map(
+                  abbr => SOURCE_TRANSLATIONS[abbr]?.[i18n.language as "ms-MY" | "en-GB"] || abbr
+                ), // Map to full names
                 link_csv: urls.csv,
                 link_parquet: urls.parquet,
                 link_editions: data.link_editions,

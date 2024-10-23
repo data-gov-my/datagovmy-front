@@ -86,9 +86,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source
-              ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB")
-              : "",
+            agency: query.source || "",
             context: query.source ? "agency" : "",
           }),
           agency: "govt",
@@ -96,7 +94,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       case "opendosm":
         return {
           category: t("header_category_agency", {
-            agency: t("agencies:dosm.abbr"),
+            agency: "dosm",
           }),
           description: t("description_opendosm"),
           agency: "dosm",
@@ -104,10 +102,10 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       case "kkmnow":
         return {
           category: t("header_category_agency", {
-            agency: t("agencies:moh.abbr"),
+            agency: "moh",
           }),
           description: t("description", {
-            agency: t("agencies:moh.abbr"),
+            agency: "moh",
             context: "agency",
           }),
           agency: "moh",
@@ -117,9 +115,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source
-              ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB")
-              : "",
+            agency: query.source || "",
             context: query.source ? "agency" : "",
           }),
           agency: "govt",
@@ -142,7 +138,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           sourceOptions.length > 0 && (
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              width="w-64"
+              width="w-fit"
               placeholder={t("placeholder.source")}
               anchor="left"
               options={sourceOptions}
@@ -363,7 +359,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                 <div className="grid grid-cols-2 gap-3 pt-3">
                   <Dropdown
                     label={t("begin")}
-                    width="w-full"
+                    width="w-fit"
                     anchor="left-0 bottom-10"
                     options={filterYears(startYear, endYear)}
                     selected={filter.begin}
@@ -372,7 +368,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
                   />
                   <Dropdown
                     label={t("end")}
-                    width="w-full"
+                    width="w-fit"
                     anchor="right-0 bottom-10"
                     disabled={!filter.begin}
                     options={filter.begin ? filterYears(+filter.begin.value, endYear) : []}
