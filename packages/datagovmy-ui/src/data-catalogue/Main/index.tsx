@@ -81,15 +81,20 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const getHeaderText = (
     site: SiteName
   ): { category: string; description: string; agency: Agency } => {
+    const agencyKey = query.source ? query.source.toLowerCase() : "govt";
+    const agencyTranslation = query.source
+      ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB")
+      : "";
+
     switch (site) {
       case "datagovmy":
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source || "",
+            agency: agencyTranslation,
             context: query.source ? "agency" : "",
           }),
-          agency: "govt",
+          agency: agencyKey as Agency,
         };
       case "opendosm":
         return {
@@ -115,10 +120,10 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source || "",
+            agency: agencyTranslation,
             context: query.source ? "agency" : "",
           }),
-          agency: "govt",
+          agency: agencyKey as Agency,
         };
     }
   };
@@ -130,9 +135,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
       <Hero
         background="blue"
         category={[text.category, "text-primary dark:text-primary-dark"]}
-        header={[
-          `${query.source ? getSourceTranslation(query.source, language as "ms-MY" | "en-GB").concat(":") : ""} ${t("header")}`,
-        ]}
+        header={[`${query.source ? query.source.toUpperCase().concat(":") : ""} ${t("header")}`]}
         description={[text.description]}
         action={
           sourceOptions.length > 0 && (

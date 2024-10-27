@@ -287,7 +287,7 @@ export const SOURCE_TRANSLATIONS: Record<string, { "ms-MY": string; "en-GB": str
     "en-GB": "Accountant General’s Department of Malaysia",
   },
   "JAS": { "ms-MY": "Jabatan Alam Sekitar", "en-GB": "Department of Environment" },
-  "JDN": { "ms-MY": "Jabatan Diraja Negeri", "en-GB": "Royal Department of State" },
+  "JDN": { "ms-MY": "Jabatan Digital Negara", "en-GB": "Jabatan Digital Negara" },
   "JMG": {
     "ms-MY": "Jabatan Mineral dan Geosains",
     "en-GB": "Department of Minerals and Geoscience",
@@ -297,16 +297,16 @@ export const SOURCE_TRANSLATIONS: Record<string, { "ms-MY": string; "en-GB": str
   "KDN": { "ms-MY": "Kementerian Dalam Negeri", "en-GB": "Ministry of Home Affairs" },
   "KPDN": {
     "ms-MY": "Kementerian Perdagangan Dalam Negeri",
-    "en-GB": "Ministry of Domestic Trade",
+    "en-GB": "Ministry of Domestic Trade and Cost of Living",
   },
   "KPKT": {
     "ms-MY": "Kementerian Perumahan dan Kerajaan Tempatan",
     "en-GB": "Ministry of Housing and Local Government",
   },
-  "KTMB": { "ms-MY": "Keretapi Tanah Melayu Berhad", "en-GB": "Malayan Railways Limited" },
+  "KTMB": { "ms-MY": "Keretapi Tanah Melayu Berhad", "en-GB": "Keretapi Tanah  Melayu Berhad" },
   "MAFS": {
-    "ms-MY": "Kementerian Pertanian dan Industri Makanan",
-    "en-GB": "Ministry of Agriculture and Food Industries",
+    "ms-MY": "Kementerian Pertanian dan Keterjaminan Makanan",
+    "en-GB": "Ministry of Agriculture and Food Security",
   },
   "MOE": { "ms-MY": "Kementerian Pendidikan", "en-GB": "Ministry of Education" },
   "MOF": { "ms-MY": "Kementerian Kewangan", "en-GB": "Ministry of Finance" },
@@ -322,8 +322,8 @@ export const SOURCE_TRANSLATIONS: Record<string, { "ms-MY": string; "en-GB": str
     "en-GB": "Department of Natural Resources and Environment",
   },
   "NTRC": {
-    "ms-MY": "Pusat Penyelidikan dan Pembangunan Teknologi",
-    "en-GB": "National Technology Research Centre",
+    "ms-MY": "Pusat Sumber Transplan Nasional",
+    "en-GB": "National Technology Resource Centre",
   },
   "Parlimen": { "ms-MY": "Parlimen Malaysia", "en-GB": "Parliament of Malaysia" },
   "PDN": { "ms-MY": "Pusat Darah Negara", "en-GB": "National Blood Centre" },
@@ -331,15 +331,15 @@ export const SOURCE_TRANSLATIONS: Record<string, { "ms-MY": string; "en-GB": str
   "Penjara": { "ms-MY": "Jabatan Penjara Malaysia", "en-GB": "Prison Department of Malaysia" },
   "Perhutanan": {
     "ms-MY": "Jabatan Perhutanan Semenanjung Malaysia",
-    "en-GB": "Forestry Department Peninsular Malaysia",
+    "en-GB": "Forestry Department of Peninsular Malaysia",
   },
   "Perikanan": {
     "ms-MY": "Jabatan Perikanan Malaysia",
     "en-GB": "Department of Fisheries Malaysia",
   },
   "PHCorp": {
-    "ms-MY": "Perbadanan Harta Intelek Malaysia",
-    "en-GB": "Intellectual Property Corporation of Malaysia",
+    "ms-MY": "Protect Health",
+    "en-GB": "Protect Health",
   },
   "Prasarana": { "ms-MY": "Prasarana Malaysia Berhad", "en-GB": "Prasarana Malaysia Berhad" },
   "SESB": { "ms-MY": "Sabah Electricity Sdn Bhd", "en-GB": "Sabah Electricity Sdn Bhd" },
@@ -350,4 +350,8 @@ export const SOURCE_TRANSLATIONS: Record<string, { "ms-MY": string; "en-GB": str
   "ST": { "ms-MY": "Suruhanjaya Tenaga", "en-GB": "Energy Commission" },
   "SWK-ENERGY": { "ms-MY": "Sarawak Energy Berhad", "en-GB": "Sarawak Energy Berhad" },
   "TNB": { "ms-MY": "Tenaga Nasional Berhad", "en-GB": "Tenaga Nasional Berhad" },
+};
+
+export const getSourceTranslation = (source: string, language: "ms-MY" | "en-GB"): string => {
+  return SOURCE_TRANSLATIONS[source]?.[language] || source;
 };

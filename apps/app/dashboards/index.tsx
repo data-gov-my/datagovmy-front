@@ -142,7 +142,7 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
         ]}
         description={[
           t("description", {
-            agency: t(`agencies:${data.agency}.abbr`),
+            agency: t(`agencies:${data.agency}.full`),
             context: data.agency ? "agency" : "",
           }),
         ]}
