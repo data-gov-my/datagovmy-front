@@ -54,7 +54,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);
   const sourceOptions = sources.map(source => ({
-    label: source,
+    label: t(`agencies:${source.toLowerCase()}.full`),
     value: source,
   }));
 
@@ -77,7 +77,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source ?? "",
+            agency: query.source ? t(`agencies:${query.source.toLowerCase()}.full`) : "",
             context: query.source ? "agency" : "",
           }),
           agency: "govt",
@@ -96,7 +96,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
             agency: t("agencies:moh.abbr"),
           }),
           description: t("description", {
-            agency: t("agencies:moh.abbr"),
+            agency: t("agencies:moh.full"),
             context: "agency",
           }),
           agency: "moh",
@@ -106,7 +106,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         return {
           category: t("header_category_govt"),
           description: t("description", {
-            agency: query.source ?? "",
+            agency: query.source ? t(`agencies:${query.source.toLowerCase()}.full`) : "",
             context: query.source ? "agency" : "",
           }),
           agency: "govt",
@@ -127,11 +127,15 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
           sourceOptions.length > 0 && (
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
-              width="w-64"
+              width="w-fit"
               placeholder={t("placeholder.source")}
               anchor="left"
               options={sourceOptions}
-              selected={query.source ? { label: query.source, value: query.source } : undefined}
+              selected={
+                query.source
+                  ? { label: t(`agencies:${query.source.toLowerCase()}.full`), value: query.source }
+                  : undefined
+              }
               onChange={e => filterRef.current?.setFilter("source", e)}
               enableSearch
               enableClear
