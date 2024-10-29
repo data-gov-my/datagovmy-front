@@ -19,15 +19,16 @@ interface NewSubscriptionProps {
   token?: string;
 }
 
-const NewSubscription = ({ data, token }: NewSubscriptionProps) => {
+const NewSubscription = ({ data, token: _token }: NewSubscriptionProps) => {
   const { t } = useTranslation("publication-subscription");
 
   const [email, setEmail] = useState("");
+  const [token, setToken] = useState(_token);
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (token) setIndex(1);
+    if (_token) setIndex(1);
   }, []);
 
   const STEPS = [
@@ -55,6 +56,7 @@ const NewSubscription = ({ data, token }: NewSubscriptionProps) => {
           loading={loading}
           setIndex={setIndex}
           setLoading={setLoading}
+          setToken={setToken}
           token={token}
         />
       ),

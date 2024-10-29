@@ -74,7 +74,10 @@ const TokenForm: FC<TokenFormProps> = ({
           name="token"
           type="text"
           value={token}
-          onChange={() => setValidation("")}
+          onChange={token => {
+            setToken(token);
+            setValidation("");
+          }}
           validation={validation}
         />
       </div>
