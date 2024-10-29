@@ -50,6 +50,19 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
         header={[t("header")]}
         description={[t("description")]}
         agencyBadge={<AgencyBadge agency="dosm" />}
+        action={
+          <div className="flex flex-wrap gap-3">
+            <At className="btn-primary shadow-button" href={routes.NEW_SUBSCRIPTION}>
+              {t("subscribe")}
+            </At>
+            <At
+              className="btn btn-border px-3 py-1.5 shadow-button"
+              href={routes.MANAGE_SUBSCRIPTION}
+            >
+              {t("manage_subscription")}
+            </At>
+          </div>
+        }
       />
 
       {/* Navigations */}
