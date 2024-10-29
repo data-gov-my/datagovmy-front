@@ -265,7 +265,9 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
                 fields: data.fields,
                 last_updated: data.last_updated,
                 next_update: data.next_update,
-                data_source: data.data_source,
+                data_source: data.data_source.map(source =>
+                  t(`agencies:${source.toLowerCase()}.full`, { defaultValue: source })
+                ),
                 link_csv: urls.csv,
                 link_parquet: urls.parquet,
                 link_editions: data.link_editions,
