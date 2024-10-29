@@ -1,5 +1,6 @@
 import { ComponentProps, FunctionComponent, MouseEventHandler, ReactNode } from "react";
 import { clx } from "../../lib/helpers";
+import Spinner from "../Spinner";
 
 interface ButtonProps extends ComponentProps<"button"> {
   className?: string;
@@ -9,6 +10,7 @@ interface ButtonProps extends ComponentProps<"button"> {
   children?: ReactNode;
   icon?: ReactNode;
   disabled?: boolean;
+  loading?: boolean;
 }
 
 const style = {
@@ -30,6 +32,7 @@ const Button: FunctionComponent<ButtonProps> = ({
   onClick,
   children,
   disabled = false,
+  loading = false,
   ...props
 }) => {
   return (
@@ -40,6 +43,9 @@ const Button: FunctionComponent<ButtonProps> = ({
       className={clx(variant !== "reset" && style.base, style[variant], className)}
       {...props}
     >
+      {loading && (
+        <Spinner loading={loading} className={variant === "primary" ? "border-t-white" : ""} />
+      )}
       {icon}
       {children}
     </button>
