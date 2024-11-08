@@ -27,7 +27,7 @@ const RecoverSubscriptionToken = ({}: RecoverSubscriptionTokenProps) => {
 
   const STEPS = [
     {
-      icon: <UserIcon className="size-7" />,
+      icon: UserIcon,
       step: "recover.step1",
       desc: "recover.step1_desc",
       tab: (
@@ -41,7 +41,7 @@ const RecoverSubscriptionToken = ({}: RecoverSubscriptionTokenProps) => {
       ),
     },
     {
-      icon: <CheckCircleIcon className="size-7" />,
+      icon: CheckCircleIcon,
       step: "recover.step2",
       desc: "recover.step2_desc",
       tab: (
@@ -78,7 +78,7 @@ const RecoverSubscriptionToken = ({}: RecoverSubscriptionTokenProps) => {
             {t("view_subscription")}
           </At>
           <At
-            className="btn btn-border w-full justify-center shadow-button"
+            className="btn btn-border w-full justify-center bg-white px-3 py-1.5 text-sm text-black shadow-button active:bg-washed"
             href={routes.PUBLICATIONS}
           >
             {t("done")}

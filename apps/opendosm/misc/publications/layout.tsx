@@ -56,7 +56,7 @@ const PublicationsLayout: FunctionComponent<PublicationsLayoutProps> = ({ childr
               {t("subscribe")}
             </At>
             <At
-              className="btn btn-border px-3 py-1.5 shadow-button"
+              className="btn btn-border bg-white px-3 py-1.5 text-black shadow-button active:bg-washed"
               href={routes.MANAGE_SUBSCRIPTION}
             >
               {t("manage_subscription")}

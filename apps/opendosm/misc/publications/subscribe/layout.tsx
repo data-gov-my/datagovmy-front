@@ -1,7 +1,7 @@
-import { Button } from "datagovmy-ui/components";
+import { Button, Container } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { clx } from "datagovmy-ui/helpers";
-import { FC, ReactNode } from "react";
+import { ForwardRefExoticComponent, FC, ReactNode, SVGProps } from "react";
 import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { routes } from "@lib/routes";
@@ -15,7 +15,7 @@ interface PublicationSubscriptionLayoutProps {
   children: ReactNode;
   currentIndex: number;
   header: string;
-  steps: { icon: ReactNode; step: string; desc: string }[];
+  steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; step: string; desc: string }[];
 }
 
 const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
@@ -27,10 +27,10 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
   const { t } = useTranslation("publication-subscription");
 
   return (
-    <div className="flex min-h-dvh flex-col divide-outline dark:divide-washed-dark max-lg:gap-6 max-lg:px-4.5 max-lg:py-6 lg:max-h-dvh lg:flex-row lg:divide-x">
+    <Container className="flex min-h-dvh flex-col divide-none max-lg:gap-6 max-lg:py-6 lg:max-h-dvh lg:flex-row lg:divide-x">
       <div className="flex w-full flex-col gap-3 lg:w-2/5 lg:gap-14 lg:p-20 xl:w-1/3">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="text-balance font-body text-base font-bold lg:font-header lg:text-3xl lg:leading-[38px]">
+          <h1 className="text-balance font-body text-base font-bold lg:font-header lg:text-xl">
             {header}
           </h1>
           <Link className="lg:hidden" href={routes.PUBLICATIONS}>
@@ -60,39 +60,42 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
         </div>
 
         <div className="hidden flex-col gap-y-1 lg:flex">
-          {steps.map(({ desc, icon, step }, i) => (
-            <>
-              <div
-                className={clx(
-                  "flex items-center gap-4",
-                  i === currentIndex
-                    ? "text-primary dark:text-primary-dark"
-                    : "text-black dark:text-white",
-                  i > currentIndex && "opacity-40"
-                )}
-              >
-                <div className="size-12 rounded-lg border border-outline p-2.5 dark:border-washed-dark">
-                  {icon}
-                </div>
-                <div className="flex flex-col">
-                  <p className="font-bold">{t(step)}</p>
-                  <p className="text-sm text-dim">{t(desc)}</p>
-                </div>
-              </div>
-              {i < steps.length - 1 && (
-                <svg
-                  width="2"
-                  height="22"
-                  viewBox="0 0 2 22"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={clx("ml-[23px] rounded", i >= currentIndex && "opacity-40")}
+          {steps.map(({ desc, icon, step }, i) => {
+            const Icon = icon;
+            return (
+              <>
+                <div
+                  className={clx(
+                    "flex items-center gap-4",
+                    i === currentIndex
+                      ? "text-primary dark:text-primary-dark"
+                      : "text-black dark:text-white",
+                    i > currentIndex && "opacity-40"
+                  )}
                 >
-                  <rect width="2" height="22" />
-                </svg>
-              )}
-            </>
-          ))}
+                  <div className="size-12 rounded-lg border border-outline p-2.5 dark:border-washed-dark">
+                    <Icon className="size-7" />
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="font-bold">{t(step)}</p>
+                    <p className="text-sm text-dim">{t(desc)}</p>
+                  </div>
+                </div>
+                {i < steps.length - 1 && (
+                  <svg
+                    width="2"
+                    height="22"
+                    viewBox="0 0 2 22"
+                    fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={clx("ml-[23px] rounded", i >= currentIndex && "opacity-40")}
+                  >
+                    <rect width="2" height="22" />
+                  </svg>
+                )}
+              </>
+            );
+          })}
         </div>
         <Link className="hidden lg:block" href={routes.PUBLICATIONS}>
           <Button variant="default">{t("cancel")}</Button>
@@ -100,7 +103,7 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
       </div>
 
       {children}
-    </div>
+    </Container>
   );
 };
 

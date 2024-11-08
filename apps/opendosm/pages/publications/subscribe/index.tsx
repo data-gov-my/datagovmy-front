@@ -10,21 +10,20 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 const SubscribePublication: Page = ({
   data,
   meta,
-  token,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation("publication-subscription");
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("new.header")} description={t("description")} />
-      <NewPublicationSubscription data={data} token={token} />
+      <NewPublicationSubscription data={data} />
     </AnalyticsProvider>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withi18n(
   "publication-subscription",
-  async ({ locale, query }) => {
+  async ({ locale }) => {
     try {
       const { data } = await get("/publication-type-list", {
         lang: locale!.slice(0, 2),
@@ -40,7 +39,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             agency: "DOSM",
           },
           data: data,
-          token: query.token || "",
         },
       };
     } catch (e: any) {

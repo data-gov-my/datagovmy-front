@@ -8,6 +8,7 @@ import { routes } from "@lib/routes";
 import EmailForm from "./email-form";
 import TokenForm from "./token-form";
 import ChecklistForm from "./checklist-form";
+import { parseCookies } from "datagovmy-ui/helpers";
 
 /**
  * New Publication Subscription
@@ -16,24 +17,24 @@ import ChecklistForm from "./checklist-form";
 
 interface NewSubscriptionProps {
   data: Record<string, Record<string, string>>;
-  token?: string;
 }
 
-const NewSubscription = ({ data, token: _token }: NewSubscriptionProps) => {
+const NewSubscription = ({ data }: NewSubscriptionProps) => {
   const { t } = useTranslation("publication-subscription");
 
   const [email, setEmail] = useState("");
-  const [token, setToken] = useState(_token);
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
 
-  useEffect(() => {
-    if (_token) setIndex(1);
-  }, []);
+  // useEffect(() => {
+  //   const cookie = parseCookies(document.cookie);
+  //   if ("subscription_token" in cookie) setIndex(2);
+  // }, []);
 
   const STEPS = [
     {
-      icon: <UserIcon className="size-7" />,
+      icon: UserIcon,
       step: "new.step1",
       desc: "new.step1_desc",
       form: (
@@ -47,7 +48,7 @@ const NewSubscription = ({ data, token: _token }: NewSubscriptionProps) => {
       ),
     },
     {
-      icon: <CheckCircleIcon className="size-7" />,
+      icon: CheckCircleIcon,
       step: "new.step2",
       desc: "new.step2_desc",
       form: (
@@ -62,7 +63,7 @@ const NewSubscription = ({ data, token: _token }: NewSubscriptionProps) => {
       ),
     },
     {
-      icon: <NewspaperIcon className="size-7" />,
+      icon: NewspaperIcon,
       step: "new.step3",
       desc: "new.step3_desc",
       form: (

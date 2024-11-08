@@ -16,7 +16,7 @@ const ManageSubscription: Page = ({
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("manage.header")} description={t("description")} keywords={""} />
-      <ManageSubscriptionPage data={data} subscribed={[]} />
+      <ManageSubscriptionPage data={data} />
     </AnalyticsProvider>
   );
 };
