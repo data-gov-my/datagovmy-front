@@ -44,10 +44,11 @@ const instance = (base: BaseURL, headers: Record<string, string> = {}) => {
 export const get = (
   route: string,
   params?: Record<string, any>,
-  base: BaseURL = "api"
+  base: BaseURL = "api",
+  headers: Record<string, string> = {}
 ): Promise<AxiosResponse> => {
   return new Promise((resolve, reject) => {
-    instance(base)
+    instance(base, headers)
       .get(route, { params })
       .then((response: AxiosResponse) => resolve(response))
       .catch((err: AxiosError<{ status: number; message: string }>) => {
@@ -81,7 +82,44 @@ export const post = (
           const edgeResponse = await getRollingToken();
           if (edgeResponse) {
             const { token } = await edgeResponse.json();
-            return instance(base, { ...headers, Authorization: `Bearer ${token}` })
+            return instance(base, { Authorization: `Bearer ${token}`, ...headers })
+              .post(route, payload)
+              .then((response: AxiosResponse) => resolve(response))
+              .catch((err: AxiosError) => reject(err));
+          } else {
+            reject(err);
+          }
+        }
+        reject(err);
+      });
+  });
+};
+
+/**
+ * Universal PUT helper function.
+ * @param route Endpoint route
+ * @param payload Body payload
+ * @param {"api" | "app"} base api | app
+ * @param {Record<string, string>} headers Additional headers
+ * @returns {Promise<AxiosResponse>} Promised response
+ */
+export const put = (
+  route: string,
+  payload?: any,
+  base: BaseURL = "api",
+  headers: Record<string, string> = {}
+): Promise<AxiosResponse> => {
+  return new Promise((resolve, reject) => {
+    instance(base, headers)
+      .put(route, payload)
+      .then((response: AxiosResponse) => resolve(response))
+      .catch(async (err: AxiosError<{ status: number; message: string }>) => {
+        // If gotten unauthorized status, reattempt on making the request, after fetching rolling token from edge
+        if (err.response?.data.status === 401 && typeof window !== "undefined") {
+          const edgeResponse = await getRollingToken();
+          if (edgeResponse) {
+            const { token } = await edgeResponse.json();
+            return instance(base, { Authorization: `Bearer ${token}`, ...headers })
               .post(route, payload)
               .then((response: AxiosResponse) => resolve(response))
               .catch((err: AxiosError) => reject(err));

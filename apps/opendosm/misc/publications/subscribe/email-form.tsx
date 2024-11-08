@@ -37,7 +37,7 @@ const EmailForm: FC<EmailFormProps> = ({ email, loading, setEmail, setIndex, set
         }
         setValidation("");
         setLoading(true);
-        await post("/token/request/", { email }, "api")
+        await post("/token/request/", { email })
           .then(() => setIndex(index => index + 1))
           .catch(err => {
             toast.error(

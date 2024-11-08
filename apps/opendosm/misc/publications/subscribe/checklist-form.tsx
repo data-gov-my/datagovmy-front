@@ -1,5 +1,7 @@
-import { post } from "datagovmy-ui/api";
+import { CheckCircleIcon } from "@heroicons/react/20/solid";
+import { post, put } from "datagovmy-ui/api";
 import { Button, NestedChecklist, toast } from "datagovmy-ui/components";
+import { parseCookies } from "datagovmy-ui/helpers";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -11,7 +13,7 @@ import { useTranslation } from "react-i18next";
 interface ChecklistFormProps {
   data: Record<string, Record<string, string>>;
   loading: boolean;
-  setIndex: Dispatch<SetStateAction<number>>;
+  setIndex?: Dispatch<SetStateAction<number>>;
   setLoading: (loading: boolean) => void;
   subscribed?: string[];
 }
@@ -21,17 +23,48 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
   loading,
   setIndex,
   setLoading,
-  subscribed = [],
+  subscribed,
 }) => {
   const { t, i18n } = useTranslation("publication-subscription");
   const [nodes, setNodes] = useState(transform(data, subscribed));
-  useEffect(() => setNodes(transform(data, subscribed)), [i18n]);
+  useEffect(() => setNodes(transform(data, subscribed)), [i18n, subscribed]);
 
   return (
     <form
       onSubmit={async ev => {
         ev.preventDefault();
-        setIndex(index => index + 1); // temp
+
+        let pubs = [];
+        const formData = new FormData(ev.currentTarget);
+        for (const entry of formData.entries()) pubs.push(entry[1]);
+        const body = new FormData();
+        pubs.map(pub => body.append("publications", pub));
+
+        const cookie = parseCookies(document.cookie);
+
+        if (pubs && "subscription_token" in cookie) {
+          await put("subscriptions/", body, "api", {
+            Authorization: cookie.subscription_token,
+          })
+            .then(() => {
+              setIndex
+                ? setIndex(index => index + 1)
+                : toast.success(
+                    <>
+                      <CheckCircleIcon className="size-4.5 text-green-600" />
+                      {t("changes_saved")}
+                    </>
+                  );
+            })
+            .catch(err => {
+              toast.error(
+                t("common:error.toast.form_submission_failure"),
+                t("common:error.toast.reach_support")
+              );
+              console.error(err);
+            })
+            .finally(() => setLoading(false));
+        }
       }}
       className="flex w-full flex-col gap-6 lg:min-h-0 lg:w-3/5 lg:px-20 lg:py-12 xl:w-2/3"
     >
@@ -46,7 +79,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
         className="w-full justify-center sm:w-fit"
         loading={loading}
       >
-        {t(subscribed.length > 0 ? "save" : "subscribe")}
+        {t(subscribed ? "save" : "subscribe")}
       </Button>
     </form>
   );
@@ -73,7 +106,7 @@ function transform(data: Record<string, Record<string, string>>, subscribed: str
     const subtypes = Object.entries(value).map(([value, label]) => ({
       label: label,
       value: value,
-      checked: subscribed.length > 0 ? subscribed.includes(value) : subscribed,
+      checked: subscribed ? subscribed.includes(value) : false,
       children: [],
       parent: node,
     }));

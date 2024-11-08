@@ -150,7 +150,13 @@ const Checklist = ({
           <ul className="flex flex-col gap-4">
             {node.children.map(({ label, value, checked }) => (
               <li key={value} className="flex items-center gap-1.5 text-sm">
-                <Checkbox id={value} value={value} checked={checked} onChange={onChange} />
+                <Checkbox
+                  id={value}
+                  name={value}
+                  value={value}
+                  checked={checked}
+                  onChange={onChange}
+                />
                 <label htmlFor={value}>{label}</label>
               </li>
             ))}

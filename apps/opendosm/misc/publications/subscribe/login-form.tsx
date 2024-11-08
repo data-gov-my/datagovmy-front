@@ -1,8 +1,9 @@
 import { routes } from "@lib/routes";
-import { post } from "datagovmy-ui/api";
+import { get } from "datagovmy-ui/api";
 import { At, Button, Input, toast } from "datagovmy-ui/components";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { setCookie } from "./utils";
 
 /**
  * Login Form
@@ -13,9 +14,10 @@ interface LoginFormProps {
   loading: boolean;
   setIndex: Dispatch<SetStateAction<number>>;
   setLoading: (loading: boolean) => void;
+  setSubscribed: Dispatch<SetStateAction<string[]>>;
 }
 
-const LoginForm: FC<LoginFormProps> = ({ loading, setIndex, setLoading }) => {
+const LoginForm: FC<LoginFormProps> = ({ loading, setIndex, setLoading, setSubscribed }) => {
   const { t } = useTranslation("publication-subscription");
   const [validation, setValidation] = useState({
     email: "",
@@ -45,7 +47,23 @@ const LoginForm: FC<LoginFormProps> = ({ loading, setIndex, setLoading }) => {
           token: "",
           email: "",
         });
-        // setLoading(true);
+        setLoading(true);
+        await get("/subscriptions/", undefined, "api", {
+          Authorization: token,
+        })
+          .then(({ data }) => {
+            setCookie("subscription_token", token);
+            setIndex(index => index + 1);
+            setSubscribed(data.data);
+          })
+          .catch(err => {
+            toast.error(
+              t("common:error.toast.form_submission_failure"),
+              t("common:error.toast.reach_support")
+            );
+            console.error(err);
+          })
+          .finally(() => setLoading(false));
       }}
     >
       <div className="w-full space-y-4 lg:w-96">
