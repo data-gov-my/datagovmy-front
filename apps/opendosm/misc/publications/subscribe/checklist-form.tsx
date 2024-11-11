@@ -43,7 +43,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
         const cookie = parseCookies(document.cookie);
 
         if (pubs && "subscription_token" in cookie) {
-          await put("subscriptions/", body, "api", {
+          await put("/subscriptions/", body, "api", {
             Authorization: cookie.subscription_token,
           })
             .then(() => {

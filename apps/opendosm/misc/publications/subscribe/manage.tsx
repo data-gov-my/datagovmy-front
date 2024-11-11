@@ -21,7 +21,7 @@ interface ManageSubscriptionsProps {
 const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   const { t } = useTranslation("publication-subscription");
 
-  const [index, setIndex] = useState(2);
+  const [index, setIndex] = useState(0);
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
