@@ -1,5 +1,6 @@
+import { routes } from "@lib/routes";
 import { post } from "datagovmy-ui/api";
-import { Button, Input, toast } from "datagovmy-ui/components";
+import { At, Button, Input, toast } from "datagovmy-ui/components";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -14,10 +15,19 @@ interface EmailFormProps {
   setEmail: (email: string) => void;
   setIndex: Dispatch<SetStateAction<number>>;
   setLoading: (loading: boolean) => void;
+  signUp?: boolean;
 }
 
-const EmailForm: FC<EmailFormProps> = ({ email, loading, setEmail, setIndex, setLoading }) => {
+const EmailForm: FC<EmailFormProps> = ({
+  email,
+  loading,
+  setEmail,
+  setIndex,
+  setLoading,
+  signUp = false,
+}) => {
   const { t } = useTranslation("publication-subscription");
+  const [redirect, setRedirect] = useState(false);
   const [validation, setValidation] = useState("");
 
   return (
@@ -37,8 +47,21 @@ const EmailForm: FC<EmailFormProps> = ({ email, loading, setEmail, setIndex, set
         }
         setValidation("");
         setLoading(true);
-        await post("/token/request/", { email })
-          .then(() => setIndex(index => index + 1))
+        setRedirect(false);
+        await post("/check-subscription/", { email })
+          .then(({ data }: { data: { message: string } }) => {
+            if (data.message.startsWith(signUp ? "Email does not exist" : "Email does exist"))
+              post("/token/request/", { email })
+                .then(() => setIndex(index => index + 1))
+                .catch(err => {
+                  toast.error(
+                    t("common:error.toast.form_submission_failure"),
+                    t("common:error.toast.reach_support")
+                  );
+                  console.error(err);
+                });
+            else setRedirect(true);
+          })
           .catch(err => {
             toast.error(
               t("common:error.toast.form_submission_failure"),
@@ -64,6 +87,18 @@ const EmailForm: FC<EmailFormProps> = ({ email, loading, setEmail, setIndex, set
           validation={validation}
         />
       </div>
+      {redirect && (
+        <span className="text-sm text-dim">
+          {t(signUp ? "email_present" : "email_absent")}{" "}
+          <At
+            className="link-primary"
+            href={signUp ? routes.MANAGE_SUBSCRIPTION : routes.NEW_SUBSCRIPTION}
+          >
+            {t("here")}
+          </At>
+          .
+        </span>
+      )}
 
       <Button
         variant="primary"

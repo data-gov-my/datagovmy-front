@@ -1,12 +1,13 @@
-import { NewspaperIcon, UserIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, NewspaperIcon, UserIcon } from "@heroicons/react/20/solid";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { useEffect, useState } from "react";
 import Layout from "./layout";
 import { parseCookies } from "datagovmy-ui/helpers";
 import ChecklistForm from "./checklist-form";
-import LoginForm from "./login-form";
 import { get } from "datagovmy-ui/api";
 import { toast } from "datagovmy-ui/components";
+import EmailForm from "./email-form";
+import TokenForm from "./token-form";
 
 /**
  * Manage Subscriptions
@@ -20,14 +21,16 @@ interface ManageSubscriptionsProps {
 const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   const { t } = useTranslation("publication-subscription");
 
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(2);
+  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState<string[]>([]);
 
   useEffect(() => {
     const cookie = parseCookies(document.cookie);
     if ("subscription_token" in cookie) {
-      setIndex(1);
+      setIndex(2);
       get("/subscriptions/", undefined, "api", { Authorization: cookie.subscription_token })
         .then(({ data }) => setSubscribed(data.data))
         .catch(err => {
@@ -46,20 +49,36 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
       icon: UserIcon,
       step: "manage.step1",
       desc: "manage.step1_desc",
-      tab: (
-        <LoginForm
+      form: (
+        <EmailForm
+          email={email}
+          setEmail={setEmail}
           loading={loading}
           setIndex={setIndex}
           setLoading={setLoading}
-          setSubscribed={setSubscribed}
+        />
+      ),
+    },
+    {
+      icon: CheckCircleIcon,
+      step: "manage.step2",
+      desc: "manage.step2_desc",
+      form: (
+        <TokenForm
+          email={email}
+          loading={loading}
+          setIndex={setIndex}
+          setLoading={setLoading}
+          setToken={setToken}
+          token={token}
         />
       ),
     },
     {
       icon: NewspaperIcon,
-      step: "manage.step2",
-      desc: "manage.step2_desc",
-      tab: (
+      step: "manage.step3",
+      desc: "manage.step3_desc",
+      form: (
         <ChecklistForm
           data={data}
           loading={loading}
@@ -71,8 +90,8 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   ];
 
   return (
-    <Layout header={t("manage.header")} currentIndex={index} steps={STEPS}>
-      {STEPS[index].tab}
+    <Layout header={t("manage.header")} currentIndex={index} steps={STEPS} logOut={index === 2}>
+      {STEPS[index].form}
     </Layout>
   );
 };

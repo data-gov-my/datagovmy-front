@@ -30,6 +30,7 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
   // useEffect(() => {
   //   const cookie = parseCookies(document.cookie);
   //   if ("subscription_token" in cookie) setIndex(2);
+  //    router.redirect()
   // }, []);
 
   const STEPS = [
@@ -40,10 +41,11 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
       form: (
         <EmailForm
           email={email}
-          setEmail={setEmail}
           loading={loading}
+          setEmail={setEmail}
           setIndex={setIndex}
           setLoading={setLoading}
+          signUp
         />
       ),
     },
