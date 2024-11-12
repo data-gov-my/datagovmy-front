@@ -50,7 +50,7 @@ const TokenForm: FC<TokenFormProps> = ({
           .then(() => {
             setCookie("subscription_token", token);
             setToken(token);
-            setIndex(index => index + 1);
+            setIndex(i => i + 1);
           })
           .catch(() =>
             toast.error(
@@ -63,6 +63,8 @@ const TokenForm: FC<TokenFormProps> = ({
     >
       <p className="w-full text-sm text-black dark:text-white lg:w-96">
         {t("sent_verification")}
+        <span className="text-primary dark:text-primary-dark">notif@opendosm.my</span>
+        {t("to")}
         <span className="text-primary dark:text-primary-dark">{email}</span>
         {t("check_inbox")}
       </p>

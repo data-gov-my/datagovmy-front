@@ -1,6 +1,6 @@
 import { routes } from "@lib/routes";
 import { post } from "datagovmy-ui/api";
-import { At, Button, Input, toast } from "datagovmy-ui/components";
+import { At, Button, Callout, Input, toast } from "datagovmy-ui/components";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -48,19 +48,11 @@ const EmailForm: FC<EmailFormProps> = ({
         setValidation("");
         setLoading(true);
         setRedirect(false);
-        await post("/check-subscription/", { email })
+        await post(signUp ? "/check-subscription/" : "/token/request/", { email })
           .then(({ data }: { data: { message: string } }) => {
-            if (data.message.startsWith(signUp ? "Email does not exist" : "Email does exist"))
-              post("/token/request/", { email })
-                .then(() => setIndex(index => index + 1))
-                .catch(err => {
-                  toast.error(
-                    t("common:error.toast.form_submission_failure"),
-                    t("common:error.toast.reach_support")
-                  );
-                  console.error(err);
-                });
-            else setRedirect(true);
+            if (data.message.startsWith(signUp ? "Email does exist" : "Not subscribed"))
+              setRedirect(true);
+            else setIndex(i => i + 1);
           })
           .catch(err => {
             toast.error(
@@ -83,21 +75,25 @@ const EmailForm: FC<EmailFormProps> = ({
           onChange={email => {
             setEmail(email);
             setValidation("");
+            setRedirect(false);
           }}
           validation={validation}
         />
       </div>
       {redirect && (
-        <span className="text-sm text-dim">
-          {t(signUp ? "email_present" : "email_absent")}{" "}
-          <At
-            className="link-primary"
-            href={signUp ? routes.MANAGE_SUBSCRIPTION : routes.NEW_SUBSCRIPTION}
-          >
-            {t("here")}
-          </At>
-          .
-        </span>
+        <div className="w-full lg:w-96">
+          <Callout variant="warning">
+            <span>
+              {t(signUp ? "email_present" : "email_absent")}{" "}
+              <At
+                className="link-primary"
+                href={signUp ? routes.MANAGE_SUBSCRIPTION : routes.NEW_SUBSCRIPTION}
+              >
+                {t(signUp ? "manage_here" : "subscribe_now")}
+              </At>
+            </span>
+          </Callout>
+        </div>
       )}
 
       <Button
@@ -105,6 +101,7 @@ const EmailForm: FC<EmailFormProps> = ({
         type="submit"
         className="w-full justify-center sm:w-fit"
         loading={loading}
+        disabled={redirect}
       >
         {t("continue")}
       </Button>
