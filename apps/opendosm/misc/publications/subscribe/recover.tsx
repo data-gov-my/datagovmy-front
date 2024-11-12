@@ -45,13 +45,7 @@ const RecoverSubscriptionToken = ({}: RecoverSubscriptionTokenProps) => {
       step: "recover.step2",
       desc: "recover.step2_desc",
       tab: (
-        <TokenForm
-          email={email}
-          loading={loading}
-          setIndex={setIndex}
-          setLoading={setLoading}
-          setToken={setToken}
-        />
+        <TokenForm email={email} loading={loading} setIndex={setIndex} setLoading={setLoading} />
       ),
     },
   ];

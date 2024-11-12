@@ -1,4 +1,4 @@
-import { post } from "datagovmy-ui/api";
+import { get, post } from "datagovmy-ui/api";
 import { Button, Input, toast } from "datagovmy-ui/components";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,19 +14,12 @@ interface TokenFormProps {
   loading: boolean;
   setIndex: Dispatch<SetStateAction<number>>;
   setLoading: (loading: boolean) => void;
-  setToken?: (token: string) => void;
-  token?: string;
+  setSubscribed?: Dispatch<SetStateAction<string[]>>;
 }
 
-const TokenForm: FC<TokenFormProps> = ({
-  email,
-  loading,
-  setIndex,
-  setLoading,
-  setToken,
-  token,
-}) => {
+const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, setSubscribed }) => {
   const { t } = useTranslation("publication-subscription");
+  const [token, setToken] = useState("");
   const [validation, setValidation] = useState("");
   const [isRunning, setIsRunning] = useState(true);
   const [isSending, setIsSending] = useState(false);
@@ -46,11 +39,13 @@ const TokenForm: FC<TokenFormProps> = ({
           setLoading(true);
           setValidation("");
         }
-        await post("/token/verify/", { token }, "api")
-          .then(() => {
+        await get("/subscriptions/", undefined, "api", { Authorization: token })
+          .then(({ data }) => {
             setCookie("subscription_token", token);
             setToken(token);
             setIndex(i => i + 1);
+            console.log(data);
+            if (setSubscribed && data.data) setSubscribed(data.data);
           })
           .catch(() =>
             toast.error(

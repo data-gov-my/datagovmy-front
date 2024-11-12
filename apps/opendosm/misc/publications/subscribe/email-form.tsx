@@ -91,6 +91,7 @@ const EmailForm: FC<EmailFormProps> = ({
               >
                 {t(signUp ? "manage_here" : "subscribe_now")}
               </At>
+              .
             </span>
           </Callout>
         </div>

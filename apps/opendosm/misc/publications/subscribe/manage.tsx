@@ -23,7 +23,6 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
 
   const [index, setIndex] = useState(0);
   const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState<string[]>([]);
 
@@ -69,8 +68,7 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
           loading={loading}
           setIndex={setIndex}
           setLoading={setLoading}
-          setToken={setToken}
-          token={token}
+          setSubscribed={setSubscribed}
         />
       ),
     },

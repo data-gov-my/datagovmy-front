@@ -23,14 +23,12 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
   const { t } = useTranslation("publication-subscription");
 
   const [email, setEmail] = useState("");
-  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
 
   // useEffect(() => {
   //   const cookie = parseCookies(document.cookie);
-  //   if ("subscription_token" in cookie) setIndex(2);
-  //    router.redirect()
+  //   if ("subscription_token" in cookie) router.redirect()
   // }, []);
 
   const STEPS = [
@@ -54,14 +52,7 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
       step: "new.step2",
       desc: "new.step2_desc",
       form: (
-        <TokenForm
-          email={email}
-          loading={loading}
-          setIndex={setIndex}
-          setLoading={setLoading}
-          setToken={setToken}
-          token={token}
-        />
+        <TokenForm email={email} loading={loading} setIndex={setIndex} setLoading={setLoading} />
       ),
     },
     {
