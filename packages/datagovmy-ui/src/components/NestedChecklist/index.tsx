@@ -33,9 +33,10 @@ export default function NestedChecklist({
 
   return (
     <div className="flex flex-col gap-3 lg:min-h-0">
-      <label htmlFor={data.value} className="flex items-center gap-1.5 text-sm">
+      <label htmlFor={data.value} className="flex items-center gap-2 text-sm">
         <Checkbox
           id={data.value}
+          name={data.value}
           value={data.value}
           checked={data.checked}
           onChange={handleBoxChecked}
@@ -112,7 +113,7 @@ const Checklist = ({
   return (
     <Collapsible defaultOpen={defaultOpen} open={true}>
       <div className="flex w-full min-w-0 max-w-full items-center justify-between gap-3 p-4">
-        <div className="flex min-w-0 max-w-full items-center gap-1.5 font-bold">
+        <div className="flex min-w-0 max-w-full items-center gap-2 font-bold">
           <Checkbox id={node.value} checked={node.checked} value={node.value} onChange={onChange} />
           <label htmlFor={node.value} className="max-w-full truncate">
             {node.label}
@@ -147,9 +148,9 @@ const Checklist = ({
         )}
       >
         <CollapsibleContent className="p-4 pl-8 pt-2">
-          <ul className="flex flex-col gap-4">
+          <ul className="flex flex-col gap-4 text-sm">
             {node.children.map(({ label, value, checked }) => (
-              <li key={value} className="flex items-center gap-1.5 text-sm">
+              <li key={value} className="flex items-center gap-2">
                 <Checkbox
                   id={value}
                   name={value}

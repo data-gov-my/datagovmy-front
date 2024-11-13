@@ -26,7 +26,7 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
 
   return (
     <form
-      className="flex w-full flex-col gap-6 lg:min-h-0 lg:w-3/5 lg:px-20 lg:py-52 xl:w-2/3"
+      className="flex w-full flex-col gap-6 lg:min-h-0 lg:w-3/5 lg:px-20 lg:py-40 xl:w-2/3"
       onSubmit={async ev => {
         ev.preventDefault();
 
@@ -44,7 +44,6 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
             setCookie("subscription_token", token);
             setToken(token);
             setIndex(i => i + 1);
-            console.log(data);
             if (setSubscribed && data.data) setSubscribed(data.data);
           })
           .catch(() =>

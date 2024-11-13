@@ -19,7 +19,7 @@ interface ManageSubscriptionsProps {
 }
 
 const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
-  const { t } = useTranslation("publication-subscription");
+  const { t } = useTranslation("publication-manage");
 
   const [index, setIndex] = useState(0);
   const [email, setEmail] = useState("");
@@ -46,8 +46,8 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   const STEPS = [
     {
       icon: UserIcon,
-      step: "manage.step1",
-      desc: "manage.step1_desc",
+      step: t("step1"),
+      desc: t("step1_desc"),
       form: (
         <EmailForm
           email={email}
@@ -60,8 +60,8 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
     },
     {
       icon: CheckCircleIcon,
-      step: "manage.step2",
-      desc: "manage.step2_desc",
+      step: t("step2"),
+      desc: t("step2_desc"),
       form: (
         <TokenForm
           email={email}
@@ -74,8 +74,8 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
     },
     {
       icon: NewspaperIcon,
-      step: "manage.step3",
-      desc: "manage.step3_desc",
+      step: t("step3"),
+      desc: t("step3_desc"),
       form: (
         <ChecklistForm
           data={data}
@@ -88,7 +88,7 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   ];
 
   return (
-    <Layout header={t("manage.header")} currentIndex={index} steps={STEPS} logOut={index === 2}>
+    <Layout header={t("header")} currentIndex={index} steps={STEPS}>
       {STEPS[index].form}
     </Layout>
   );

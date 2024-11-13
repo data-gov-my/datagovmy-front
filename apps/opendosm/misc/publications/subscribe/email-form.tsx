@@ -26,13 +26,13 @@ const EmailForm: FC<EmailFormProps> = ({
   setLoading,
   signUp = false,
 }) => {
-  const { t } = useTranslation("publication-subscription");
+  const { t } = useTranslation(signUp ? "publication-subscription" : "publication-manage");
   const [redirect, setRedirect] = useState(false);
   const [validation, setValidation] = useState("");
 
   return (
     <form
-      className="flex w-full flex-col gap-6 lg:min-h-0 lg:w-3/5 lg:px-20 lg:py-52 xl:w-2/3"
+      className="flex w-full flex-col gap-6 lg:min-h-0 lg:w-3/5 lg:px-20 lg:py-44 xl:w-2/3"
       onSubmit={async ev => {
         ev.preventDefault();
 

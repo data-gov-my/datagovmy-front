@@ -1,9 +1,8 @@
-import { Button, Container } from "datagovmy-ui/components";
+import { At, Button, Container } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { clx } from "datagovmy-ui/helpers";
 import { ForwardRefExoticComponent, FC, ReactNode, SVGProps } from "react";
 import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
-import Link from "next/link";
 import { routes } from "@lib/routes";
 
 /**
@@ -16,7 +15,6 @@ interface PublicationSubscriptionLayoutProps {
   currentIndex: number;
   header: string;
   steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; step: string; desc: string }[];
-  logOut?: boolean;
 }
 
 const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
@@ -24,7 +22,6 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
   currentIndex,
   header,
   steps,
-  logOut = false,
 }) => {
   const { t } = useTranslation("publication-subscription");
 
@@ -35,11 +32,11 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
           <h1 className="text-balance font-body text-base font-bold lg:font-header lg:text-xl">
             {header}
           </h1>
-          <Link className="lg:hidden" href={routes.PUBLICATIONS}>
+          <At className="lg:hidden" href={routes.PUBLICATIONS}>
             <Button className="p-0">
               <XMarkIcon className="size-6 text-dim" />
             </Button>
-          </Link>
+          </At>
         </div>
 
         <div className="flex w-fit items-center gap-y-1 rounded-lg bg-washed px-3 py-1 text-sm dark:bg-washed-dark lg:hidden">
@@ -52,7 +49,7 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
                     : "text-black dark:text-white"
                 )}
               >
-                {t(step)}
+                {step}
               </div>
               {i < steps.length - 1 && (
                 <ChevronRightIcon className="size-6 text-outlineHover dark:text-outlineHover-dark" />
@@ -80,35 +77,26 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
                       <Icon className="size-7" />
                     </div>
                     {i < steps.length - 1 && (
-                      <div className="max-h-full w-0.5 grow rounded bg-black dark:text-white">
-                        <svg
-                          width="2"
-                          height="22"
-                          viewBox="0 0 2 22"
-                          fill="currentColor"
-                          xmlns="http://www.w3.org/2000/svg"
-                          className={i >= currentIndex && "opacity-40"}
-                        >
-                          <rect width="2" height="22" />
-                        </svg>
-                      </div>
+                      <div
+                        className={clx(
+                          "max-h-full w-0.5 grow rounded bg-black",
+                          i >= currentIndex && "bg-outline"
+                        )}
+                      />
                     )}
                   </div>
                   <div className="flex h-full flex-col gap-0.5">
-                    <p className="font-bold">{t(step)}</p>
-                    <p className="pb-6 text-sm text-dim">{t(desc)}</p>
+                    <p className="font-bold">{step}</p>
+                    <p className="pb-6 text-sm text-dim">{desc}</p>
                   </div>
                 </div>
               </>
             );
           })}
         </div>
-        <div className="flex items-center gap-3">
-          <Link className="hidden w-fit lg:block" href={routes.PUBLICATIONS}>
-            <Button variant="default">{t("cancel")}</Button>
-          </Link>
-          {/* {logOut && <Button variant="ghost">{t("log_out")}</Button>} */}
-        </div>
+        <At className="hidden w-fit lg:block" href={routes.PUBLICATIONS}>
+          <Button variant="default">{t("cancel")}</Button>
+        </At>
       </div>
 
       {children}

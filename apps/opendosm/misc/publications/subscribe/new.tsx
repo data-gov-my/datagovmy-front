@@ -1,14 +1,12 @@
 import { CheckCircleIcon, NewspaperIcon, UserIcon } from "@heroicons/react/20/solid";
 import { At } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Layout from "./layout";
-import Success from "./success";
 import { routes } from "@lib/routes";
 import EmailForm from "./email-form";
 import TokenForm from "./token-form";
 import ChecklistForm from "./checklist-form";
-import { parseCookies } from "datagovmy-ui/helpers";
 
 /**
  * New Publication Subscription
@@ -26,16 +24,11 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
   const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
 
-  // useEffect(() => {
-  //   const cookie = parseCookies(document.cookie);
-  //   if ("subscription_token" in cookie) router.redirect()
-  // }, []);
-
   const STEPS = [
     {
       icon: UserIcon,
-      step: "new.step1",
-      desc: "new.step1_desc",
+      step: t("step1"),
+      desc: t("step1_desc"),
       form: (
         <EmailForm
           email={email}
@@ -49,16 +42,16 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
     },
     {
       icon: CheckCircleIcon,
-      step: "new.step2",
-      desc: "new.step2_desc",
+      step: t("step2"),
+      desc: t("step2_desc"),
       form: (
         <TokenForm email={email} loading={loading} setIndex={setIndex} setLoading={setLoading} />
       ),
     },
     {
       icon: NewspaperIcon,
-      step: "new.step3",
-      desc: "new.step3_desc",
+      step: t("step3"),
+      desc: t("step3_desc"),
       form: (
         <ChecklistForm data={data} loading={loading} setIndex={setIndex} setLoading={setLoading} />
       ),
@@ -66,16 +59,26 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
   ];
 
   return index === 3 ? (
-    <Success title={t("new.success")} description={t("new.success_desc")}>
+    <div className="flex min-h-[90dvh] flex-col items-center justify-center gap-6 p-4.5 sm:gap-8">
+      <div className="flex flex-col items-center gap-y-6">
+        <CheckCircleIcon className="size-[72px] text-green-600" />
+        <div className="space-y-3 text-center sm:w-[450px]">
+          <h2 className="text-black dark:text-white">{t("success")}</h2>
+          <p className="text-sm text-dim">
+            {t("success_desc")}{" "}
+            <span className="text-primary dark:text-primary-dark">notif@opendosm.my</span>.
+          </p>
+        </div>
+      </div>
       <At
         className="btn-primary w-full justify-center shadow-button sm:w-fit"
         href={routes.PUBLICATIONS}
       >
-        {t("done")}
+        {t("return")}
       </At>
-    </Success>
+    </div>
   ) : (
-    <Layout header={t("new.header")} currentIndex={index} steps={STEPS}>
+    <Layout header={t("header")} currentIndex={index} steps={STEPS}>
       {STEPS[index].form}
     </Layout>
   );

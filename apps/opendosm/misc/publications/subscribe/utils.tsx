@@ -25,7 +25,7 @@ function Timer({
   );
 }
 
-export { setCookie, Timer };
+export { deleteCookie, setCookie, Timer };
 
 // source: https://overreacted.io/making-setinterval-declarative-with-react-hooks/
 function useInterval(callback: () => void, delay: number | null) {
@@ -53,3 +53,5 @@ const setCookie = (name: string, value: string, hours: number = 12) => {
 
   document.cookie = `${name}=${value}; expires=${expiryDate.toUTCString()}; path=/`;
 };
+
+const deleteCookie = (name: string) => (document.cookie = `${name}=; Max-Age=0; path=/`);

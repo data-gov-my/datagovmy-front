@@ -5,24 +5,24 @@ import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import ManageSubscriptionPage from "misc/publications/subscribe/manage";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const ManageSubscription: Page = ({
   data,
   meta,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation("publication-subscription");
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { t } = useTranslation("publication-manage");
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("manage.header")} description={t("description")} keywords={""} />
+      <Metadata title={t("header")} description={t("description")} keywords={""} />
       <ManageSubscriptionPage data={data} />
     </AnalyticsProvider>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withi18n(
-  "publication-subscription",
+export const getStaticProps: GetStaticProps = withi18n(
+  ["publication-manage", "publication-subscription"],
   async ({ locale }) => {
     try {
       const { data } = await get("/publication-type-list", {

@@ -5,23 +5,23 @@ import { withi18n } from "datagovmy-ui/decorators";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import NewPublicationSubscription from "misc/publications/subscribe/new";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const SubscribePublication: Page = ({
   data,
   meta,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("publication-subscription");
 
   return (
     <AnalyticsProvider meta={meta}>
-      <Metadata title={t("new.header")} description={t("description")} />
+      <Metadata title={t("header")} description={t("description")} />
       <NewPublicationSubscription data={data} />
     </AnalyticsProvider>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withi18n(
+export const getStaticProps: GetStaticProps = withi18n(
   "publication-subscription",
   async ({ locale }) => {
     try {

@@ -1,9 +1,11 @@
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { post, put } from "datagovmy-ui/api";
-import { Button, NestedChecklist, toast } from "datagovmy-ui/components";
+import { routes } from "@lib/routes";
+import { put } from "datagovmy-ui/api";
+import { At, Button, NestedChecklist, toast } from "datagovmy-ui/components";
 import { parseCookies } from "datagovmy-ui/helpers";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { deleteCookie } from "./utils";
 
 /**
  * Checklist Form
@@ -25,7 +27,9 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
   setLoading,
   subscribed,
 }) => {
-  const { t, i18n } = useTranslation("publication-subscription");
+  const { t, i18n } = useTranslation(
+    subscribed ? "publication-manage" : "publication-subscription"
+  );
   const [nodes, setNodes] = useState(transform(data, subscribed));
   useEffect(() => setNodes(transform(data, subscribed)), [i18n, subscribed]);
 
@@ -34,11 +38,16 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
       onSubmit={async ev => {
         ev.preventDefault();
 
-        let pubs = [];
+        let pubs: string[] = [];
         const formData = new FormData(ev.currentTarget);
-        for (const entry of formData.entries()) pubs.push(entry[1]);
         const body = new FormData();
-        pubs.map(pub => body.append("publications", pub));
+        for (const entry of formData.entries()) {
+          const pub = entry[1] as string;
+          if (pub === "all") {
+            body.append("publications", "all");
+            break;
+          } else body.append("publications", pub);
+        }
 
         const cookie = parseCookies(document.cookie);
 
@@ -73,22 +82,36 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
         <p className="text-sm text-dim">{t("choose_publication_desc")}</p>
       </div>
       <NestedChecklist data={nodes} label={t("select_all")} setData={setNodes} />
-      <Button
-        variant="primary"
-        type="submit"
-        className="w-full justify-center sm:w-fit"
-        loading={loading}
-      >
-        {t(subscribed ? "save" : "subscribe")}
-      </Button>
+      <div className="flex flex-col gap-x-3 gap-y-2 lg:flex-row">
+        <Button
+          variant="primary"
+          type="submit"
+          className="w-full justify-center sm:w-fit"
+          loading={loading}
+        >
+          {t(subscribed ? "save" : "subscribe")}
+        </Button>
+        {subscribed && (
+          <At href={routes.PUBLICATIONS}>
+            <Button
+              variant="ghost"
+              type="submit"
+              className="w-full justify-center sm:w-fit"
+              onClick={() => deleteCookie("subscription_token")}
+            >
+              {t("log_out")}
+            </Button>
+          </At>
+        )}
+      </div>
     </form>
   );
 };
 
 function transform(data: Record<string, Record<string, string>>, subscribed: string[]) {
   const root = {
-    label: "root",
-    value: "root",
+    label: "all",
+    value: "all",
     checked: false,
     children: [],
   };
@@ -106,7 +129,11 @@ function transform(data: Record<string, Record<string, string>>, subscribed: str
     const subtypes = Object.entries(value).map(([value, label]) => ({
       label: label,
       value: value,
-      checked: subscribed ? subscribed.includes(value) : false,
+      checked: subscribed
+        ? subscribed.includes("all")
+          ? true
+          : subscribed.includes(value)
+        : false,
       children: [],
       parent: node,
     }));
