@@ -47,9 +47,9 @@ function useInterval(callback: () => void, delay: number | null) {
   }, [delay]);
 }
 
-const setCookie = (name: string, value: string, hours: number = 12) => {
+const setCookie = (name: string, value: string, mins: number = 5) => {
   const expiryDate = new Date();
-  expiryDate.setHours(expiryDate.getHours() + hours);
+  expiryDate.setMinutes(expiryDate.getMinutes() + mins);
 
   document.cookie = `${name}=${value}; expires=${expiryDate.toUTCString()}; path=/`;
 };
