@@ -46,7 +46,7 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   const STEPS = [
     {
       icon: UserIcon,
-      step: t("step1"),
+      name: t("step1"),
       desc: t("step1_desc"),
       form: (
         <EmailForm
@@ -60,7 +60,7 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
     },
     {
       icon: CheckCircleIcon,
-      step: t("step2"),
+      name: t("step2"),
       desc: t("step2_desc"),
       form: (
         <TokenForm
@@ -74,7 +74,7 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
     },
     {
       icon: NewspaperIcon,
-      step: t("step3"),
+      name: t("step3"),
       desc: t("step3_desc"),
       form: (
         <ChecklistForm

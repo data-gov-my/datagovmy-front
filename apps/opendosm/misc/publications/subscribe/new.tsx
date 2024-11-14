@@ -27,7 +27,7 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
   const STEPS = [
     {
       icon: UserIcon,
-      step: t("step1"),
+      name: t("step1"),
       desc: t("step1_desc"),
       form: (
         <EmailForm
@@ -42,7 +42,7 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
     },
     {
       icon: CheckCircleIcon,
-      step: t("step2"),
+      name: t("step2"),
       desc: t("step2_desc"),
       form: (
         <TokenForm email={email} loading={loading} setIndex={setIndex} setLoading={setLoading} />
@@ -50,7 +50,7 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
     },
     {
       icon: NewspaperIcon,
-      step: t("step3"),
+      name: t("step3"),
       desc: t("step3_desc"),
       form: (
         <ChecklistForm data={data} loading={loading} setIndex={setIndex} setLoading={setLoading} />

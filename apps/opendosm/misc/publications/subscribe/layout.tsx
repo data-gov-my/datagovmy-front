@@ -14,7 +14,7 @@ interface PublicationSubscriptionLayoutProps {
   children: ReactNode;
   currentIndex: number;
   header: string;
-  steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; step: string; desc: string }[];
+  steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; name: string; desc: string }[];
 }
 
 const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
@@ -40,7 +40,7 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
         </div>
 
         <div className="flex w-fit items-center gap-y-1 rounded-lg bg-washed px-3 py-1 text-sm dark:bg-washed-dark lg:hidden">
-          {steps.map(({ step }, i) => (
+          {steps.map((step, i) => (
             <>
               <div
                 className={clx(
@@ -49,7 +49,7 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
                     : "text-black dark:text-white"
                 )}
               >
-                {step}
+                {step.name}
               </div>
               {i < steps.length - 1 && (
                 <ChevronRightIcon className="size-6 text-outlineHover dark:text-outlineHover-dark" />
@@ -59,40 +59,35 @@ const PublicationSubscriptionLayout: FC<PublicationSubscriptionLayoutProps> = ({
         </div>
 
         <div className="hidden flex-col gap-y-2 lg:flex">
-          {steps.map(({ desc, icon, step }, i) => {
-            const Icon = icon;
-            return (
-              <>
-                <div
-                  className={clx(
-                    "flex h-full gap-4",
-                    i === currentIndex
-                      ? "text-primary dark:text-primary-dark"
-                      : "text-black dark:text-white",
-                    i > currentIndex && "opacity-40"
-                  )}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="size-12 rounded-lg border border-outline p-2.5 dark:border-washed-dark">
-                      <Icon className="size-7" />
-                    </div>
-                    {i < steps.length - 1 && (
-                      <div
-                        className={clx(
-                          "max-h-full w-0.5 grow rounded bg-black",
-                          i >= currentIndex && "bg-outline"
-                        )}
-                      />
-                    )}
-                  </div>
-                  <div className="flex h-full flex-col gap-0.5">
-                    <p className="font-bold">{step}</p>
-                    <p className="pb-6 text-sm text-dim">{desc}</p>
-                  </div>
+          {steps.map((step, i) => (
+            <div
+              className={clx(
+                "flex h-full gap-4",
+                i === currentIndex
+                  ? "text-primary dark:text-primary-dark"
+                  : "text-black dark:text-white",
+                i > currentIndex && "opacity-40"
+              )}
+            >
+              <div className="flex flex-col items-center gap-2">
+                <div className="size-12 rounded-lg border border-outline p-2.5 dark:border-washed-dark">
+                  <step.icon className="size-7" />
                 </div>
-              </>
-            );
-          })}
+                {i < steps.length - 1 && (
+                  <div
+                    className={clx(
+                      "max-h-full w-0.5 grow rounded bg-black",
+                      i >= currentIndex && "bg-outline"
+                    )}
+                  />
+                )}
+              </div>
+              <div className="flex h-full flex-col gap-0.5">
+                <p className="font-bold">{step.name}</p>
+                <p className="pb-6 text-sm text-dim">{step.desc}</p>
+              </div>
+            </div>
+          ))}
         </div>
         <At className="hidden w-fit lg:block" href={routes.PUBLICATIONS}>
           <Button variant="default">{t("cancel")}</Button>
