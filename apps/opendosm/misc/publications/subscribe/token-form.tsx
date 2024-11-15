@@ -18,7 +18,7 @@ interface TokenFormProps {
 }
 
 const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, setSubscribed }) => {
-  const { t } = useTranslation("publication-subscription");
+  const { t } = useTranslation(setSubscribed ? "publication-manage" : "publication-subscription");
   const [token, setToken] = useState("");
   const [validation, setValidation] = useState("");
   const [isRunning, setIsRunning] = useState(true);

@@ -27,9 +27,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
   setLoading,
   subscribed,
 }) => {
-  const { t, i18n } = useTranslation(
-    subscribed ? "publication-manage" : "publication-subscription"
-  );
+  const { t, i18n } = useTranslation(setIndex ? "publication-subscription" : "publication-manage");
   const [nodes, setNodes] = useState(transform(data, subscribed));
   useEffect(() => setNodes(transform(data, subscribed)), [i18n, subscribed]);
 
@@ -126,17 +124,19 @@ function transform(data: Record<string, Record<string, string>>, subscribed: str
       parent: root,
     };
 
-    const subtypes = Object.entries(value).map(([value, label]) => ({
-      label: label,
-      value: value,
-      checked: subscribed
-        ? subscribed.includes("all")
-          ? true
-          : subscribed.includes(value)
-        : false,
-      children: [],
-      parent: node,
-    }));
+    const subtypes = Object.entries(value)
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([value, label]) => ({
+        label: label,
+        value: value,
+        checked: subscribed
+          ? subscribed.includes("all")
+            ? true
+            : subscribed.includes(value)
+          : false,
+        children: [],
+        parent: node,
+      }));
 
     node.children = subtypes;
     if (subtypes.every(node => node.checked)) node.checked = true;

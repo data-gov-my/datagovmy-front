@@ -47,11 +47,7 @@ function useInterval(callback: () => void, delay: number | null) {
   }, [delay]);
 }
 
-const setCookie = (name: string, value: string, mins: number = 5) => {
-  const expiryDate = new Date();
-  expiryDate.setMinutes(expiryDate.getMinutes() + mins);
-
-  document.cookie = `${name}=${value}; expires=${expiryDate.toUTCString()}; path=/`;
-};
+const setCookie = (name: string, value: string, maxAge: number = 300) =>
+  (document.cookie = `${name}=${value}; Max-Age=${maxAge}; path=/`);
 
 const deleteCookie = (name: string) => (document.cookie = `${name}=; Max-Age=0; path=/`);
