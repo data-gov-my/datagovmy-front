@@ -125,7 +125,6 @@ function transform(data: Record<string, Record<string, string>>, subscribed: str
     };
 
     const subtypes = Object.entries(value)
-      .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([value, label]) => ({
         label: label,
         value: value,
