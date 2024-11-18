@@ -47,7 +47,6 @@ function useInterval(callback: () => void, delay: number | null) {
   }, [delay]);
 }
 
-const setCookie = (name: string, value: string, maxAge: number = 300) =>
-  (document.cookie = `${name}=${value}; Max-Age=${maxAge}; path=/`);
+const setCookie = (name: string, value: string) => (document.cookie = `${name}=${value}; path=/`);
 
 const deleteCookie = (name: string) => (document.cookie = `${name}=; Max-Age=0; path=/`);

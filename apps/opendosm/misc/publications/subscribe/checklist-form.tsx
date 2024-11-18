@@ -6,6 +6,7 @@ import { parseCookies } from "datagovmy-ui/helpers";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { deleteCookie } from "./utils";
+import { useRouter } from "next/router";
 
 /**
  * Checklist Form
@@ -30,7 +31,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
   const { t, i18n } = useTranslation(setIndex ? "publication-subscription" : "publication-manage");
   const [nodes, setNodes] = useState(transform(data, subscribed));
   useEffect(() => setNodes(transform(data, subscribed)), [i18n, subscribed]);
-
+  const router = useRouter();
   return (
     <form
       onSubmit={async ev => {
@@ -63,12 +64,18 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
                     </>
                   );
             })
-            .catch(err => {
-              toast.error(
-                t("common:error.toast.form_submission_failure"),
-                t("common:error.toast.reach_support")
-              );
-              console.error(err);
+            .catch(({ response }) => {
+              if (response.status === 401) {
+                toast.error(t("token_expired"), t("request_again"));
+                deleteCookie("subscription_token");
+                setTimeout(() => {
+                  setIndex ? router.push(routes.MANAGE_SUBSCRIPTION) : router.reload();
+                }, 300);
+              } else
+                toast.error(
+                  t("common:error.toast.form_submission_failure"),
+                  t("common:error.toast.reach_support")
+                );
             })
             .finally(() => setLoading(false));
         }
@@ -80,7 +87,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
         <p className="text-sm text-dim">{t("choose_publication_desc")}</p>
       </div>
       <NestedChecklist data={nodes} label={t("select_all")} setData={setNodes} />
-      <div className="flex flex-col gap-x-3 gap-y-2 lg:flex-row">
+      <div className="flex flex-col gap-x-3 gap-y-2 sm:flex-row">
         <Button
           variant="primary"
           type="submit"
@@ -124,18 +131,17 @@ function transform(data: Record<string, Record<string, string>>, subscribed: str
       parent: root,
     };
 
-    const subtypes = Object.entries(value)
-      .map(([value, label]) => ({
-        label: label,
-        value: value,
-        checked: subscribed
-          ? subscribed.includes("all")
-            ? true
-            : subscribed.includes(value)
-          : false,
-        children: [],
-        parent: node,
-      }));
+    const subtypes = Object.entries(value).map(([value, label]) => ({
+      label: label,
+      value: value,
+      checked: subscribed
+        ? subscribed.includes("all")
+          ? true
+          : subscribed.includes(value)
+        : false,
+      children: [],
+      parent: node,
+    }));
 
     node.children = subtypes;
     if (subtypes.every(node => node.checked)) node.checked = true;

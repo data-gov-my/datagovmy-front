@@ -42,16 +42,17 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
         await get("/subscriptions/", undefined, "api", { Authorization: token })
           .then(({ data }) => {
             setCookie("subscription_token", token);
-            setToken(token);
             setIndex(i => i + 1);
             if (setSubscribed && data.data) setSubscribed(data.data);
           })
-          .catch(() =>
+          .catch(({ response }) => {
             toast.error(
-              t("common:error.toast.form_submission_failure"),
-              t("common:error.toast.reach_support")
-            )
-          )
+              response.status === 401
+                ? (t("token_expired"), t("request_again"))
+                : (t("common:error.toast.form_submission_failure"),
+                  t("common:error.toast.reach_support"))
+            );
+          })
           .finally(() => setLoading(false));
       }}
     >
