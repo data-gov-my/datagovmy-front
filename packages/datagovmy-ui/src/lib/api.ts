@@ -51,8 +51,20 @@ export const get = (
     instance(base, headers)
       .get(route, { params })
       .then((response: AxiosResponse) => resolve(response))
-      .catch((err: AxiosError<{ status: number; message: string }>) => {
-        if (err.response?.status === 401 && typeof window !== "undefined") window.location.reload(); // refresh rolling token
+      .catch(async (err: AxiosError<{ status: number; message: string }>) => {
+        // TODO maybe add retries with axios-retry, for all fetch methods OR refactor away from rolling token
+        if (err.response?.data.status === 401 && typeof window !== "undefined") {
+          const edgeResponse = await getRollingToken();
+          if (edgeResponse) {
+            const { token } = await edgeResponse.json();
+            return instance(base, { Authorization: `Bearer ${token}`, ...headers })
+              .get(route, { params })
+              .then((response: AxiosResponse) => resolve(response))
+              .catch((err: AxiosError) => reject(err));
+          } else {
+            reject(err);
+          }
+        }
         reject(err);
       });
   });
@@ -120,7 +132,7 @@ export const put = (
           if (edgeResponse) {
             const { token } = await edgeResponse.json();
             return instance(base, { Authorization: `Bearer ${token}`, ...headers })
-              .post(route, payload)
+              .put(route, payload)
               .then((response: AxiosResponse) => resolve(response))
               .catch((err: AxiosError) => reject(err));
           } else {
