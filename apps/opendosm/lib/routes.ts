@@ -27,7 +27,6 @@ export const routes = {
   PUBLICATIONS: "/publications",
   NEW_SUBSCRIPTION: "/publications/subscribe",
   MANAGE_SUBSCRIPTION: "/publications/manage-subscription",
-  RECOVER_TOKEN: "/publications/recover-token",
   GUI: "/gui",
   GUI_OPENDOSM_PUB: "/gui/opendosm-pub",
   GUI_CATALOGUE: "/gui/catalogue",
