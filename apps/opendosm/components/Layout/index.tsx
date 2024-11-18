@@ -2,8 +2,8 @@ import { FunctionComponent, ReactNode } from "react";
 
 import Header from "./Header";
 import Footer from "./Footer";
-import { useTranslation } from "react-i18next";
-import { Container, Markdown } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
+import { Container } from "datagovmy-ui/components";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import { clx } from "datagovmy-ui/helpers";
 
@@ -29,9 +29,7 @@ const Layout: FunctionComponent<LayoutProps> = ({
             <Container>
               <div className="flex max-w-screen-2xl gap-2 py-4 text-white">
                 <InformationCircleIcon className="shrink-0 size-5 text-white" />
-                <Markdown className="banner-markdown">
-                  {t("common:common.opendosm_banner")}
-                </Markdown>
+                <div className="banner-markdown text-sm">{t("common:common.opendosm_banner")}</div>
               </div>
             </Container>
           </div>

@@ -36,8 +36,5 @@
 }
 
 .banner-markdown a {
-  @apply underline [text-underline-position:from-font];
-}
-.banner-markdown p {
-  @apply text-sm;
+  @apply text-white underline;
 }
