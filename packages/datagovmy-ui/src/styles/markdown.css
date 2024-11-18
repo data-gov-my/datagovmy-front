@@ -36,7 +36,7 @@
 }
 
 .banner-markdown a {
-  @apply underline;
+  @apply underline [text-underline-position:from-font];
 }
 .banner-markdown p {
   @apply text-sm;

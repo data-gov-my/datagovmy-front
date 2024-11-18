@@ -22,7 +22,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
     ((page: ReactNode) => (
       <Layout
         className={clx(body.variable, "font-sans")}
-        useBanner={Boolean(t("common:common.banner")) ? true : false}
+        useBanner={Boolean(t("common:common.opendosm_banner")) ? true : false}
       >
         {page}
       </Layout>
