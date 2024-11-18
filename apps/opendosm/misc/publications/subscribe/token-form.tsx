@@ -2,7 +2,7 @@ import { get, post } from "datagovmy-ui/api";
 import { Button, Input, toast } from "datagovmy-ui/components";
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { setCookie, Timer } from "./utils";
+import { deleteCookie, setCookie, Timer } from "./utils";
 
 /**
  * Token Form
@@ -11,18 +11,18 @@ import { setCookie, Timer } from "./utils";
 
 interface TokenFormProps {
   email: string;
-  loading: boolean;
   setIndex: Dispatch<SetStateAction<number>>;
-  setLoading: (loading: boolean) => void;
   setSubscribed?: Dispatch<SetStateAction<string[]>>;
 }
 
-const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, setSubscribed }) => {
+const TokenForm: FC<TokenFormProps> = ({ email, setIndex, setSubscribed }) => {
   const { t } = useTranslation(setSubscribed ? "publication-manage" : "publication-subscription");
   const [token, setToken] = useState("");
   const [validation, setValidation] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [isTimerRunning, setIsTimerRunning] = useState(true);
-  const [isSending, setIsSending] = useState(false);
+  const [isResending, setIsResending] = useState(false);
 
   return (
     <form
@@ -46,13 +46,15 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
             if (setSubscribed && data.data) setSubscribed(data.data);
           })
           .catch(err => {
+            if (err.response.status === 401) {
+              toast.error(t("token_expired"), t("request_again"));
+              deleteCookie("subscription_token");
+            } else
+              toast.error(
+                t("common:error.toast.form_submission_failure"),
+                t("common:error.toast.reach_support")
+              );
             console.error(err);
-            if (err.response.status === 401)
-              return toast.error(t("token_expired"), t("request_again"));
-            return toast.error(
-              t("common:error.toast.form_submission_failure"),
-              t("common:error.toast.reach_support")
-            );
           })
           .finally(() => setLoading(false));
       }}
@@ -97,9 +99,9 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
           <Button
             variant="ghost"
             className="w-full justify-center sm:w-fit"
-            loading={isSending}
+            loading={isResending}
             onClick={async () => {
-              setIsSending(true);
+              setIsResending(true);
               await post("/token/request/", { email }, "api")
                 .then(() => setIsTimerRunning(true))
                 .catch(err => {
@@ -109,7 +111,7 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
                   );
                   console.error(err);
                 })
-                .finally(() => setIsSending(false));
+                .finally(() => setIsResending(false));
             }}
           >
             {t("resend")}

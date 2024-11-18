@@ -21,7 +21,6 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
   const { t } = useTranslation("publication-subscription");
 
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
   const [index, setIndex] = useState(0);
 
   const STEPS = [
@@ -29,32 +28,19 @@ const NewSubscription = ({ data }: NewSubscriptionProps) => {
       icon: UserIcon,
       name: t("step1"),
       desc: t("step1_desc"),
-      form: (
-        <EmailForm
-          email={email}
-          loading={loading}
-          setEmail={setEmail}
-          setIndex={setIndex}
-          setLoading={setLoading}
-          signUp
-        />
-      ),
+      form: <EmailForm email={email} setEmail={setEmail} setIndex={setIndex} signUp />,
     },
     {
       icon: CheckCircleIcon,
       name: t("step2"),
       desc: t("step2_desc"),
-      form: (
-        <TokenForm email={email} loading={loading} setIndex={setIndex} setLoading={setLoading} />
-      ),
+      form: <TokenForm email={email} setIndex={setIndex} />,
     },
     {
       icon: NewspaperIcon,
       name: t("step3"),
       desc: t("step3_desc"),
-      form: (
-        <ChecklistForm data={data} loading={loading} setIndex={setIndex} setLoading={setLoading} />
-      ),
+      form: <ChecklistForm data={data} setIndex={setIndex} />,
     },
   ];
 

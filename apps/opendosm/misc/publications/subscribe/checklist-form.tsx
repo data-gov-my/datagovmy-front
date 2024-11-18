@@ -15,20 +15,13 @@ import { useRouter } from "next/router";
 
 interface ChecklistFormProps {
   data: Record<string, Record<string, string>>;
-  loading: boolean;
   setIndex?: Dispatch<SetStateAction<number>>;
-  setLoading: (loading: boolean) => void;
   subscribed?: string[];
 }
 
-const ChecklistForm: FC<ChecklistFormProps> = ({
-  data,
-  loading,
-  setIndex,
-  setLoading,
-  subscribed,
-}) => {
+const ChecklistForm: FC<ChecklistFormProps> = ({ data, setIndex, subscribed }) => {
   const { t, i18n } = useTranslation(setIndex ? "publication-subscription" : "publication-manage");
+  const [loading, setLoading] = useState(false);
   const [nodes, setNodes] = useState(transform(data, subscribed));
   useEffect(() => setNodes(transform(data, subscribed)), [i18n, subscribed]);
   const router = useRouter();
@@ -71,7 +64,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
                 deleteCookie("subscription_token");
                 setTimeout(() => {
                   setIndex ? router.push(routes.MANAGE_SUBSCRIPTION) : router.reload();
-                }, 300);
+                }, 1000);
               } else
                 toast.error(
                   t("common:error.toast.form_submission_failure"),

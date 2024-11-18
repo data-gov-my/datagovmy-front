@@ -5,9 +5,11 @@ import Layout from "./layout";
 import { parseCookies } from "datagovmy-ui/helpers";
 import ChecklistForm from "./checklist-form";
 import { get } from "datagovmy-ui/api";
-import { toast } from "datagovmy-ui/components";
+import { Spinner, toast } from "datagovmy-ui/components";
 import EmailForm from "./email-form";
 import TokenForm from "./token-form";
+import { deleteCookie } from "./utils";
+import { useRouter } from "next/router";
 
 /**
  * Manage Subscriptions
@@ -25,18 +27,26 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState<string[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const cookie = parseCookies(document.cookie);
     if ("subscription_token" in cookie) {
-      setIndex(2);
+      setLoading(true);
       get("/subscriptions/", undefined, "api", { Authorization: cookie.subscription_token })
-        .then(({ data }) => setSubscribed(data.data))
+        .then(({ data }) => {
+          setSubscribed(data.data);
+          setIndex(2);
+        })
         .catch(err => {
-          toast.error(
-            t("common:error.toast.form_submission_failure"),
-            t("common:error.toast.reach_support")
-          );
+          if (err.response.status === 401) {
+            deleteCookie("subscription_token");
+            router.reload();
+          } else
+            toast.error(
+              t("common:error.toast.form_submission_failure"),
+              t("common:error.toast.reach_support")
+            );
           console.error(err);
         })
         .finally(() => setLoading(false));
@@ -48,46 +58,27 @@ const ManageSubscriptions = ({ data }: ManageSubscriptionsProps) => {
       icon: UserIcon,
       name: t("step1"),
       desc: t("step1_desc"),
-      form: (
-        <EmailForm
-          email={email}
-          setEmail={setEmail}
-          loading={loading}
-          setIndex={setIndex}
-          setLoading={setLoading}
-        />
-      ),
+      form: <EmailForm email={email} setEmail={setEmail} setIndex={setIndex} />,
     },
     {
       icon: CheckCircleIcon,
       name: t("step2"),
       desc: t("step2_desc"),
-      form: (
-        <TokenForm
-          email={email}
-          loading={loading}
-          setIndex={setIndex}
-          setLoading={setLoading}
-          setSubscribed={setSubscribed}
-        />
-      ),
+      form: <TokenForm email={email} setIndex={setIndex} setSubscribed={setSubscribed} />,
     },
     {
       icon: NewspaperIcon,
       name: t("step3"),
       desc: t("step3_desc"),
-      form: (
-        <ChecklistForm
-          data={data}
-          loading={loading}
-          setLoading={setLoading}
-          subscribed={subscribed}
-        />
-      ),
+      form: <ChecklistForm data={data} subscribed={subscribed} />,
     },
   ];
 
-  return (
+  return loading ? (
+    <div className="flex min-h-dvh w-full items-center justify-center">
+      <Spinner loading={loading} />
+    </div>
+  ) : (
     <Layout header={t("header")} currentIndex={index} steps={STEPS}>
       {STEPS[index].form}
     </Layout>

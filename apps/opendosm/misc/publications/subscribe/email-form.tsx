@@ -11,22 +11,14 @@ import { Dispatch, FC, SetStateAction, useState } from "react";
 
 interface EmailFormProps {
   email: string;
-  loading: boolean;
   setEmail: (email: string) => void;
   setIndex: Dispatch<SetStateAction<number>>;
-  setLoading: (loading: boolean) => void;
   signUp?: boolean;
 }
 
-const EmailForm: FC<EmailFormProps> = ({
-  email,
-  loading,
-  setEmail,
-  setIndex,
-  setLoading,
-  signUp = false,
-}) => {
+const EmailForm: FC<EmailFormProps> = ({ email, setEmail, setIndex, signUp = false }) => {
   const { t } = useTranslation(signUp ? "publication-subscription" : "publication-manage");
+  const [loading, setLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
   const [validation, setValidation] = useState("");
 
