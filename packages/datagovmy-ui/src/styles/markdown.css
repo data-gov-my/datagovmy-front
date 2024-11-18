@@ -28,7 +28,7 @@
 }
 
 .markdown a {
-  @apply text-primary dark:text-primary-dark [text-underline-position:from-font] hover:underline;
+  @apply text-primary dark:text-primary-dark hover:underline;
 }
 
 .tooltip-list ul {
@@ -36,8 +36,5 @@
 }
 
 .banner-markdown a {
-  @apply underline;
-}
-.banner-markdown p {
-  @apply text-sm;
+  @apply text-white underline;
 }
