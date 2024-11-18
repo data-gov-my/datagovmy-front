@@ -3,8 +3,8 @@ import { routes } from "@lib/routes";
 import { put } from "datagovmy-ui/api";
 import { At, Button, NestedChecklist, toast } from "datagovmy-ui/components";
 import { parseCookies } from "datagovmy-ui/helpers";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { deleteCookie } from "./utils";
 import { useRouter } from "next/router";
 
@@ -32,6 +32,7 @@ const ChecklistForm: FC<ChecklistFormProps> = ({
   const [nodes, setNodes] = useState(transform(data, subscribed));
   useEffect(() => setNodes(transform(data, subscribed)), [i18n, subscribed]);
   const router = useRouter();
+
   return (
     <form
       onSubmit={async ev => {

@@ -1,7 +1,7 @@
 import { get, post } from "datagovmy-ui/api";
 import { Button, Input, toast } from "datagovmy-ui/components";
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { setCookie, Timer } from "./utils";
 
 /**
@@ -21,7 +21,7 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
   const { t } = useTranslation(setSubscribed ? "publication-manage" : "publication-subscription");
   const [token, setToken] = useState("");
   const [validation, setValidation] = useState("");
-  const [isRunning, setIsRunning] = useState(true);
+  const [isTimerRunning, setIsTimerRunning] = useState(true);
   const [isSending, setIsSending] = useState(false);
 
   return (
@@ -45,12 +45,13 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
             setIndex(i => i + 1);
             if (setSubscribed && data.data) setSubscribed(data.data);
           })
-          .catch(({ response }) => {
-            toast.error(
-              response.status === 401
-                ? (t("token_expired"), t("request_again"))
-                : (t("common:error.toast.form_submission_failure"),
-                  t("common:error.toast.reach_support"))
+          .catch(err => {
+            console.error(err);
+            if (err.response.status === 401)
+              return toast.error(t("token_expired"), t("request_again"));
+            return toast.error(
+              t("common:error.toast.form_submission_failure"),
+              t("common:error.toast.reach_support")
             );
           })
           .finally(() => setLoading(false));
@@ -88,9 +89,9 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
         >
           {t("continue")}
         </Button>
-        {isRunning ? (
+        {isTimerRunning ? (
           <span className="px-3 py-1.5 text-sm">
-            {t("resend_in")} <Timer isRunning={isRunning} setIsRunning={setIsRunning} />
+            {t("resend_in")} <Timer isRunning={isTimerRunning} setIsRunning={setIsTimerRunning} />
           </span>
         ) : (
           <Button
@@ -100,7 +101,7 @@ const TokenForm: FC<TokenFormProps> = ({ email, loading, setIndex, setLoading, s
             onClick={async () => {
               setIsSending(true);
               await post("/token/request/", { email }, "api")
-                .then(() => setIsRunning(true))
+                .then(() => setIsTimerRunning(true))
                 .catch(err => {
                   toast.error(
                     t("common:error.toast.form_submission_failure"),

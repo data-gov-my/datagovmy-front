@@ -1,8 +1,8 @@
 import { routes } from "@lib/routes";
 import { post } from "datagovmy-ui/api";
 import { At, Button, Callout, Input, toast } from "datagovmy-ui/components";
+import { useTranslation } from "datagovmy-ui/hooks";
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 /**
  * Email Form
