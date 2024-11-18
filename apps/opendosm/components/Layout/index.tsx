@@ -1,8 +1,8 @@
-import { FunctionComponent, ReactElement, ReactNode } from "react";
+import { FunctionComponent, ReactNode } from "react";
 
 import Header from "./Header";
 import Footer from "./Footer";
-import { useTranslation } from "datagovmy-ui/hooks";
+import { useTranslation } from "next-i18next";
 import { Container, Markdown } from "datagovmy-ui/components";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
 import { clx } from "datagovmy-ui/helpers";
@@ -25,13 +25,13 @@ const Layout: FunctionComponent<LayoutProps> = ({
       <Header stateSelector={stateSelector} />
       <div className="flex min-h-screen flex-col">
         {useBanner && (
-          <div className="w-full bg-primary pt-14">
-            <Container className="">
-              <div className="flex max-w-screen-2xl items-start gap-2 py-4 text-white">
-                <div className="w-full max-w-[20px]">
-                  <InformationCircleIcon className="h-[20px] w-[20px] text-white" />
-                </div>
-                <Markdown className="banner-markdown">{t("common:common.banner")}</Markdown>
+          <div className="mt-14 w-full bg-primary">
+            <Container>
+              <div className="flex max-w-screen-2xl gap-2 py-4 text-white">
+                <InformationCircleIcon className="size-5 shrink-0 text-white" />
+                <Markdown className="banner-markdown text-sm">
+                  {t("common:common.opendosm_banner")}
+                </Markdown>
               </div>
             </Container>
           </div>

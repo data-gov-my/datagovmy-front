@@ -59,6 +59,7 @@ const Input: FunctionComponent<InputProps> = ({
 
       <input
         id={name}
+        name={name}
         ref={ref}
         autoFocus={autoFocus}
         disabled={disabled}

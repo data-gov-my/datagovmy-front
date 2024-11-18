@@ -25,6 +25,8 @@ export const routes = {
   WHOLESALE_RETAIL: "/dashboard/wholesale-retail-trade",
   WELLBEING: "/dashboard/wellbeing",
   PUBLICATIONS: "/publications",
+  NEW_SUBSCRIPTION: "/publications/subscribe",
+  MANAGE_SUBSCRIPTION: "/publications/manage-subscription",
   GUI: "/gui",
   GUI_OPENDOSM_PUB: "/gui/opendosm-pub",
   GUI_CATALOGUE: "/gui/catalogue",
