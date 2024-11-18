@@ -82,11 +82,11 @@
   }
 
   .link-primary {
-    @apply text-primary cursor-pointer font-medium [text-underline-position:from-font] hover:underline;
+    @apply text-primary cursor-pointer font-medium hover:underline;
   }
 
   .link-dim {
-    @apply text-dim cursor-pointer text-sm [text-underline-position:from-font] hover:text-black hover:underline dark:hover:text-white;
+    @apply text-dim cursor-pointer text-sm hover:text-black hover:underline dark:hover:text-white;
   }
 
   .number {
@@ -183,4 +183,11 @@ path:focus {
 
 :focus-visible {
   outline: unset;
+}
+
+@layer utilities {
+  .underline {
+    text-decoration: underline;
+    text-underline-position: from-font;
+  }
 }
