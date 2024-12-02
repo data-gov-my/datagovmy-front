@@ -161,6 +161,7 @@ export type Agency =
   | "moh"
   | "mohe"
   | "mot"
+  | "napic"
   | "npra"
   | "nres"
   | "ntrc"
