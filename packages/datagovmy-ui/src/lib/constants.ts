@@ -227,7 +227,7 @@ export const AgencyLink: Record<Agency, string> = {
   "icu-jpm": "https://www.icu.gov.my/",
   "imigresen": "https://www.imi.gov.my/index.php/utama/",
   "jakoa": "https://www.jakoa.gov.my/",
-  "janm": "https://www.anm.gov.my/utama",
+  "janm": "https://www.anm.gov.my",
   "jas": "https://www.doe.gov.my",
   "jdn": "https://www.jdn.gov.my/",
   "jmg": "https://www.jmg.gov.my/",
