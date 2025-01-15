@@ -1,0 +1,16 @@
+{
+  "extends": "tsconfig/nextjs.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@lib/*": ["lib/*"],
+      "@hooks/*": ["hooks/*"],
+      "@dashboards/*": ["dashboards/*"],
+      "@misc/*": ["misc/*"],
+      "@config/*": ["config/*"]
+    }
+  },
+  "exclude": ["node_modules", ".next", ".turbo"]
+}
