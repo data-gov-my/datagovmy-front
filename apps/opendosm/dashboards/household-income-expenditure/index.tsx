@@ -282,7 +282,7 @@ const HouseholdIncomeExpenditure: FunctionComponent<HouseholdIncomeExpenditurePr
                           title: key !== "gini" && t("cagr"),
                           value:
                             key !== "gini" &&
-                            `${numFormat(timeseries_callout.data[key].cagr, "standard", 2)}%`,
+                            `${numFormat(timeseries_callout.data[key].cagr, "standard", 1)}%`,
                         },
                       ]}
                     />
