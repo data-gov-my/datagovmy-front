@@ -29,7 +29,11 @@ Query parameters consist of a key-value pair, where the key and value are separa
 ### The `filter` Parameter
 
 ```http
+# single column
 ?filter=<value>@<column>
+
+# multiple columns
+?filter=<value_1>@<column_1>,<value_2>@<column_2>,...<value_n>@<column_n>
 ```
 
 - Filters the data based on a **case-sensitive exact string** match.
