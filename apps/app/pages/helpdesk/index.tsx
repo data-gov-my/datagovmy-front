@@ -16,7 +16,7 @@ const Helpdesk: Page = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = withi18n("helpdesk", async () => {
+export const getStaticProps: GetStaticProps = withi18n(["helpdesk", "data-request"], async () => {
   return {
     notFound: false,
     props: {

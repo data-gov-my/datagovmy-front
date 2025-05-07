@@ -1,8 +1,10 @@
 import { CheckMarkIcon } from "../../icons";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { routes } from "@lib/routes";
 import { post } from "datagovmy-ui/api";
 import {
   Accordion,
+  At,
   Button,
   Card,
   Container,
@@ -23,7 +25,7 @@ import { FunctionComponent } from "react";
  */
 
 const HelpdeskDashboard: FunctionComponent = () => {
-  const { t, i18n } = useTranslation(["helpdesk", "common"]);
+  const { t, i18n } = useTranslation(["helpdesk", "data-request", "common"]);
   const { data, setData } = useData({
     name: "",
     email: "",
@@ -79,9 +81,16 @@ const HelpdeskDashboard: FunctionComponent = () => {
         background="bg-gradient-radial from-outline to-background dark:from-washed-dark dark:to-black"
         className="dark:border-outlineHover-dark border-b"
       >
-        <div className="mx-auto flex h-[170px] flex-col space-y-3 py-12">
+        <div className="mx-auto flex h-[205px] flex-col space-y-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
           <p className="text-dim text-center">{t("description")}</p>
+          <At
+            className="btn-primary shadow-button w-fit self-center text-sm"
+            href={routes.DATA_REQUEST}
+            enableIcon
+          >
+            {t("data-request:request_data")}
+          </At>
         </div>
       </Container>
       <Container>
@@ -101,7 +110,11 @@ const HelpdeskDashboard: FunctionComponent = () => {
 
             <div className="flex w-full flex-col gap-3 lg:col-span-4">
               <h5 className="mx-auto flex text-center font-bold">{t("data-tech")}</h5>
-              {[...Array(5)].map((_, i) => {
+              {[...Array(4)].map((_, i) => {
+                // Skip item 0 from the meta - "Why don't you have a data request page yet?"
+                if (i === 0) {
+                  i++;
+                }
                 i++;
                 return (
                   <Accordion key={"data-tech" + i} title={t("data-tech_q" + i)}>
