@@ -66,7 +66,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
       });
 
       return {
-        notFound: process.env.NEXT_PUBLIC_APP_ENV === "production" ? true : false,
+        notFound: false,
         props: {
           meta: {
             id: "data-request",

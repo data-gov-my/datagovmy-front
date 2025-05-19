@@ -84,13 +84,13 @@ const HelpdeskDashboard: FunctionComponent = () => {
         <div className="mx-auto flex h-[205px] flex-col space-y-3 py-12">
           <h2 className="text-center text-black">{t("header")}</h2>
           <p className="text-dim text-center">{t("description")}</p>
-          {/* <At
+          <At
             className="btn-primary shadow-button w-fit self-center text-sm"
             href={routes.DATA_REQUEST}
             enableIcon
           >
             {t("data-request:request_data")}
-          </At> */}
+          </At>
         </div>
       </Container>
       <Container>
