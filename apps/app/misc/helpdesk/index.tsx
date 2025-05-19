@@ -112,10 +112,7 @@ const HelpdeskDashboard: FunctionComponent = () => {
               <h5 className="mx-auto flex text-center font-bold">{t("data-tech")}</h5>
               {[...Array(4)].map((_, i) => {
                 // Skip item 0 from the meta - "Why don't you have a data request page yet?"
-                if (i === 0) {
-                  i++;
-                }
-                i++;
+                i += 2;
                 return (
                   <Accordion key={"data-tech" + i} title={t("data-tech_q" + i)}>
                     <p>{t("data-tech_a" + i)}</p>
