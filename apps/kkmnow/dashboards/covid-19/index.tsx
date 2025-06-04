@@ -696,8 +696,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     }}
                     enableGridX={false}
                   />
-                </div>
-                <div>
                   <Timeseries
                     className="h-[300px]"
                     title={t("area_chart_title1")}
@@ -802,6 +800,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     }}
                     enableGridX={false}
                   />
+                </div>
+                <div>
                   <Slider
                     type="range"
                     period={data.period}
