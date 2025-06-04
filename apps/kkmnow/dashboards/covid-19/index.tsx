@@ -589,140 +589,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             {play => (
               <>
                 <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title1")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("deaths.annot1"),
-                        value: numFormat(statistics.data.deaths.annot1, "standard"),
-                      },
-                      {
-                        title: t("deaths.annot2"),
-                        value: numFormat(statistics.data.deaths.annot2, "standard"),
-                      },
-                    ]}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("total"),
-                          pointRadius: 0,
-                          data: coordinate.deaths_tooltip,
-                          borderColor: AKSARA_COLOR.BLACK,
-                          backgroundColor: AKSARA_COLOR.BLACK_H,
-                          borderWidth: 1.5,
-                        },
-                        {
-                          type: "bar",
-                          label: t("area_chart_tooltip2"),
-                          data: coordinate.deaths_inpatient,
-                          backgroundColor: "#447BF4",
-                          stack: "same",
-                        },
-                        {
-                          type: "bar",
-                          label: t("area_chart_tooltip3"),
-                          data: coordinate.deaths_brought_in,
-                          backgroundColor: "#A8C3FF",
-                          stack: "same",
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title2")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("vent.annot1"),
-                        value: numFormat(statistics.data.vent.annot1, "standard"),
-                      },
-                      {
-                        title: t("vent.annot2"),
-                        value: numFormat(statistics.data.vent.annot2, "standard").concat("%"),
-                      },
-                    ]}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("area_chart2_tooltip2"),
-                          data: coordinate.vent,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title3")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("icu.annot1"),
-                        value: numFormat(statistics.data.icu.annot1, "standard"),
-                      },
-                      {
-                        title: t("icu.annot2"),
-                        value: numFormat(statistics.data.icu.annot2, "standard").concat("%"),
-                      },
-                    ]}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("area_chart3_tooltip2"),
-                          data: coordinate.icu,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title4")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("admitted.annot1"),
-                        value: numFormat(statistics.data.admitted.annot1, "standard"),
-                      },
-                      {
-                        title: t("admitted.annot2"),
-                        value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
-                      },
-                    ]}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("area_chart4_tooltip2"),
-                          data: coordinate.admitted,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
+                  
                   <Timeseries
                     className="h-[300px]"
                     title={t("area_chart_title5")}
@@ -799,6 +666,140 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     }}
                     enableGridX={false}
                   />
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title4")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("admitted.annot1"),
+                        value: numFormat(statistics.data.admitted.annot1, "standard"),
+                      },
+                      {
+                        title: t("admitted.annot2"),
+                        value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("area_chart4_tooltip2"),
+                          data: coordinate.admitted,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title3")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("icu.annot1"),
+                        value: numFormat(statistics.data.icu.annot1, "standard"),
+                      },
+                      {
+                        title: t("icu.annot2"),
+                        value: numFormat(statistics.data.icu.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("area_chart3_tooltip2"),
+                          data: coordinate.icu,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title2")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("vent.annot1"),
+                        value: numFormat(statistics.data.vent.annot1, "standard"),
+                      },
+                      {
+                        title: t("vent.annot2"),
+                        value: numFormat(statistics.data.vent.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("area_chart2_tooltip2"),
+                          data: coordinate.vent,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />          
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title1")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("deaths.annot1"),
+                        value: numFormat(statistics.data.deaths.annot1, "standard"),
+                      },
+                      {
+                        title: t("deaths.annot2"),
+                        value: numFormat(statistics.data.deaths.annot2, "standard"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("total"),
+                          pointRadius: 0,
+                          data: coordinate.deaths_tooltip,
+                          borderColor: AKSARA_COLOR.BLACK,
+                          backgroundColor: AKSARA_COLOR.BLACK_H,
+                          borderWidth: 1.5,
+                        },
+                        {
+                          type: "bar",
+                          label: t("area_chart_tooltip2"),
+                          data: coordinate.deaths_inpatient,
+                          backgroundColor: "#447BF4",
+                          stack: "same",
+                        },
+                        {
+                          type: "bar",
+                          label: t("area_chart_tooltip3"),
+                          data: coordinate.deaths_brought_in,
+                          backgroundColor: "#A8C3FF",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
                 </div>
                 <div>
                   <Slider
@@ -815,7 +816,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           </SliderProvider>
         </Section>
 
-        {/* How vaccinated against COVID-19 are we? */}
+        {/* How vaccinated against COVID-19 are we?
         <Section title={t("table_header")} date={snapshot_table.data_as_of}>
           <div>
             <Tabs className="flex flex-wrap gap-2 pb-4" title={t("table_subheader")}>
@@ -842,6 +843,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             </Tabs>
           </div>
         </Section>
+        */}
       </Container>
     </>
   );
