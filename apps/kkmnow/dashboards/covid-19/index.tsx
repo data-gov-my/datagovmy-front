@@ -589,6 +589,115 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             {play => (
               <>
                 <div className="grid grid-cols-1 gap-12 pb-6 lg:grid-cols-2 xl:grid-cols-3">
+                  
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title5")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("cases.annot1"),
+                        value: numFormat(statistics.data.cases.annot1, "standard"),
+                      },
+                      {
+                        title: t("cases.annot2"),
+                        value: numFormat(statistics.data.cases.annot2, "standard"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("area_chart5_tooltip2"),
+                          data: coordinate.cases,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title6")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("tests.annot1"),
+                        value: numFormat(statistics.data.tests.annot1, "standard"),
+                      },
+                      {
+                        title: t("tests.annot2"),
+                        value: numFormat(statistics.data.tests.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    enableRightScale
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("area_chart6_tooltip1"),
+                          borderColor: AKSARA_COLOR.BLACK,
+                          backgroundColor: AKSARA_COLOR.BLACK_H,
+                          data: coordinate.tests_tooltip,
+                          borderWidth: 1.5,
+                          yAxisID: "y1",
+                          spanGaps: true,
+                        },
+                        {
+                          type: "bar",
+                          label: t("area_chart6_tooltip2"),
+                          data: coordinate.tests_rtk,
+                          backgroundColor: "#447BF4",
+                          stack: "same",
+                        },
+                        {
+                          type: "bar",
+                          label: t("area_chart6_tooltip3"),
+                          data: coordinate.tests_pcr,
+                          backgroundColor: "#A8C3FF",
+                          stack: "same",
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                  <Timeseries
+                    className="h-[300px]"
+                    title={t("area_chart_title4")}
+                    enableAnimation={!play}
+                    stats={[
+                      {
+                        title: t("admitted.annot1"),
+                        value: numFormat(statistics.data.admitted.annot1, "standard"),
+                      },
+                      {
+                        title: t("admitted.annot2"),
+                        value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
+                      },
+                    ]}
+                    data={{
+                      labels: coordinate.x,
+                      datasets: [
+                        {
+                          type: "line",
+                          label: t("area_chart4_tooltip2"),
+                          data: coordinate.admitted,
+                          borderColor: AKSARA_COLOR.PRIMARY,
+                          borderWidth: 1.5,
+                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                          fill: true,
+                        },
+                      ],
+                    }}
+                    enableGridX={false}
+                  />
+                </div>
+                <div>
                   <Timeseries
                     className="h-[300px]"
                     title={t("area_chart_title1")}
@@ -693,114 +802,6 @@ const COVID19: FunctionComponent<COVID19Props> = ({
                     }}
                     enableGridX={false}
                   />
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title4")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("admitted.annot1"),
-                        value: numFormat(statistics.data.admitted.annot1, "standard"),
-                      },
-                      {
-                        title: t("admitted.annot2"),
-                        value: numFormat(statistics.data.admitted.annot2, "standard").concat("%"),
-                      },
-                    ]}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("area_chart4_tooltip2"),
-                          data: coordinate.admitted,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title5")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("cases.annot1"),
-                        value: numFormat(statistics.data.cases.annot1, "standard"),
-                      },
-                      {
-                        title: t("cases.annot2"),
-                        value: numFormat(statistics.data.cases.annot2, "standard"),
-                      },
-                    ]}
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("area_chart5_tooltip2"),
-                          data: coordinate.cases,
-                          borderColor: AKSARA_COLOR.PRIMARY,
-                          borderWidth: 1.5,
-                          backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                          fill: true,
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
-                  <Timeseries
-                    className="h-[300px]"
-                    title={t("area_chart_title6")}
-                    enableAnimation={!play}
-                    stats={[
-                      {
-                        title: t("tests.annot1"),
-                        value: numFormat(statistics.data.tests.annot1, "standard"),
-                      },
-                      {
-                        title: t("tests.annot2"),
-                        value: numFormat(statistics.data.tests.annot2, "standard").concat("%"),
-                      },
-                    ]}
-                    enableRightScale
-                    data={{
-                      labels: coordinate.x,
-                      datasets: [
-                        {
-                          type: "line",
-                          label: t("area_chart6_tooltip1"),
-                          borderColor: AKSARA_COLOR.BLACK,
-                          backgroundColor: AKSARA_COLOR.BLACK_H,
-                          data: coordinate.tests_tooltip,
-                          borderWidth: 1.5,
-                          yAxisID: "y1",
-                          spanGaps: true,
-                        },
-                        {
-                          type: "bar",
-                          label: t("area_chart6_tooltip2"),
-                          data: coordinate.tests_rtk,
-                          backgroundColor: "#447BF4",
-                          stack: "same",
-                        },
-                        {
-                          type: "bar",
-                          label: t("area_chart6_tooltip3"),
-                          data: coordinate.tests_pcr,
-                          backgroundColor: "#A8C3FF",
-                          stack: "same",
-                        },
-                      ],
-                    }}
-                    enableGridX={false}
-                  />
-                </div>
-                <div>
                   <Slider
                     type="range"
                     period={data.period}
@@ -815,7 +816,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
           </SliderProvider>
         </Section>
 
-        {/* How vaccinated against COVID-19 are we? */}
+        {/* How vaccinated against COVID-19 are we?
         <Section title={t("table_header")} date={snapshot_table.data_as_of}>
           <div>
             <Tabs className="flex flex-wrap gap-2 pb-4" title={t("table_subheader")}>
@@ -842,6 +843,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             </Tabs>
           </div>
         </Section>
+        */}
       </Container>
     </>
   );
