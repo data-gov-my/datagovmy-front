@@ -378,6 +378,8 @@ const COVID19: FunctionComponent<COVID19Props> = ({
 
       <Container className="min-h-screen">
         {/* What does the latest data show? */}
+        
+        {/*
         <Section
           title={t("diagram_header", { state: CountryAndStates[currentState] })}
           date={snapshot_graphic.data_as_of}
@@ -557,6 +559,7 @@ const COVID19: FunctionComponent<COVID19Props> = ({
             </div>
           </div>
         </Section>
+        */}
 
         {/* How are COVID-19 key indicators trending */}
         <Section
