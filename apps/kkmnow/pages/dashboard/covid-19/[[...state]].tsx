@@ -82,6 +82,14 @@ export const getStaticProps: GetStaticProps = withi18n(
     data.snapshot_table.data = sortMsiaFirst(data.snapshot_table.data, "state");
 
     return {
+      redirect: {
+        destination:
+          "https://myhdw-gis.maps.arcgis.com/apps/dashboards/9b0a8f0b12e241699a74382b2b7c11f2",
+        permanent: false,
+      },
+    };
+
+    return {
       notFound: false,
       props: {
         meta: {
