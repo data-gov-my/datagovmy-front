@@ -1,9 +1,13 @@
+import Layout from "@components/Layout";
 import RapidExplorerDashboard from "@dashboards/transportation/rapid-explorer";
 import { get } from "datagovmy-ui/api";
-import { Metadata } from "datagovmy-ui/components";
+import { Banner, Metadata } from "datagovmy-ui/components";
+import { body } from "datagovmy-ui/configs/font";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
+import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
+import { useTranslation as _useTranslation } from "next-i18next";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 
@@ -34,6 +38,22 @@ const RapidExplorer: Page = ({
         params={params}
       />
     </AnalyticsProvider>
+  );
+};
+
+RapidExplorer.layout = (page, props) => {
+  return (
+    <Layout
+      className={clx(body.variable, "font-sans")}
+      banner={{
+        namespace: "dashboard-rapid-explorer",
+        key: "caveats",
+        className:
+          "border-y border-[#E4E4E7] bg-[#FAFAFA] text-[#3F3F46] [&>div>div>div>p>a]:text-[#3F3F46]",
+      }}
+    >
+      {page}
+    </Layout>
   );
 };
 
