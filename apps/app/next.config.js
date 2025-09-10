@@ -80,9 +80,9 @@ const nextConfig = {
         pathname: "/**",
       },
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3000",
+        protocol: "https",
+        hostname: "staging.data.gov.my",
+        port: "",
         pathname: "/**",
       },
     ],
