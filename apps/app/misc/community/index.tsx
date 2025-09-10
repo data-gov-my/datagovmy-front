@@ -110,20 +110,17 @@ const CommunityDashboard: FunctionComponent = () => {
                     <p className="text-dim whitespace-pre-line">{t("description")}</p>
                   </div>
                 </div>
-                {/* TODO: Remove when formally launch */}
-                {process.env.NEXT_PUBLIC_APP_ENV !== "production" && (
-                  <div className="space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:space-x-1">
-                      <p className="text-dim whitespace-pre-line">{t("link_to_showcase1")} </p>
-                      <At
-                        href="/community-products"
-                        className="text-primary dark:text-primary-dark font-semibold hover:underline"
-                      >
-                        {t("link_to_showcase2")}
-                      </At>
-                    </div>
+                <div className="space-y-3">
+                  <div className="flex flex-col sm:flex-row sm:space-x-1">
+                    <p className="text-dim whitespace-pre-line">{t("link_to_showcase1")} </p>
+                    <At
+                      href="/community-products"
+                      className="text-primary dark:text-primary-dark font-semibold hover:underline"
+                    >
+                      {t("link_to_showcase2")}
+                    </At>
                   </div>
-                )}
+                </div>
               </div>
               <div className="w-full lg:w-[450px]">
                 <Card className="bg-white dark:bg-black">

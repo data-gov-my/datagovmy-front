@@ -79,6 +79,12 @@ const nextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "staging.data.gov.my",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

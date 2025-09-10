@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
 import Label, { LabelProps } from "../Label";
 import { OptionType } from "../../../types";
+import { clx } from "../../lib/helpers";
 
 interface RadioProps extends LabelProps {
   className?: string;
@@ -17,13 +18,13 @@ const Radio: FunctionComponent<RadioProps> = ({
   options,
   value,
   onChange,
-  className = "flex flex-wrap gap-x-4.5 gap-y-2.5 pt-2",
+  className,
 }) => {
   return (
     <div>
       {label && <Label label={label} />}
 
-      <ul className={className}>
+      <ul className={clx("flex flex-wrap gap-x-4.5 gap-y-2.5 pt-2", className)}>
         {options.map((option: OptionType) => (
           <li key={option.value}>
             <label htmlFor={option.value} className="flex items-center gap-2">

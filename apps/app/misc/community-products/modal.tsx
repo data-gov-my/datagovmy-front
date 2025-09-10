@@ -87,7 +87,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               <p
                                 className={clx(
                                   "text-primary",
-                                  diffInDays.days < 14 ? "opacity-100" : "opacity-0"
+                                  diffInDays.days < 14 ? "block" : "hidden"
                                 )}
                               >
                                 {t("new")}
@@ -136,7 +136,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               }
                             >
                               <Image
-                                src={product.thumbnail || "/static/images/og_en-GB.png"}
+                                src={product.thumbnail_s3 || "/static/images/og_en-GB.png"}
                                 width={1000}
                                 height={1000}
                                 alt={product.product_name}
@@ -154,7 +154,10 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                               Object.entries(product).map(([key, value]) => {
                                 if (key === "email" || key === "product_link") {
                                   return (
-                                    <div className="flex max-w-xs flex-col gap-1 text-base text-black">
+                                    <div
+                                      key={key}
+                                      className="flex max-w-xs flex-col gap-1 text-base text-black"
+                                    >
                                       <p className="font-bold">{t(key)}:</p>
                                       <At
                                         passHref={true}
@@ -199,7 +202,10 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 if (typeof value === "string") {
                                   const datasets = value.split(",");
                                   return (
-                                    <div className="flex flex-col gap-1 text-base text-black">
+                                    <div
+                                      key={key}
+                                      className="flex flex-col gap-1 text-base text-black"
+                                    >
                                       <p className="font-bold">{t(key)}:</p>
                                       {datasets.map(ds => {
                                         return isValidURL(ds) ? (
@@ -220,7 +226,7 @@ const CommunityProductsModal: FunctionComponent<CommunityProductsModalProps> = (
                                 }
                               }
                               return (
-                                <div className="flex flex-col gap-1 text-base text-black">
+                                <div key={key} className="flex flex-col gap-1 text-base text-black">
                                   <p className="font-bold">{t(key)}:</p>
                                   <p>{value}</p>
                                 </div>
