@@ -29,6 +29,7 @@ import { routes } from "@lib/routes";
 import { RequestFeatureModal } from "./request-feature-modal";
 import { debounce } from "lodash";
 import { NotFoundIcon } from "datagovmy-ui/icons";
+import { DateTime } from "luxon";
 
 export const product_type: string[] = [
   "web_application",
@@ -81,13 +82,13 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
     value: type,
   }));
 
-  const PRODUCT_YEAR: OptionType[] = [
-    { label: "2024", value: "2024" },
-    { label: "2023", value: "2023" },
-    { label: "2022", value: "2022" },
-    { label: "2021", value: "2021" },
-    { label: "2020", value: "2020" },
-  ];
+  const PRODUCT_YEAR: OptionType[] = Array.from(
+    { length: DateTime.now().year - 2018 + 1 },
+    (_, i) => {
+      const year = DateTime.now().year - i;
+      return { label: year.toString(), value: year.toString() };
+    }
+  );
 
   useEffect(() => {
     if (product) {
@@ -179,7 +180,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                   <div className="py-3">
                     <Radio
                       name="type"
-                      label={"Product Type"}
+                      label={t("request_feature_modal.product_type")}
                       options={PRODUCT_TYPE}
                       value={filter.product_type}
                       onChange={e => {
@@ -187,12 +188,13 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                         setFilter("product_type", e);
                         setFilter("page", "1");
                       }}
+                      className="grid grid-cols-2"
                     />
                   </div>
                   <div className="py-3">
                     <Radio
                       name="year"
-                      label={"Year"}
+                      label={t("request_feature_modal.product_year")}
                       options={PRODUCT_YEAR}
                       value={filter.product_year}
                       onChange={e => {
@@ -200,6 +202,7 @@ const CommunityProductsDashboard: FunctionComponent<CommunityProductsDashboardPr
                         setFilter("product_year", e);
                         setFilter("page", "1");
                       }}
+                      className="grid grid-cols-3"
                     />
                   </div>
                   <div className="dark:border-washed-dark fixed bottom-0 left-0 flex w-full flex-col gap-3 border-t bg-white p-3 dark:bg-black">

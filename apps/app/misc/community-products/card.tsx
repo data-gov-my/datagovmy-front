@@ -24,7 +24,7 @@ const CommunityProductsCard: FunctionComponent<CommunityProductsCardProps> = ({
     >
       <div className="bg-background dark:bg-washed-dark border-outline dark:border-outlineHover-dark relative flex h-[150px] w-[150px] items-center overflow-hidden rounded-lg border">
         <Image
-          src={item.thumbnail || "/static/images/og_en-GB.png"}
+          src={item.thumbnail_s3 || "/static/images/og_en-GB.png"}
           width={150}
           height={150}
           alt={item.product_name}
