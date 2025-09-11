@@ -6,8 +6,11 @@ import { withi18n } from "datagovmy-ui/decorators";
 import GUILayout from "@misc/gui/layout";
 import { CatalogueMethodology } from "datagovmy-ui/data-catalogue";
 import { clx, interpolate } from "datagovmy-ui/helpers";
+import GUIDataCatalogueLanding from "@misc/gui/landing";
+import { get } from "datagovmy-ui/api";
+import { SHORT_LANG } from "datagovmy-ui/constants";
 
-const GUICatalogue: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const GUICatalogue: Page = ({ sources }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["gui-opendosm-pub"]);
   const { data: methodology, setData: setMethodology } = useData({
     caveat: "",
@@ -25,7 +28,8 @@ const GUICatalogue: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticPr
   return (
     <>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <GUILayout>
+      <GUIDataCatalogueLanding sources={sources} />
+      {/* <GUILayout>
         <Container>
           <div className="mx-auto flex-1 p-2 py-6 pt-16 md:max-w-screen-md lg:max-w-screen-lg lg:p-8 lg:pb-6">
             <Section
@@ -125,14 +129,19 @@ const GUICatalogue: Page = ({ meta }: InferGetStaticPropsType<typeof getStaticPr
             />
           </div>
         </Container>
-      </GUILayout>
+      </GUILayout> */}
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps = withi18n(
   ["gui-opendosm-pub", "catalogue"],
-  async () => {
+  async ({ locale }) => {
+    const { data } = await get("/data-catalogue", {
+      language: SHORT_LANG[locale! as keyof typeof SHORT_LANG],
+      site: "datagovmy",
+    });
+
     return {
       notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
@@ -142,6 +151,7 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: null,
           agency: null,
         },
+        sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
       },
     };
   }

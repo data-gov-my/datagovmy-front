@@ -1,98 +1,97 @@
-import { At, AgencyBadge, Hero } from "datagovmy-ui/components";
+import { At, Button, Container, Hero } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { clx } from "datagovmy-ui/helpers";
 import { routes } from "@lib/routes";
-import { useRouter } from "next/router";
-import { FunctionComponent, ReactNode, useEffect } from "react";
-import { CalendarIcon, DocumentTextIcon, MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { ForwardRefExoticComponent, FunctionComponent, ReactNode, SVGProps } from "react";
+import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 /**
- * GUI Page Layout
+ * GUI DC Layout
  * @overview Status: Live
  */
 
-interface GUILayoutProps {
+interface GUIDCLayoutProps {
   children: ReactNode;
+  currentIndex: number;
+  header: string;
+  steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; name: string; desc: string }[];
 }
 
-const GUILayout: FunctionComponent<GUILayoutProps> = ({ children }) => {
+const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
+  children,
+  currentIndex,
+  header,
+  steps,
+}) => {
   const { t } = useTranslation(["gui-opendosm-pub", "common"]);
-  const { pathname, ...router } = useRouter();
-
-  useEffect(() => {
-    if (pathname === "/gui") {
-      router.replace("/gui/catalogue", undefined, { shallow: true });
-    }
-  }, []);
-
-  const GUI_NAVS = [
-    {
-      name: t("opendosm-pub"),
-      url: routes.GUI.concat("/opendosm-pub"),
-    },
-    {
-      name: t("catalogue"),
-      url: routes.GUI.concat("/catalogue"),
-    },
-    // {
-    //   name: t("opendosm-technote"),
-    //   url: routes.GUI.concat("/opendosm-technote"),
-    // },
-    // {
-    //   name: t("opendosm-arc"),
-    //   url: routes.GUI.concat("/opendosm-arc"),
-    // },
-  ];
-
-  const startsWith = (url: string) => {
-    const path = pathname.split("/[")[0];
-    return path === url;
-  };
 
   return (
     <>
       <Hero background="blue" header={[t("header")]} description={[t("description")]} />
 
-      {/* Navigations */}
-      {/* <nav className="border-b-outline dark:border-b-washed-dark sticky top-14 z-20 flex overflow-hidden border-b bg-white dark:bg-black min-[350px]:justify-center lg:static">
-        <div
-          className={clx(
-            "hide-scrollbar flex snap-x snap-mandatory scroll-px-9 flex-nowrap overflow-x-auto sm:justify-center"
-          )}
-        >
-          {GUI_NAVS.map(nav => (
-            <div key={nav.url} className="snap-start">
-              <At
-                className="relative flex h-full cursor-pointer items-center justify-center px-3 outline-none"
-                href={nav.url}
-                scrollTop={false}
-              >
-                <div className="relative flex h-full flex-col items-center justify-center py-4">
-                  <div
-                    className={clx(
-                      "flex items-center gap-2",
-                      startsWith(nav.url) ? "text-black dark:text-white" : "text-dim"
-                    )}
-                  >
-                    <span className="whitespace-nowrap text-sm font-medium">{nav.name}</span>
-                    {startsWith(nav.url) && (
-                      <div className="bg-primary dark:bg-primary-dark absolute bottom-0 inline-flex h-[1px] w-full rounded-full sm:hidden"></div>
-                    )}
-                  </div>
-                </div>
-                {startsWith(nav.url) && (
-                  <div className="bg-primary dark:bg-primary-dark absolute bottom-0 hidden h-[2px] w-full rounded-full sm:inline-flex"></div>
-                )}
-              </At>
-            </div>
-          ))}
-        </div>
-      </nav> */}
+      <Container className="divide-outline flex flex-col max-lg:gap-6 max-lg:divide-none max-lg:py-6 lg:flex-row lg:divide-x">
+        <div className="flex w-full max-w-[300px] flex-col items-center gap-3 lg:w-2/5 lg:gap-8 lg:px-8 lg:py-12 xl:w-1/3">
+          <h1 className="font-body lg:font-header text-balance text-base font-bold lg:text-xl">
+            {header} Create a new data catalogue
+          </h1>
 
-      {/* Content */}
-      {children}
+          <div className="bg-washed dark:bg-washed-dark flex w-fit items-center gap-y-1 rounded-lg px-3 py-1 text-sm lg:hidden">
+            {steps.map((step, i) => (
+              <>
+                <div
+                  className={clx(
+                    i === currentIndex
+                      ? "text-primary dark:text-primary-dark"
+                      : "text-black dark:text-white"
+                  )}
+                >
+                  {step.name}
+                </div>
+                {i < steps.length - 1 && (
+                  <ChevronRightIcon className="text-outlineHover dark:text-outlineHover-dark size-6" />
+                )}
+              </>
+            ))}
+          </div>
+
+          <div className="hidden w-full flex-col gap-y-2 lg:flex">
+            {steps.map((step, i) => (
+              <div
+                key={i}
+                className={clx(
+                  "flex h-full gap-4",
+                  i === currentIndex
+                    ? "text-primary dark:text-primary-dark"
+                    : "text-black dark:text-white",
+                  i > currentIndex && "opacity-40"
+                )}
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <div className="border-outline dark:border-washed-dark size-12 rounded-lg border p-2.5">
+                    <step.icon className="size-7" />
+                  </div>
+                  {i < steps.length - 1 && (
+                    <div
+                      className={clx(
+                        "max-h-full w-0.5 grow rounded bg-black",
+                        i >= currentIndex && "bg-outline"
+                      )}
+                    />
+                  )}
+                </div>
+                <div className="flex h-full flex-col gap-0.5">
+                  <p className="font-bold">{step.name}</p>
+                  <p className="text-dim pb-6 text-sm">{step.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {children}
+      </Container>
     </>
   );
 };
 
-export default GUILayout;
+export default GUIDCLayout;
