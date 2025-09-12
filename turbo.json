@@ -15,7 +15,9 @@
         "NEXT_PUBLIC_AUTHORIZATION_TOKEN",
         "NEXT_PUBLIC_TILESERVER_URL",
         "NEXT_PUBLIC_TINYBIRD_TOKEN",
-        "NEXT_PUBLIC_TINYBIRD_URL"
+        "NEXT_PUBLIC_TINYBIRD_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET"
       ],
       "outputMode": "new-only",
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]

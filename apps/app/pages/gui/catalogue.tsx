@@ -9,6 +9,7 @@ import { clx, interpolate } from "datagovmy-ui/helpers";
 import GUIDataCatalogueLanding from "@misc/gui/landing";
 import { get } from "datagovmy-ui/api";
 import { SHORT_LANG } from "datagovmy-ui/constants";
+import { SessionProvider } from "next-auth/react";
 
 const GUICatalogue: Page = ({ sources }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["gui-opendosm-pub"]);
@@ -26,7 +27,7 @@ const GUICatalogue: Page = ({ sources }: InferGetStaticPropsType<typeof getStati
   });
 
   return (
-    <>
+    <SessionProvider>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GUIDataCatalogueLanding sources={sources} />
       {/* <GUILayout>
@@ -130,7 +131,7 @@ const GUICatalogue: Page = ({ sources }: InferGetStaticPropsType<typeof getStati
           </div>
         </Container>
       </GUILayout> */}
-    </>
+    </SessionProvider>
   );
 };
 
