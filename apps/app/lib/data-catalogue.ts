@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/rest";
 import { RequestError as OctokitRequestError } from "@octokit/request-error";
+import { isValidBase64 } from "datagovmy-ui/helpers";
 
 const GH_META_REPO_OWNER = "data-gov-my";
 const GH_META_REPO_NAME = "datagovmy-meta";
@@ -14,17 +15,6 @@ const REPO_INFO = {
   owner: GH_META_REPO_OWNER,
   repo: GH_META_REPO_NAME,
 };
-
-function isValidBase64(str: string) {
-  // Regular expression for Base64 validation
-  // It checks for:
-  // - Characters A-Z, a-z, 0-9, +, /
-  // - Optional padding characters '=' at the end (0, 1, or 2)
-  // - Length divisible by 4 (implied by the structure)
-  const base64Regex =
-    /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/;
-  return base64Regex.test(str);
-}
 
 async function isCollaborator(ghAccessToken: string): Promise<boolean> {
   const octokit = new Octokit({ auth: ghAccessToken });

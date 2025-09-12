@@ -453,3 +453,14 @@ type KeyValueType<T extends string> = {
 type SnakeCase<S extends string> = S extends `${infer T}-${infer U}`
   ? `${Lowercase<T>}_${SnakeCase<U>}`
   : Lowercase<S>;
+
+export function isValidBase64(str: string) {
+  // Regular expression for Base64 validation
+  // It checks for:
+  // - Characters A-Z, a-z, 0-9, +, /
+  // - Optional padding characters '=' at the end (0, 1, or 2)
+  // - Length divisible by 4 (implied by the structure)
+  const base64Regex =
+    /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/;
+  return base64Regex.test(str);
+}
