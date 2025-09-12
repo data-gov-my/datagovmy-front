@@ -7,6 +7,8 @@ declare module "next-auth/jwt" {
     /** The user's github tokens. */
     github: {
       accessToken: string;
+      accessTokenExpiresAt: number;
+      refreshToken: string;
     };
   }
 }
@@ -19,6 +21,7 @@ declare module "next-auth" {
     /** The user's github tokens. */
     github: {
       accessToken: string;
+      refreshToken: string;
     };
   }
 }
