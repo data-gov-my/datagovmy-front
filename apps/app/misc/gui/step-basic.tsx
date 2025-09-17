@@ -48,12 +48,12 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
   };
 
   const testLink = async (url: string, field: string) => {
-    if ((field === "field_preview" && !url) || !url.trim()) {
-      return;
+    if (field === "link_preview" && (!url || !url.trim())) {
+      return true;
     }
     if (!url || !url.trim()) {
       setValidation(field, t("validations.link_required"));
-      return;
+      return false;
     }
 
     // Set loading state
@@ -77,6 +77,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             setData(`${field}_preview`, result.preview);
           }
           setValidation(field, "success");
+          return true;
         }
       } else {
         setValidation(
@@ -85,13 +86,57 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             ? getValidationMessage(result.status, result.error)
             : t("validations.failed_to_retrieve")
         );
+        return false;
       }
     } catch (error) {
       setValidation(field, t("validations.network_error"));
+      return false;
     }
   };
 
-  console.log(data);
+  const validateInput = async () => {
+    const validationPromises = Object.entries(data).map(async ([key, value]) => {
+      if (key === "link_csv" || key === "link_parquet" || key === "link_preview") {
+        const validated = await testLink(data[key], key);
+        return [key, validated];
+      }
+
+      if (typeof value === "string" || typeof value === "number") {
+        if (value) {
+          setValidation(key, false);
+          return [key, true];
+        } else {
+          setValidation(key, t("validations.required"));
+          return [key, false];
+        }
+      }
+
+      if (
+        Array.isArray(value) &&
+        (key === "demography" || key === "geography" || key === "data_source")
+      ) {
+        if (value.length > 0) {
+          setValidation(key, false);
+        } else {
+          setValidation(key, t("validations.required"));
+        }
+        return [key, value.length > 0];
+      }
+
+      return [key, true]; // Default case
+    });
+
+    const updatedValidation = await Promise.all(validationPromises);
+
+    if (updatedValidation.every(([key, validated]) => validated === true)) {
+      return {
+        ok: true,
+        message: "All fields are validated",
+      };
+    } else {
+      throw new Error("Some fields need to be validated");
+    }
+  };
 
   return (
     <form className="md:px-4.5 flex h-full w-full flex-col px-3 lg:min-h-0 lg:gap-8 lg:py-12 lg:pl-6 lg:pr-0">
@@ -367,6 +412,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
                 selected={data.geography}
                 onChange={e => {
                   setData("geography", e);
+                  setValidation("geography", false);
                 }}
               />
               <Dropdown
@@ -381,6 +427,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
                 selected={data.demography}
                 onChange={e => {
                   setData("demography", e);
+                  setValidation("demography", false);
                 }}
               />
             </div>
@@ -447,18 +494,16 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
       <Button
         variant="primary"
         className="w-fit"
-        // onClick={async () => {
-        //   try {
-        //     const isValid = (await validateInput()) as { ok: boolean; message: string };
-        //     if (isValid.ok) {
-        //       downloadJSON(
-        //         generateOutputJSON(),
-        //         `${data.publication}.json`,
-        //         "application/json"
-        //       );
-        //     }
-        //   } catch (error) {}
-        // }}
+        onClick={async () => {
+          try {
+            const isValid = await validateInput();
+            if (isValid.ok) {
+              setIndex(2);
+            }
+          } catch (error) {
+            console.error("Validation failed:", error);
+          }
+        }}
       >
         {t("step_basic.continue")}
         <ArrowRightIcon className="size-4 text-white" />
