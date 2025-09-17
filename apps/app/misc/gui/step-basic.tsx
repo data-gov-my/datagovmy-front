@@ -1,9 +1,15 @@
-import { Button, Dropdown, Input, Label, Textarea } from "datagovmy-ui/components";
-import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { Banner, Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
+import { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useState } from "react";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { demographies, frequencies, geographies } from "datagovmy-ui/options";
-import { ArrowRightIcon, BuildingLibraryIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowRightIcon,
+  BuildingLibraryIcon,
+  CheckCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
 import { clx } from "datagovmy-ui/helpers";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 
 interface StepBasicProps {
   setIndex: Dispatch<SetStateAction<number>>;
@@ -23,6 +29,9 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
   setValidation,
 }) => {
   const { t } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
+  const [validatedBanner, setValidatedBanner] = useState(false);
+
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   const frequencyOptions = frequencies(t);
   const geographiesOptions = geographies(t);
@@ -134,13 +143,38 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
         message: "All fields are validated",
       };
     } else {
-      throw new Error("Some fields need to be validated");
+      // throw new Error("Some fields need to be validated");
+      setValidatedBanner(true);
+      return {
+        ok: false,
+        message: "Some fields need to be validated",
+      };
     }
   };
+
+  useEffect(() => {
+    if (bannerRef.current && validatedBanner) {
+      bannerRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [validatedBanner]);
 
   return (
     <form className="md:px-4.5 flex h-full w-full flex-col px-3 lg:min-h-0 lg:gap-8 lg:py-12 lg:pl-6 lg:pr-0">
       <div className="flex w-full flex-1 flex-col gap-4">
+        {validatedBanner && (
+          <div ref={bannerRef} className="relative">
+            <Banner
+              className="mt-0 bg-[#FEFCE8] font-semibold text-[#A16207]"
+              text={t("step_basic.fill_all")}
+              icon={<ExclamationCircleIcon className="size-5 shrink-0" />}
+            />
+            <Button
+              onClick={() => setValidatedBanner(false)}
+              className="absolute right-4 top-1/2 h-fit -translate-y-1/2"
+              icon={<XMarkIcon className="size-5" />}
+            ></Button>
+          </div>
+        )}
         <div className="">
           <h5 className="text-base">{t("step_basic.links")}</h5>
           <p className="text-dim text-sm">{t("step_basic.links_desc")}</p>
@@ -167,7 +201,13 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             />
             <Button
               variant="default"
-              icon={validation.link_csv === "success" && <CheckCircleIcon className="size-4" />}
+              icon={
+                validation.link_csv === "success" ? (
+                  <CheckCircleIcon className="size-4" />
+                ) : validation.link_csv === "loading" ? (
+                  <Spinner loading={true} />
+                ) : null
+              }
               className={clx(
                 "h-full w-fit self-end text-nowrap rounded-lg rounded-l-none",
                 validation.link_csv && validation.link_csv === "success" && "text-[#15803D]",
@@ -212,7 +252,13 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             />
             <Button
               variant="default"
-              icon={validation.link_parquet === "success" && <CheckCircleIcon className="size-4" />}
+              icon={
+                validation.link_parquet === "success" ? (
+                  <CheckCircleIcon className="size-4" />
+                ) : validation.link_parquet === "loading" ? (
+                  <Spinner loading={true} />
+                ) : null
+              }
               className={clx(
                 "h-full w-fit self-end text-nowrap rounded-lg rounded-l-none",
                 validation.link_parquet &&
@@ -258,7 +304,13 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             />
             <Button
               variant="default"
-              icon={validation.link_preview === "success" && <CheckCircleIcon className="size-4" />}
+              icon={
+                validation.link_preview === "success" ? (
+                  <CheckCircleIcon className="size-4" />
+                ) : validation.link_preview === "loading" ? (
+                  <Spinner loading={true} />
+                ) : null
+              }
               className={clx(
                 "h-full w-fit self-end text-nowrap rounded-lg rounded-l-none",
                 validation.link_preview &&
@@ -496,7 +548,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
         className="w-fit"
         onClick={async () => {
           try {
-            const isValid = await validateInput();
+            const isValid = (await validateInput()) as { ok: boolean; message: string };
             if (isValid.ok) {
               setIndex(2);
             }

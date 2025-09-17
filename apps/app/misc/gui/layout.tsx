@@ -12,9 +12,15 @@ interface GUIDCLayoutProps {
   children: ReactNode;
   currentIndex: number;
   steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; name: string; desc: string }[];
+  reset: ReactNode;
 }
 
-const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({ children, currentIndex, steps }) => {
+const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
+  children,
+  currentIndex,
+  steps,
+  reset,
+}) => {
   const { t } = useTranslation(["gui-data-catalogue", "common"]);
 
   return (
@@ -75,6 +81,7 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({ children, currentInd
                 </div>
               </div>
             ))}
+            {reset}
           </div>
         </div>
 

@@ -14,14 +14,21 @@ interface LayoutProps {
     key: string;
     className?: string;
   };
+  hideLanguage?: boolean;
 }
-const Layout: FunctionComponent<LayoutProps> = ({ className, children, stateSelector, banner }) => {
+const Layout: FunctionComponent<LayoutProps> = ({
+  className,
+  children,
+  stateSelector,
+  banner,
+  hideLanguage,
+}) => {
   const { t } = useTranslation(banner?.namespace);
   const useBanner = Boolean(t(banner?.key || ""));
 
   return (
     <div className={className}>
-      <Header stateSelector={stateSelector} />
+      <Header stateSelector={stateSelector} hideLanguage={hideLanguage} />
       <div className="flex min-h-screen flex-col">
         {useBanner && <Banner className={banner?.className} text={t(banner?.key || "")} />}
         <div className={clx("flex flex-grow flex-col", useBanner ? "" : "pt-14")}>{children}</div>

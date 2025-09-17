@@ -1,12 +1,13 @@
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useState } from "react";
 import { CheckCircleIcon, LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
-import { At } from "datagovmy-ui/components";
+import { At, Button } from "datagovmy-ui/components";
 import { routes } from "@lib/routes";
 import GUIDCLayout from "./layout";
 import StepAuth from "./step-auth";
 import StepBasic from "./step-basic";
 import { DateTime } from "luxon";
+import StepCatalogue from "./step-catalogue";
 
 /**
  * GUI Data Catalogue Landing Page
@@ -21,7 +22,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
 
-  const { data, setData } = useData({
+  const { data, setData, reset } = useData({
     link_csv: "",
     link_parquet: "",
     link_preview: "",
@@ -67,7 +68,16 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
       icon: TableCellsIcon,
       name: t("step_catalogue.name"),
       desc: t("step_catalogue.desc"),
-      content: null,
+      content: (
+        <StepCatalogue
+          setIndex={setIndex}
+          sources={sources}
+          data={data}
+          setData={setData}
+          validation={validation}
+          setValidation={setValidation}
+        />
+      ),
     },
   ];
 
@@ -95,7 +105,22 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   }
 
   return (
-    <GUIDCLayout currentIndex={index} steps={STEPS}>
+    <GUIDCLayout
+      currentIndex={index}
+      steps={STEPS}
+      reset={
+        <Button
+          onClick={() => {
+            setIndex(1);
+            reset();
+          }}
+          variant="default"
+          className="w-fit"
+        >
+          {t("reset")}
+        </Button>
+      }
+    >
       {STEPS[index].content}
     </GUIDCLayout>
   );
