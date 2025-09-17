@@ -1,6 +1,6 @@
 import { useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useState } from "react";
-import { CheckCircleIcon, NewspaperIcon, UserIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
 import { At } from "datagovmy-ui/components";
 import { routes } from "@lib/routes";
 import GUIDCLayout from "./layout";
@@ -17,26 +17,26 @@ interface GUIDCLandingProps {
 }
 
 const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
-  const { t } = useTranslation("publication-subscription");
+  const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
 
   const STEPS = [
     {
-      icon: CheckCircleIcon,
+      icon: UserIcon,
       name: t("step_auth.name"),
       desc: t("step_auth.desc"),
       content: <StepAuth setIndex={setIndex} />,
     },
     {
-      icon: UserIcon,
+      icon: LinkIcon,
       name: t("step_basic.name"),
       desc: t("step_basic.desc"),
       content: <StepBasic setIndex={setIndex} sources={sources} />,
     },
     {
-      icon: NewspaperIcon,
-      name: t("step_gui.name"),
-      desc: t("step_gui.desc"),
+      icon: TableCellsIcon,
+      name: t("step_catalogue.name"),
+      desc: t("step_catalogue.desc"),
       content: null,
     },
   ];

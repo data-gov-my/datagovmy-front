@@ -8,7 +8,7 @@ interface StepAuthProps {
 }
 
 const StepAuth: FunctionComponent<StepAuthProps> = ({ setIndex }) => {
-  const { t } = useTranslation(["gui-opendosm-pub", "common"]);
+  const { t } = useTranslation(["gui-data-catalogue", "common"]);
 
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
