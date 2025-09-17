@@ -1,9 +1,7 @@
-import { At, Button, Container, Hero } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { clx } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
-import { ForwardRefExoticComponent, FunctionComponent, ReactNode, SVGProps } from "react";
-import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import { ForwardRefExoticComponent, Fragment, FunctionComponent, ReactNode, SVGProps } from "react";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 /**
  * GUI DC Layout
@@ -13,16 +11,10 @@ import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
 interface GUIDCLayoutProps {
   children: ReactNode;
   currentIndex: number;
-  header: string;
   steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; name: string; desc: string }[];
 }
 
-const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
-  children,
-  currentIndex,
-  header,
-  steps,
-}) => {
+const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({ children, currentIndex, steps }) => {
   const { t } = useTranslation(["gui-data-catalogue", "common"]);
 
   return (
@@ -35,7 +27,7 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
 
           <div className="bg-washed dark:bg-washed-dark flex w-fit items-center gap-y-1 rounded-lg px-3 py-1 text-sm lg:hidden">
             {steps.map((step, i) => (
-              <>
+              <Fragment key={i}>
                 <div
                   className={clx(
                     i === currentIndex
@@ -48,7 +40,7 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
                 {i < steps.length - 1 && (
                   <ChevronRightIcon className="text-outlineHover dark:text-outlineHover-dark size-6" />
                 )}
-              </>
+              </Fragment>
             ))}
           </div>
 

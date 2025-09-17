@@ -1,4 +1,4 @@
-import { useTranslation } from "datagovmy-ui/hooks";
+import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useState } from "react";
 import { CheckCircleIcon, LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
 import { At } from "datagovmy-ui/components";
@@ -6,6 +6,7 @@ import { routes } from "@lib/routes";
 import GUIDCLayout from "./layout";
 import StepAuth from "./step-auth";
 import StepBasic from "./step-basic";
+import { DateTime } from "luxon";
 
 /**
  * GUI Data Catalogue Landing Page
@@ -20,6 +21,26 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
 
+  const { data, setData } = useData({
+    link_csv: "",
+    link_parquet: "",
+    link_preview: "",
+    title_en: "",
+    title_ms: "",
+    description_en: "",
+    description_ms: "",
+    file_name: "",
+    frequency: "",
+    demography: [],
+    geography: [],
+    dataset_start: DateTime.now().year,
+    dataset_end: DateTime.now().year,
+    data_source: [],
+  });
+  const { data: validation, setData: setValidation } = useData(
+    Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
+  );
+
   const STEPS = [
     {
       icon: UserIcon,
@@ -31,7 +52,16 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
       icon: LinkIcon,
       name: t("step_basic.name"),
       desc: t("step_basic.desc"),
-      content: <StepBasic setIndex={setIndex} sources={sources} />,
+      content: (
+        <StepBasic
+          setIndex={setIndex}
+          sources={sources}
+          data={data}
+          setData={setData}
+          validation={validation}
+          setValidation={setValidation}
+        />
+      ),
     },
     {
       icon: TableCellsIcon,
@@ -65,7 +95,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   }
 
   return (
-    <GUIDCLayout header={t("header")} currentIndex={index} steps={STEPS}>
+    <GUIDCLayout currentIndex={index} steps={STEPS}>
       {STEPS[index].content}
     </GUIDCLayout>
   );

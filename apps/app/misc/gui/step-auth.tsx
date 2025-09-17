@@ -40,7 +40,7 @@ const StepAuth: FunctionComponent<StepAuthProps> = ({ setIndex }) => {
       ) : authenticated ? (
         <div className="flex flex-col items-center justify-center gap-2">
           <CheckCircleIcon className="size-10 text-green-500" />
-          <p>{t("github_authenticated")}</p>
+          <p>{t("step_auth.github_authenticated")}</p>
         </div>
       ) : null}
     </div>
