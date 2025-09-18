@@ -25,7 +25,7 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
 
   return (
     <div className="flex h-full w-full flex-1 justify-center">
-      <div className="divide-outline md:px-4.5 flex max-w-screen-2xl flex-1 divide-x px-3 max-lg:gap-6 max-lg:py-6 lg:px-6">
+      <div className="divide-outline md:px-4.5 dark:divide-washed-dark flex max-w-screen-2xl flex-1 divide-x px-3 max-lg:gap-6 max-lg:py-6 lg:px-6">
         <div className="flex w-full max-w-[284px] flex-col items-center gap-3 lg:w-2/5 lg:gap-8 lg:py-12 lg:pr-6 xl:w-1/3">
           <h3 className="font-body lg:font-header text-balance font-bold max-lg:text-base">
             {t("create_new")}

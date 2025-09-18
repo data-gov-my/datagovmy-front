@@ -84,6 +84,15 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
           // Store preview data if available
           if (result.preview) {
             setData(`${field}_preview`, result.preview);
+
+            const header = result.preview[0].split(",");
+            const _result = result.preview.slice(1).map((row: string) => {
+              const values = row.split(",");
+              const obj: Record<string, any> = {};
+              header.forEach((key: string, i: number) => (obj[key] = values[i]));
+              return obj;
+            });
+            setData("data", _result);
           }
           setValidation(field, "success");
           return true;

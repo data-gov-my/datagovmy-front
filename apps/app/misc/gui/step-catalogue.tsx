@@ -1,7 +1,16 @@
+import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, CheckIcon } from "@heroicons/react/20/solid";
+import { PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { Button, Container, Input, Section, Textarea } from "datagovmy-ui/components";
-import { interpolate } from "datagovmy-ui/helpers";
+import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
+import { CatalogueMethodology } from "datagovmy-ui/data-catalogue";
+import { clx, interpolate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { Dispatch, FunctionComponent, SetStateAction } from "react";
+import { languages } from "datagovmy-ui/options";
+import { UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
+import dynamic from "next/dynamic";
+import { Dispatch, FunctionComponent, SetStateAction, useContext, useState } from "react";
+
+const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 
 interface StepCatalogueProps {
   setIndex: Dispatch<SetStateAction<number>>;
@@ -21,6 +30,13 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
   setValidation,
 }) => {
   const { t } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
+  const [toggleIndex, setToggleIndex] = useState(0);
+  const { dataset } = useContext(CatalogueContext);
+  const config = {
+    precision: 0,
+    filter_columns: [],
+    freeze_columns: [],
+  };
 
   const { data: methodology, setData: setMethodology } = useData({
     caveat: "",
@@ -28,101 +44,219 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     publication: "",
     related_datasets: [],
   });
-  const { data: title, setData: setTitle } = useData({
-    title: "",
-    description: "",
+  const { data: edit, setData: setEdit } = useData({
     edit_title: false,
     edit_description: false,
   });
+
+  const generateTableSchema = () => {
+    const columns = Array.isArray(dataset.table) ? Object.keys(dataset.table[0]) : [];
+
+    switch (dataset.type) {
+      case "TABLE":
+        return UNIVERSAL_TABLE_SCHEMA(
+          columns,
+          data.translations,
+          config.freeze_columns,
+          (item, key) => item[key]
+        );
+      default:
+        return UNIVERSAL_TABLE_SCHEMA(columns, data.translations, config.freeze_columns);
+    }
+  };
+
+  console.log(dataset);
   return (
-    <Container>
-      <div className="mx-auto flex-1 p-2 py-6 pt-16 md:max-w-screen-md lg:max-w-screen-lg lg:p-8 lg:pb-6">
-        <Section
-          title={
-            title.edit_title ? (
-              <div className="flex w-full flex-col items-end gap-2">
-                <Input
-                  required
-                  autoFocus
-                  className="min-w-[500px]"
-                  name="title"
-                  placeholder={"[Double Click Here To Add Title]"}
-                  value={title.title}
-                  onChange={e => {
-                    setTitle("title", e);
-                  }}
-                  // validation={validation.publication}
-                />
-                <div className="flex gap-2 self-end">
-                  <Button variant="primary" onClick={() => setTitle("edit_title", false)}>
-                    Ok
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setTitle("title", "");
-                    }}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <h4
-                className="select-none hover:cursor-pointer"
-                onDoubleClick={() => setTitle("edit_title", true)}
-              >
-                {title.title || "[Double Click Here To Add Title]"}
-              </h4>
-            )
-          }
-          description={
-            title.edit_description ? (
-              <div className="flex w-full flex-col items-end gap-2">
-                <Textarea
-                  required
-                  rows={2}
-                  autoFocus
-                  className="min-w-[500px]"
-                  name="description"
-                  placeholder={"[Double Click Here To Add Description]"}
-                  value={title.description}
-                  onChange={e => {
-                    setTitle("description", e.target.value);
-                  }}
-                  // validation={validation.publication}
-                />
-                <div className="flex gap-2">
-                  <Button variant="primary" onClick={() => setTitle("edit_description", false)}>
-                    Ok
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
-                      setTitle("description", "");
-                    }}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <p
-                className="text-dim select-none whitespace-pre-line text-base hover:cursor-pointer"
-                data-testid="catalogue-description"
-                onDoubleClick={() => setTitle("edit_description", true)}
-              >
-                {interpolate(title.description.substring(title.description.indexOf("]") + 1)) ||
-                  "[Double Click Here To Add Description]"}
-              </p>
-            )
-          }
-        >
-          <div className="bg-background flex h-40 w-full items-center justify-center rounded-lg text-sm">
-            Preview of chart
+    <>
+      <Container className="divide-y-0 lg:px-0">
+        <div className="dark:border-washed-dark sticky top-14 z-10 flex border-b bg-white p-6">
+          <div className="flex-1 space-y-4">
+            <ul className={clx("bg-washed flex w-fit flex-wrap rounded-md")}>
+              {languages.map((option, index) => (
+                <li
+                  key={option.value}
+                  className={clx(
+                    "flex cursor-pointer select-none self-center whitespace-nowrap rounded-md px-2.5 py-1 text-sm outline-none transition-colors",
+                    toggleIndex === index
+                      ? "dark:bg-washed-dark border-outline border bg-white font-medium text-black dark:text-white"
+                      : "text-dim bg-transparent hover:text-black dark:hover:text-white"
+                  )}
+                  onClick={() => setToggleIndex(index)}
+                >
+                  {option.label}
+                </li>
+              ))}
+            </ul>
+
+            <p className="text-dim text-sm">{t("step_catalogue.section_explanation")}</p>
           </div>
-        </Section>
-        {/* <CatalogueMethodology
+          <div className="flex items-start justify-center gap-2">
+            <Button variant="base" className="text-primary border border-[#C2D5FF] dark:bg-white">
+              Draft with AI
+              <SparklesIcon className="text-primary size-4" />
+            </Button>
+            <Button variant="primary">
+              Publish
+              <ArrowRightIcon className="size-4 text-white" />
+            </Button>
+          </div>
+        </div>
+        <div className="mx-auto flex-1 p-2 py-6 pt-0 md:max-w-screen-md lg:max-w-[850px] lg:p-8 lg:py-0 lg:pb-6">
+          <Section
+            title={
+              edit.edit_title ? (
+                <div className="group relative flex w-full flex-col items-center justify-center gap-2">
+                  <Input
+                    required
+                    autoFocus
+                    className="w-full py-1.5"
+                    name="title"
+                    placeholder={
+                      toggleIndex === 0
+                        ? t("forms.title_en_placeholder")
+                        : t("forms.title_ms_placeholder")
+                    }
+                    value={toggleIndex === 0 ? data.title_en : data.title_ms}
+                    onChange={e => {
+                      setData(toggleIndex === 0 ? "title_en" : "title_ms", e);
+                    }}
+                  />
+                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                      <Button
+                        className="size-8 justify-center p-1"
+                        disabled
+                        icon={<ArrowUpIcon className="size-5" />}
+                      />
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowDownIcon className="size-5" />}
+                        onClick={() => {
+                          setEdit("edit_title", false);
+                          setEdit("edit_description", true);
+                        }}
+                      />
+                    </div>
+                    <Button
+                      variant="default"
+                      className="size-8 justify-center p-1"
+                      onClick={() => setEdit("edit_title", false)}
+                      icon={<CheckIcon className="text-success size-5" />}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="group relative">
+                  <h4 className="select-none">
+                    {data.title_en && data.title_ms
+                      ? toggleIndex === 0
+                        ? data.title_en
+                        : data.title_ms
+                      : toggleIndex === 0
+                        ? `[${t("forms.title_en_placeholder")}]`
+                        : `[${t("forms.title_ms_placeholder")}]`}
+                  </h4>
+
+                  <Button
+                    variant="default"
+                    onClick={() => setEdit("edit_title", true)}
+                    className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    icon={<PencilIcon className="size-5" />}
+                  />
+                </div>
+              )
+            }
+            description={
+              edit.edit_description ? (
+                <div className="group relative flex w-full flex-col items-center justify-center gap-2">
+                  <Textarea
+                    required
+                    rows={3}
+                    autoFocus
+                    className="w-full py-1.5"
+                    name="description"
+                    placeholder={
+                      toggleIndex === 0
+                        ? t("forms.description_en_placeholder")
+                        : t("forms.description_ms_placeholder")
+                    }
+                    value={toggleIndex === 0 ? data.description_en : data.description_ms}
+                    onChange={e => {
+                      setData(
+                        toggleIndex === 0 ? "description_en" : "description_ms",
+                        e.target.value
+                      );
+                    }}
+                  />
+                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowUpIcon className="size-5" />}
+                        onClick={() => {
+                          setEdit("edit_title", true);
+                          setEdit("edit_description", false);
+                        }}
+                      />
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowDownIcon className="size-5" />}
+                        onClick={() => {
+                          setEdit("edit_title", false);
+                          setEdit("edit_description", true);
+                        }}
+                      />
+                    </div>
+                    <Button
+                      variant="default"
+                      className="size-8 justify-center p-1"
+                      onClick={() => setEdit("edit_description", false)}
+                      icon={<CheckIcon className="text-success size-5" />}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="group relative">
+                  <p
+                    className="text-dim select-none whitespace-pre-line text-base"
+                    data-testid="catalogue-description"
+                  >
+                    {data.description_en && data.description_ms
+                      ? interpolate(
+                          toggleIndex === 0
+                            ? data.description_en.substring(data.description_en.indexOf("]") + 1)
+                            : data.description_ms.substring(data.description_ms.indexOf("]") + 1)
+                        )
+                      : toggleIndex === 0
+                        ? `[${t("forms.description_en_placeholder")}]`
+                        : `[${t("forms.description_ms_placeholder")}]`}
+                  </p>
+                  <Button
+                    variant="default"
+                    onClick={() => setEdit("edit_description", true)}
+                    className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    icon={<PencilIcon className="size-5" />}
+                  />
+                </div>
+              )
+            }
+          >
+            <div className="min-h-[350px] lg:h-full">
+              <div className={clx(dataset.type === "TABLE" ? "block" : "hidden")}>
+                <Table
+                  className={clx("table-stripe table-default table-sticky-header")}
+                  responsive={dataset.type === "TABLE"}
+                  data={dataset.table}
+                  freeze={config.freeze_columns}
+                  precision={config.precision}
+                  config={generateTableSchema()}
+                  enablePagination={["TABLE", "GEOPOINT"].includes(dataset.type) ? 15 : false}
+                  data-testid="catalogue-table"
+                />
+              </div>
+            </div>
+          </Section>
+          <CatalogueMethodology
             isGUI={true}
             explanation={{
               methodology: methodology.methodology,
@@ -131,9 +265,11 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
               related_datasets: [],
             }}
             setMethodology={setMethodology}
-          /> */}
-      </div>
-    </Container>
+          />
+        </div>
+      </Container>
+      <div />
+    </>
   );
 };
 

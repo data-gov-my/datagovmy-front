@@ -1,5 +1,5 @@
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useMemo, useState } from "react";
 import { CheckCircleIcon, LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
 import { At, Button } from "datagovmy-ui/components";
 import { routes } from "@lib/routes";
@@ -8,6 +8,7 @@ import StepAuth from "./step-auth";
 import StepBasic from "./step-basic";
 import { DateTime } from "luxon";
 import StepCatalogue from "./step-catalogue";
+import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
 
 /**
  * GUI Data Catalogue Landing Page
@@ -18,29 +19,64 @@ interface GUIDCLandingProps {
   sources: string[];
 }
 
+const STEPBASICDUMMY = {
+  link_csv: "https://storage.data.gov.my/demography/births.csv",
+  link_parquet: "https://storage.data.gov.my/demography/births.parquet",
+  link_preview: "",
+  title_en: "title",
+  title_ms: "tajuk",
+  description_en: "desc",
+  description_ms: "kete",
+  file_name: "annual",
+  frequency: "YEARLY",
+  demography: ["state"],
+  geography: ["sex", "age"],
+  dataset_start: DateTime.now().year,
+  dataset_end: DateTime.now().year,
+  data_source: [{ label: "BNM", value: "BNM" }],
+  data: [],
+  translations: {},
+};
+
 const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
 
   const { data, setData, reset } = useData({
-    link_csv: "",
-    link_parquet: "",
-    link_preview: "",
-    title_en: "",
-    title_ms: "",
-    description_en: "",
-    description_ms: "",
-    file_name: "",
-    frequency: "",
-    demography: [],
-    geography: [],
-    dataset_start: DateTime.now().year,
-    dataset_end: DateTime.now().year,
-    data_source: [],
+    ...STEPBASICDUMMY,
   });
+  // const { data, setData, reset } = useData({
+  //   link_csv: "",
+  //   link_parquet: "",
+  //   link_preview: "",
+  //   title_en: "",
+  //   title_ms: "",
+  //   description_en: "",
+  //   description_ms: "",
+  //   file_name: "",
+  //   frequency: "",
+  //   demography: [],
+  //   geography: [],
+  //   dataset_start: DateTime.now().year,
+  //   dataset_end: DateTime.now().year,
+  //   data_source: [],
+  // });
   const { data: validation, setData: setValidation } = useData(
     Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
+
+  const dataset: DatasetType = useMemo(() => {
+    return {
+      type: "TABLE",
+      chart: {},
+      table: data.data || [],
+      meta: {
+        unique_id: data.id,
+        title: data.title,
+        desc: data.description,
+      },
+    };
+  }, [data.data]);
 
   const STEPS = [
     {
@@ -69,14 +105,22 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
       name: t("step_catalogue.name"),
       desc: t("step_catalogue.desc"),
       content: (
-        <StepCatalogue
-          setIndex={setIndex}
-          sources={sources}
-          data={data}
-          setData={setData}
-          validation={validation}
-          setValidation={setValidation}
-        />
+        <CatalogueProvider
+          dataset={dataset}
+          urls={{
+            csv: data.link_csv,
+            parquet: data.link_parquet,
+          }}
+        >
+          <StepCatalogue
+            setIndex={setIndex}
+            sources={sources}
+            data={data}
+            setData={setData}
+            validation={validation}
+            setValidation={setValidation}
+          />
+        </CatalogueProvider>
       ),
     },
   ];

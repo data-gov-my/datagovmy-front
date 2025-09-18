@@ -103,70 +103,76 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
       />
 
       {/* What caveats I should bear in mind when using this data? */}
-      <Section
-        title={t("header_2")}
-        ref={ref => {
-          scrollRef &&
-            (scrollRef.current[
-              i18n.language === "en-GB" ? "Metadata: Caveats" : "Metadata: Kaveat"
-            ] = ref);
-        }}
-        className=""
-        description={
-          <div
-            className={clx(
-              isGUI && "min-h-[20px] min-w-[500px] select-none",
-              editGui.caveat && "flex w-full flex-col items-end gap-2"
-            )}
-            onDoubleClick={isGUI ? () => setEditGui("caveat", true) : () => {}}
-          >
-            {editGui.caveat ? (
-              <>
-                <Textarea
-                  required
-                  autoFocus
-                  rows={5}
-                  className="min-w-[500px]"
-                  name="caveat"
-                  placeholder={"[Double Click Here To Add Caveat]"}
-                  value={explanation.caveat}
-                  onChange={e => {
-                    if (isGUI) {
-                      setMethodology("caveat", e.target.value);
-                    }
-                  }}
-                  // validation={validation.publication}
-                />
-                <div className="flex gap-2">
-                  <Button variant="primary" onClick={() => setEditGui("caveat", false)}>
-                    Ok
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => {
+      {(Boolean(explanation.caveat.length > 3) || isGUI) && (
+        <Section
+          title={t("header_2")}
+          ref={ref => {
+            scrollRef &&
+              (scrollRef.current[
+                i18n.language === "en-GB" ? "Metadata: Caveats" : "Metadata: Kaveat"
+              ] = ref);
+          }}
+          className=""
+          description={
+            <div
+              className={clx(
+                isGUI && "min-h-[20px] min-w-[500px] select-none",
+                editGui.caveat && "flex w-full flex-col items-end gap-2"
+              )}
+              onDoubleClick={isGUI ? () => setEditGui("caveat", true) : () => {}}
+            >
+              {editGui.caveat ? (
+                <>
+                  <Textarea
+                    required
+                    autoFocus
+                    rows={5}
+                    className="min-w-[500px]"
+                    name="caveat"
+                    placeholder={"[Double Click Here To Add Caveat]"}
+                    value={explanation.caveat}
+                    onChange={e => {
                       if (isGUI) {
-                        setMethodology("caveat", "");
+                        setMethodology("caveat", e.target.value);
                       }
                     }}
-                  >
-                    Clear
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <Markdown
-                className="markdown hover:cursor-pointer"
-                data-testid="catalogue-methodology"
-              >
-                {explanation.caveat || "[Double Click Here To Add Caveat]"}
-              </Markdown>
-            )}
-          </div>
-        }
-      />
-
+                    // validation={validation.publication}
+                  />
+                  <div className="flex gap-2">
+                    <Button variant="primary" onClick={() => setEditGui("caveat", false)}>
+                      Ok
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        if (isGUI) {
+                          setMethodology("caveat", "");
+                        }
+                      }}
+                    >
+                      Clear
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <Markdown
+                  className="markdown hover:cursor-pointer"
+                  data-testid="catalogue-methodology"
+                >
+                  {explanation.caveat || "[Double Click Here To Add Caveat]"}
+                </Markdown>
+              )}
+            </div>
+          }
+        />
+      )}
       {/* Publication(s) using this data */}
-      {(Boolean(explanation.publication) || isGUI) && (
+      {(Boolean(
+        typeof explanation.publication === "string"
+          ? explanation.publication.length > 3
+          : explanation.publication
+      ) ||
+        isGUI) && (
         <Section
           title={t("header_3")}
           ref={ref => {
