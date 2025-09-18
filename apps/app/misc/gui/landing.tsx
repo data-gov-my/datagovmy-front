@@ -25,7 +25,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
       icon: CheckCircleIcon,
       name: t("step_auth.name"),
       desc: t("step_auth.desc"),
-      content: <StepAuth setIndex={setIndex} />,
+      content: <StepAuth onClickContinue={() => setIndex(1)} />,
     },
     {
       icon: UserIcon,

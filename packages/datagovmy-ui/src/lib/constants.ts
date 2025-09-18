@@ -275,3 +275,10 @@ export const AgencyLink: Record<Agency, string> = {
   "tnb": "https://www.tnb.com.my/",
   "unhcr": "https://www.unhcr.org/my/",
 } as const;
+
+export const AUTH_ERROR_KEY = "error";
+
+export const AUTH_ERROR = {
+  UNKNOWN: "unknown",
+  UNAUTHORIZED: "unauthorized",
+} as const;
