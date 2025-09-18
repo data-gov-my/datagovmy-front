@@ -1,15 +1,19 @@
 import { FunctionComponent, MutableRefObject } from "react";
 import { Button, Markdown, Section, Textarea } from "../../components";
-import { useData, useTranslation } from "../../hooks";
+import { useTranslation } from "../../hooks";
 import CatalogueCard from "../Card";
 import { clx } from "../../lib/helpers";
 import { DCVariable } from "../../../types/data-catalogue";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import { ArrowDownIcon, ArrowUpIcon, CheckIcon } from "@heroicons/react/20/solid";
 
 type MethodologyGUI =
   | {
       isGUI: true;
       scrollRef?: never;
-      setMethodology: (key: string, value: any) => void;
+      setMethodology: (key: string, value: string) => void;
+      edit: any;
+      setEdit: (key: string, value: boolean) => void;
     }
   | MethodologyDefault;
 
@@ -17,6 +21,8 @@ type MethodologyDefault = {
   isGUI: false;
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   setMethodology?: never;
+  edit?: never;
+  setEdit?: never;
 };
 
 type MethodologyProps = MethodologyGUI & {
@@ -28,14 +34,10 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
   explanation,
   isGUI,
   setMethodology,
+  edit,
+  setEdit,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
-
-  const { data: editGui, setData: setEditGui } = useData({
-    caveat: false,
-    methodology: false,
-    publication: false,
-  });
 
   return (
     <div className="dark:border-b-outlineHover-dark space-y-8 border-b py-8 lg:py-12">
@@ -53,50 +55,70 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
           <div
             className={clx(
               isGUI && "min-h-[20px] min-w-[500px] select-none",
-              editGui.methodology && "flex w-full flex-col items-end gap-2"
+              edit?.edit_methodology && "flex w-full flex-col items-end gap-2"
             )}
-            onDoubleClick={isGUI ? () => setEditGui("methodology", true) : () => {}}
           >
-            {editGui.methodology ? (
-              <>
+            {edit?.edit_methodology ? (
+              <div className="group relative flex w-full flex-col items-center justify-center gap-2">
                 <Textarea
                   required
                   autoFocus
                   rows={5}
-                  className="min-w-[500px]"
+                  className="w-full py-1.5"
                   name="methodology"
-                  placeholder={"[Double Click Here To Add Methodology]"}
+                  placeholder={"[Add methodology text]"}
                   value={explanation.methodology}
                   onChange={e => {
                     if (isGUI) {
                       setMethodology("methodology", e.target.value);
                     }
                   }}
-                  // validation={validation.publication}
                 />
-                <div className="flex gap-2">
-                  <Button variant="primary" onClick={() => setEditGui("methodology", false)}>
-                    Ok
-                  </Button>
+                <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <Button
+                      className="hover:bg-washed size-8 justify-center p-1"
+                      icon={<ArrowUpIcon className="size-5 text-black" />}
+                      onClick={() => {
+                        if (isGUI) {
+                          setEdit("edit_description", true);
+                          setEdit("edit_methodology", false);
+                        }
+                      }}
+                    />
+                    <Button
+                      className="hover:bg-washed size-8 justify-center p-1"
+                      icon={<ArrowDownIcon className="size-5 text-black" />}
+                      onClick={() => {
+                        if (isGUI) {
+                          setEdit("edit_methodology", false);
+                          setEdit("edit_caveat", true);
+                        }
+                      }}
+                    />
+                  </div>
                   <Button
-                    variant="ghost"
-                    onClick={() => {
-                      if (isGUI) {
-                        setMethodology("methodology", "");
-                      }
-                    }}
-                  >
-                    Clear
-                  </Button>
+                    variant="default"
+                    className="size-8 justify-center p-1"
+                    onClick={() => isGUI && setEdit("edit_methodology", false)}
+                    icon={<CheckIcon className="text-success size-5" />}
+                  />
                 </div>
-              </>
+              </div>
             ) : (
-              <Markdown
-                className="markdown hover:cursor-pointer"
-                data-testid="catalogue-methodology"
-              >
-                {explanation.methodology || "[Double Click Here To Add Methodology]"}
-              </Markdown>
+              <div className="group relative">
+                <Markdown className="markdown" data-testid="catalogue-methodology">
+                  {explanation.methodology || "[Click on the button to add methodology]"}
+                </Markdown>
+                {isGUI && (
+                  <Button
+                    variant="default"
+                    onClick={() => setEdit && setEdit("edit_methodology", true)}
+                    className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                    icon={<PencilIcon className="size-5" />}
+                  />
+                )}
+              </div>
             )}
           </div>
         }
@@ -117,50 +139,70 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
             <div
               className={clx(
                 isGUI && "min-h-[20px] min-w-[500px] select-none",
-                editGui.caveat && "flex w-full flex-col items-end gap-2"
+                edit?.edit_caveat && "flex w-full flex-col items-end gap-2"
               )}
-              onDoubleClick={isGUI ? () => setEditGui("caveat", true) : () => {}}
             >
-              {editGui.caveat ? (
-                <>
+              {edit?.edit_caveat ? (
+                <div className="group relative flex w-full flex-col items-center justify-center gap-2">
                   <Textarea
                     required
                     autoFocus
                     rows={5}
-                    className="min-w-[500px]"
+                    className="w-full py-1.5"
                     name="caveat"
-                    placeholder={"[Double Click Here To Add Caveat]"}
+                    placeholder={"[Add caveat text]"}
                     value={explanation.caveat}
                     onChange={e => {
                       if (isGUI) {
                         setMethodology("caveat", e.target.value);
                       }
                     }}
-                    // validation={validation.publication}
                   />
-                  <div className="flex gap-2">
-                    <Button variant="primary" onClick={() => setEditGui("caveat", false)}>
-                      Ok
-                    </Button>
+                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowUpIcon className="size-5 text-black" />}
+                        onClick={() => {
+                          if (isGUI) {
+                            setEdit("edit_methodology", true);
+                            setEdit("edit_caveat", false);
+                          }
+                        }}
+                      />
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        onClick={() => {
+                          if (isGUI) {
+                            setEdit("edit_caveat", false);
+                            setEdit("edit_publication", true);
+                          }
+                        }}
+                      />
+                    </div>
                     <Button
-                      variant="ghost"
-                      onClick={() => {
-                        if (isGUI) {
-                          setMethodology("caveat", "");
-                        }
-                      }}
-                    >
-                      Clear
-                    </Button>
+                      variant="default"
+                      className="size-8 justify-center p-1"
+                      onClick={() => isGUI && setEdit("edit_caveat", false)}
+                      icon={<CheckIcon className="text-success size-5" />}
+                    />
                   </div>
-                </>
+                </div>
               ) : (
-                <Markdown
-                  className="markdown hover:cursor-pointer"
-                  data-testid="catalogue-methodology"
-                >
-                  {explanation.caveat || "[Double Click Here To Add Caveat]"}
-                </Markdown>
+                <div className="group relative">
+                  <Markdown className="markdown" data-testid="catalogue-caveat">
+                    {explanation.caveat || "[Click on the button to add caveat]"}
+                  </Markdown>
+                  {isGUI && (
+                    <Button
+                      variant="default"
+                      onClick={() => isGUI && setEdit("edit_caveat", true)}
+                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      icon={<PencilIcon className="size-5" />}
+                    />
+                  )}
+                </div>
               )}
             </div>
           }
@@ -186,50 +228,70 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
             <div
               className={clx(
                 isGUI && "min-h-[20px] min-w-[500px] select-none",
-                editGui.publication && "flex w-full flex-col items-end gap-2"
+                edit?.edit_publication && "flex w-full flex-col items-end gap-2"
               )}
-              onDoubleClick={isGUI ? () => setEditGui("publication", true) : () => {}}
             >
-              {editGui.publication ? (
-                <>
+              {edit?.edit_publication ? (
+                <div className="group relative flex w-full flex-col items-center justify-center gap-2">
                   <Textarea
                     required
                     autoFocus
                     rows={5}
-                    className="min-w-[500px]"
+                    className="w-full py-1.5"
                     name="publication"
-                    placeholder={"[Double Click Here To Add Publication]"}
+                    placeholder={"[Add publication text]"}
                     value={explanation.publication}
                     onChange={e => {
                       if (isGUI) {
                         setMethodology("publication", e.target.value);
                       }
                     }}
-                    // validation={validation.publication}
                   />
-                  <div className="flex gap-2">
-                    <Button variant="primary" onClick={() => setEditGui("publication", false)}>
-                      Ok
-                    </Button>
+                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowUpIcon className="size-5 text-black" />}
+                        onClick={() => {
+                          if (isGUI) {
+                            setEdit("edit_caveat", true);
+                            setEdit("edit_publication", false);
+                          }
+                        }}
+                      />
+                      <Button
+                        className="hover:bg-washed size-8 justify-center p-1"
+                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        onClick={() => {
+                          if (isGUI) {
+                            setEdit("edit_publication", false);
+                            setEdit("edit_description2", true);
+                          }
+                        }}
+                      />
+                    </div>
                     <Button
-                      variant="ghost"
-                      onClick={() => {
-                        if (isGUI) {
-                          setMethodology("publication", "");
-                        }
-                      }}
-                    >
-                      Clear
-                    </Button>
+                      variant="default"
+                      className="size-8 justify-center p-1"
+                      onClick={() => isGUI && setEdit("edit_publication", false)}
+                      icon={<CheckIcon className="text-success size-5" />}
+                    />
                   </div>
-                </>
+                </div>
               ) : (
-                <Markdown
-                  className="markdown hover:cursor-pointer"
-                  data-testid="catalogue-publication"
-                >
-                  {explanation.publication! || "[Double Click Here To Add Publication]"}
-                </Markdown>
+                <div className="group relative">
+                  <Markdown className="markdown" data-testid="catalogue-publication">
+                    {explanation.publication! || "[Click on the button to add publication]"}
+                  </Markdown>
+                  {isGUI && (
+                    <Button
+                      variant="default"
+                      onClick={() => isGUI && setEdit("edit_publication", true)}
+                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
+                      icon={<PencilIcon className="size-5" />}
+                    />
+                  )}
+                </div>
               )}
             </div>
           }

@@ -2,11 +2,12 @@ import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, CheckIcon } from "@heroicon
 import { PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { Button, Container, Input, Section, Textarea } from "datagovmy-ui/components";
 import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
-import { CatalogueMethodology } from "datagovmy-ui/data-catalogue";
+import { CatalogueMethodology, CatalogueMetadata, DCField } from "datagovmy-ui/data-catalogue";
 import { clx, interpolate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { languages } from "datagovmy-ui/options";
 import { UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { Dispatch, FunctionComponent, SetStateAction, useContext, useState } from "react";
 
@@ -14,7 +15,6 @@ const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false })
 
 interface StepCatalogueProps {
   setIndex: Dispatch<SetStateAction<number>>;
-  sources: string[];
   data: Record<string, any>;
   setData: (key: string, value: any) => void;
   validation: Record<string, any>;
@@ -23,7 +23,6 @@ interface StepCatalogueProps {
 
 const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
   setIndex,
-  sources,
   data,
   setData,
   validation,
@@ -38,15 +37,16 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     freeze_columns: [],
   };
 
-  const { data: methodology, setData: setMethodology } = useData({
-    caveat: "",
-    methodology: "",
-    publication: "",
-    related_datasets: [],
-  });
   const { data: edit, setData: setEdit } = useData({
     edit_title: false,
     edit_description: false,
+    edit_methodology: false,
+    edit_caveat: false,
+    edit_publication: false,
+    edit_description2: false,
+    edit_fields: false,
+    edit_last_updated: false,
+    edit_next_update: false,
   });
 
   const generateTableSchema = () => {
@@ -65,7 +65,24 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     }
   };
 
-  console.log(dataset);
+  const updateSingleResource = (key: string, value: any, index: number) => {
+    if (index < 0 || index >= data.fields.length) {
+      return;
+    }
+
+    const _key = key.split(".")[1];
+    const lastKey = `${_key}_${toggleIndex === 0 ? "en" : "ms"}`;
+
+    // Create a copy of the resources array
+    const updatedResource = [...data.fields];
+    updatedResource[index] = {
+      ...updatedResource[index],
+      [lastKey]: value,
+    };
+
+    setData("fields", updatedResource);
+  };
+
   return (
     <>
       <Container className="divide-y-0 lg:px-0">
@@ -130,7 +147,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5" />}
+                        icon={<ArrowDownIcon className="size-5 text-black" />}
                         onClick={() => {
                           setEdit("edit_title", false);
                           setEdit("edit_description", true);
@@ -146,8 +163,8 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative">
-                  <h4 className="select-none">
+                <div className="group relative w-full">
+                  <h4 className="w-full select-none">
                     {data.title_en && data.title_ms
                       ? toggleIndex === 0
                         ? data.title_en
@@ -192,7 +209,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowUpIcon className="size-5" />}
+                        icon={<ArrowUpIcon className="size-5 text-black" />}
                         onClick={() => {
                           setEdit("edit_title", true);
                           setEdit("edit_description", false);
@@ -200,10 +217,10 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5" />}
+                        icon={<ArrowDownIcon className="size-5 text-black" />}
                         onClick={() => {
-                          setEdit("edit_title", false);
-                          setEdit("edit_description", true);
+                          setEdit("edit_description", false);
+                          setEdit("edit_methodology", true);
                         }}
                       />
                     </div>
@@ -216,9 +233,9 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative">
+                <div className="group relative w-full">
                   <p
-                    className="text-dim select-none whitespace-pre-line text-base"
+                    className="text-dim w-full select-none whitespace-pre-line text-base"
                     data-testid="catalogue-description"
                   >
                     {data.description_en && data.description_ms
@@ -259,12 +276,46 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
           <CatalogueMethodology
             isGUI={true}
             explanation={{
-              methodology: methodology.methodology,
-              caveat: methodology.caveat,
-              publication: methodology.publication,
-              related_datasets: [],
+              methodology: toggleIndex === 0 ? data.methodology_en : data.methodology_ms,
+              caveat: toggleIndex === 0 ? data.caveat_en : data.caveat_ms,
+              publication: toggleIndex === 0 ? data.publication_en : data.publication_ms,
+              related_datasets: data.related_datasets,
             }}
-            setMethodology={setMethodology}
+            setMethodology={(key, value) =>
+              setData(toggleIndex === 0 ? `${key}_en` : `${key}_ms`, value)
+            }
+            edit={edit}
+            setEdit={setEdit}
+          />
+          <CatalogueMetadata
+            isGUI={true}
+            edit={edit}
+            setEdit={setEdit}
+            metadata={{
+              description: toggleIndex === 0 ? data.description_en : data.description_ms,
+              fields: data.fields.map((field: any) => ({
+                name: field.name,
+                title: toggleIndex === 0 ? field.title_en : field.title_ms,
+                description: toggleIndex === 0 ? field.description_en : field.description_ms,
+              })),
+              last_updated: data.last_updated,
+              next_update: data.next_update,
+              data_source: data.data_source.map((source: OptionType) =>
+                t(`agencies:${source.value.toLowerCase()}.full`, { defaultValue: source.value })
+              ),
+              link_csv: data.link_csv,
+              link_parquet: data.link_parquet,
+            }}
+            selectedEdition={""}
+            setSelectedEdition={(edition: string) => {}}
+            setMetadata={(key, value, index) => {
+              key.includes("fields")
+                ? updateSingleResource(key, value, typeof index === "number" ? index : -1)
+                : setData(
+                    key === "description" ? (toggleIndex === 0 ? `${key}_en` : `${key}_ms`) : key,
+                    value
+                  );
+            }}
           />
         </div>
       </Container>

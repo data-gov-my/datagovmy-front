@@ -93,6 +93,16 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               return obj;
             });
             setData("data", _result);
+            setData(
+              "fields",
+              header.map((h: any) => ({
+                name: h,
+                title_en: "",
+                title_ms: "",
+                description_en: "",
+                description_ms: "",
+              }))
+            );
           }
           setValidation(field, "success");
           return true;
@@ -114,6 +124,22 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
 
   const validateInput = async () => {
     const validationPromises = Object.entries(data).map(async ([key, value]) => {
+      // this to be validated in next steps
+      if (
+        key === "methodology_en" ||
+        key === "methodology_ms" ||
+        key === "caveat_en" ||
+        key === "caveat_ms" ||
+        key === "publication_en" ||
+        key === "publication_ms" ||
+        key === "related_datasets" ||
+        key === "title_sort" ||
+        key === "manual_trigger" ||
+        key === "data_as_of" ||
+        key === "data_as_of_type"
+      ) {
+        return [key, true];
+      }
       if (key === "link_csv" || key === "link_parquet" || key === "link_preview") {
         const validated = await testLink(data[key], key);
         return [key, validated];
@@ -504,14 +530,14 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
                 required
                 type="number"
                 className="w-full rounded-lg py-1.5"
-                name="dataset_start"
-                placeholder={t("forms.dataset_start")}
-                value={data.dataset_start}
+                name="dataset_begin"
+                placeholder={t("forms.dataset_begin")}
+                value={data.dataset_begin}
                 onChange={e => {
-                  setData("dataset_start", e);
-                  setValidation("dataset_start", false);
+                  setData("dataset_begin", e);
+                  setValidation("dataset_begin", false);
                 }}
-                validation={validation.dataset_start}
+                validation={validation.dataset_begin}
               />
               <Input
                 required

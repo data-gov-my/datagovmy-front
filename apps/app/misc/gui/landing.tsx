@@ -27,15 +27,47 @@ const STEPBASICDUMMY = {
   title_ms: "tajuk",
   description_en: "desc",
   description_ms: "kete",
+  title_sort: 10, // need to add in UI
+  exclude_openapi: false,
+  manual_trigger: "",
+  data_as_of: "", // need to add in UI
   file_name: "annual",
   frequency: "YEARLY",
-  demography: ["state"],
-  geography: ["sex", "age"],
-  dataset_start: DateTime.now().year,
+  geography: [{ label: "STATE", value: "STATE" }], // need to take value in final json
+  demography: [
+    { label: "AGE", value: "AGE" },
+    { label: "SEX", value: "SEX" },
+  ], // need to take value in final json
+  dataset_begin: DateTime.now().year,
   dataset_end: DateTime.now().year,
-  data_source: [{ label: "BNM", value: "BNM" }],
-  data: [],
+  data_source: [{ label: "BNM", value: "BNM" }], // need to take value in final json
+  methodology_en: "",
+  methodology_ms: "",
+  caveat_en: "",
+  caveat_ms: "",
+  publication_en: "",
+  publication_ms: "",
+  related_datasets: [],
+  last_updated: DateTime.now().toSQL(),
+  next_update: "-",
+  fields: [],
   translations: {},
+  site_category: [
+    {
+      site: "datagovmy",
+      category_en: "Demography",
+      category_ms: "Demografi",
+      category_sort: 1,
+      subcategory_en: "Births",
+      subcategory_ms: "Kelahiran",
+      subcategory_sort: 2,
+    },
+  ], // need to add in UI
+  dataviz: [], // generate in final json
+
+  // Specific for render
+  data: [],
+  data_as_of_type: "",
 };
 
 const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
@@ -57,7 +89,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   //   frequency: "",
   //   demography: [],
   //   geography: [],
-  //   dataset_start: DateTime.now().year,
+  //   dataset_begin: DateTime.now().year,
   //   dataset_end: DateTime.now().year,
   //   data_source: [],
   // });
@@ -114,7 +146,6 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
         >
           <StepCatalogue
             setIndex={setIndex}
-            sources={sources}
             data={data}
             setData={setData}
             validation={validation}
