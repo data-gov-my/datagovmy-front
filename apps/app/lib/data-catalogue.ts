@@ -4,12 +4,7 @@ import { isValidBase64 } from "datagovmy-ui/helpers";
 
 const GH_META_REPO_OWNER = "data-gov-my";
 const GH_META_REPO_NAME = "datagovmy-meta";
-const GH_META_REPO_TARGET_BRANCH =
-  process.env.NEXT_PUBLIC_APP_ENV === "production"
-    ? "main"
-    : process.env.NEXT_PUBLIC_APP_ENV === "staging"
-      ? "staging"
-      : "dev";
+const GH_META_REPO_TARGET_BRANCH = "dev";
 
 const REPO_INFO = {
   owner: GH_META_REPO_OWNER,
