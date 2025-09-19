@@ -74,7 +74,7 @@ export function PublishDataCatalogueModal({
       <CenteredContainer>
         <div className="flex flex-col items-center gap-4">
           <Spinner loading className="h-20 w-20" />
-          <p>{t("loading")}</p>
+          <p>{t("common:placeholder.loading")}</p>
         </div>
       </CenteredContainer>
     );
@@ -86,8 +86,8 @@ export function PublishDataCatalogueModal({
         <div className="flex flex-col items-center gap-6">
           <ExclamationCircleIcon className="text-danger h-16 w-16" />
           <div className="text-center">
-            <h2 className="mb-2">{t("publish_error.heading")}</h2>
-            <p className="text-dim">{t("publish_error.subheading")}</p>
+            <h2 className="mb-2">{t("publish.error.heading")}</h2>
+            <p className="text-dim">{t("publish.error.subheading")}</p>
           </div>
           <div className="flex w-full gap-2">
             <Button
@@ -95,7 +95,7 @@ export function PublishDataCatalogueModal({
               className="flex-1 justify-center text-center"
               onClick={() => logout()}
             >
-              {t("logout")}
+              {t("step_auth.logout")}
             </Button>
             {onClickRetry && (
               <Button
@@ -118,8 +118,8 @@ export function PublishDataCatalogueModal({
       <div className="flex flex-col items-center gap-6">
         <CheckCircleIcon className="h-16 w-16 text-green-500" />
         <div className="text-center">
-          <h2 className="mb-2">{t("publish_success.heading")}</h2>
-          <p className="text-dim">{t("publish_success.subheading")}</p>
+          <h2 className="mb-2">{t("publish.success.heading")}</h2>
+          <p className="text-dim">{t("publish.success.subheading")}</p>
         </div>
         <div className="flex w-full gap-2">
           <Button
@@ -127,7 +127,7 @@ export function PublishDataCatalogueModal({
             className="flex-1 justify-center text-center"
             onClick={() => logout()}
           >
-            {t("logout")}
+            {t("step_auth.logout")}
           </Button>
           <Button
             variant="primary"
@@ -135,7 +135,7 @@ export function PublishDataCatalogueModal({
             icon={<PlusIcon className="h-4 w-4" />}
             onClick={() => onClickCreateAnotherPage()}
           >
-            {t("create_another_page")}
+            {t("publish.create_another_page")}
           </Button>
         </div>
       </div>

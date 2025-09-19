@@ -159,6 +159,16 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
                 description_ms: "",
               }))
             );
+            setValidation(
+              "fields",
+              header.map((h: any) => ({
+                name: false,
+                title_en: false,
+                title_ms: false,
+                description_en: false,
+                description_ms: false,
+              }))
+            );
           }
           setValidation(field, "success");
           return true;
@@ -190,6 +200,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
         key === "publication_ms" ||
         key === "related_datasets" ||
         key === "title_sort" ||
+        key === "fields" ||
         key === "manual_trigger"
       ) {
         return [key, true];

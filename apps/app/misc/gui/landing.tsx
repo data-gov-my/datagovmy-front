@@ -1,8 +1,7 @@
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useMemo, useState } from "react";
-import { CheckCircleIcon, LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
-import { At, Button } from "datagovmy-ui/components";
-import { routes } from "@lib/routes";
+import { LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
+import { Button } from "datagovmy-ui/components";
 import GUIDCLayout from "./layout";
 import StepAuth from "./step-auth";
 import StepBasic from "./step-basic";
@@ -10,7 +9,6 @@ import { DateTime } from "luxon";
 import StepCatalogue from "./step-catalogue";
 import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
 import { PublishDataCatalogueModal, usePublishDataCatalogue } from "./publish";
-import { useRouter } from "next/router";
 
 /**
  * GUI Data Catalogue Landing Page
@@ -32,28 +30,25 @@ interface GUIDCLandingProps {
   categoryMs: CatalogueCategory;
 }
 
-const STEPBASICDUMMY = {
-  link_csv: "https://storage.data.gov.my/demography/births.csv",
-  link_parquet: "https://storage.data.gov.my/demography/births.parquet",
+const DEFAULT_STATE = {
+  link_csv: "",
+  link_parquet: "",
   link_preview: "",
-  title_en: "title",
-  title_ms: "tajuk",
-  description_en: "desc",
-  description_ms: "kete",
+  title_en: "",
+  title_ms: "",
+  description_en: "",
+  description_ms: "",
   title_sort: 1,
   exclude_openapi: false,
   manual_trigger: "",
-  data_as_of: DateTime.now().toSQL(),
-  file_name: "annual",
-  frequency: "YEARLY",
-  geography: [{ label: "STATE", value: "STATE" }],
-  demography: [
-    { label: "AGE", value: "AGE" },
-    { label: "SEX", value: "SEX" },
-  ],
+  data_as_of: "",
+  file_name: "",
+  frequency: "",
+  geography: [],
+  demography: [],
   dataset_begin: DateTime.now().year,
   dataset_end: DateTime.now().year,
-  data_source: [{ label: "BNM", value: "BNM" }],
+  data_source: [],
   methodology_en: "",
   methodology_ms: "",
   caveat_en: "",
@@ -66,22 +61,12 @@ const STEPBASICDUMMY = {
   fields: [],
   translations_en: {},
   translations_ms: {},
-  site_category: [
-    {
-      site: "datagovmy",
-      category_en: "Demography",
-      category_ms: "Demografi",
-      category_sort: 1,
-      subcategory_en: "Births",
-      subcategory_ms: "Kelahiran",
-      subcategory_sort: 2,
-    },
-  ],
+  site_category: [],
   dataviz: [],
 
   // Specific for render
   data: [],
-  selected_category: "demography_births",
+  selected_category: "",
 };
 
 const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
@@ -90,28 +75,11 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
   categoryMs,
 }) => {
   const { t } = useTranslation("gui-data-catalogue");
-  const router = useRouter();
   const [index, setIndex] = useState(0);
 
   const { data, setData, reset } = useData({
-    ...STEPBASICDUMMY,
+    ...DEFAULT_STATE,
   });
-  // const { data, setData, reset } = useData({
-  //   link_csv: "",
-  //   link_parquet: "",
-  //   link_preview: "",
-  //   title_en: "",
-  //   title_ms: "",
-  //   description_en: "",
-  //   description_ms: "",
-  //   file_name: "",
-  //   frequency: "",
-  //   demography: [],
-  //   geography: [],
-  //   dataset_begin: DateTime.now().year,
-  //   dataset_end: DateTime.now().year,
-  //   data_source: [],
-  // });
   const { data: validation, setData: setValidation } = useData(
     Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
@@ -194,8 +162,8 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
         status={publishStatus}
         onClickCreateAnotherPage={() => {
           resetPublish();
-          // TODO: Properly reset state
-          router.replace(routes.GUI_CATALOGUE);
+          setIndex(1);
+          reset(DEFAULT_STATE);
         }}
       />
     );
@@ -210,7 +178,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
         <Button
           onClick={() => {
             setIndex(1);
-            reset();
+            reset(DEFAULT_STATE);
           }}
           variant="default"
           className="w-fit"
