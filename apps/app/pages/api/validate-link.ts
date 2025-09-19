@@ -61,7 +61,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (field === "link_csv" && url.toLowerCase().includes(".csv")) {
       try {
         const previewResponse = await fetch(url, {
-          headers: { Range: "bytes=0-2048" }, // First 2KB
+          headers: { Range: "bytes=0-4096" }, // First 4KB
           signal: AbortSignal.timeout(10000),
         });
 
@@ -70,11 +70,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           const lines = text.split("\n").filter(line => line.trim());
 
           if (lines.length > 0) {
-            // Return first 6 lines including header
+            // Return first 10 lines including header
             return res.status(200).json({
               isValid: true,
               status: headResponse.status,
-              preview: lines.slice(0, 6),
+              preview: lines.slice(0, 10),
             });
           } else {
             return res.status(200).json({

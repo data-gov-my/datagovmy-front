@@ -15,8 +15,19 @@ import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue"
  * @overview Status: Live
  */
 
+export type CatalogueCategory = Record<
+  string,
+  Array<{
+    subcategory: string;
+    category_sort: number;
+    subcategory_sort: number;
+  }>
+>;
+
 interface GUIDCLandingProps {
   sources: string[];
+  categoryEn: CatalogueCategory;
+  categoryMs: CatalogueCategory;
 }
 
 const STEPBASICDUMMY = {
@@ -27,20 +38,20 @@ const STEPBASICDUMMY = {
   title_ms: "tajuk",
   description_en: "desc",
   description_ms: "kete",
-  title_sort: 10, // need to add in UI
+  title_sort: 1,
   exclude_openapi: false,
   manual_trigger: "",
-  data_as_of: "", // need to add in UI
+  data_as_of: "",
   file_name: "annual",
   frequency: "YEARLY",
-  geography: [{ label: "STATE", value: "STATE" }], // need to take value in final json
+  geography: [{ label: "STATE", value: "STATE" }],
   demography: [
     { label: "AGE", value: "AGE" },
     { label: "SEX", value: "SEX" },
-  ], // need to take value in final json
+  ],
   dataset_begin: DateTime.now().year,
   dataset_end: DateTime.now().year,
-  data_source: [{ label: "BNM", value: "BNM" }], // need to take value in final json
+  data_source: [{ label: "BNM", value: "BNM" }],
   methodology_en: "",
   methodology_ms: "",
   caveat_en: "",
@@ -51,7 +62,8 @@ const STEPBASICDUMMY = {
   last_updated: DateTime.now().toSQL(),
   next_update: "-",
   fields: [],
-  translations: {},
+  translations_en: {},
+  translations_ms: {},
   site_category: [
     {
       site: "datagovmy",
@@ -62,15 +74,19 @@ const STEPBASICDUMMY = {
       subcategory_ms: "Kelahiran",
       subcategory_sort: 2,
     },
-  ], // need to add in UI
-  dataviz: [], // generate in final json
+  ],
+  dataviz: [],
 
   // Specific for render
   data: [],
-  data_as_of_type: "",
+  selected_category: "",
 };
 
-const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
+const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
+  sources,
+  categoryEn,
+  categoryMs,
+}) => {
   const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
 
@@ -129,6 +145,8 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
           setData={setData}
           validation={validation}
           setValidation={setValidation}
+          categoryEn={categoryEn}
+          categoryMs={categoryMs}
         />
       ),
     },
@@ -182,6 +200,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   return (
     <GUIDCLayout
       currentIndex={index}
+      setIndex={setIndex}
       steps={STEPS}
       reset={
         <Button

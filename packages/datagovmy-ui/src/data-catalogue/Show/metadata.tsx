@@ -126,14 +126,19 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative w-full">
+                <div
+                  onClick={() => setEdit && setEdit("edit_description2", true)}
+                  className={clx(
+                    "group relative",
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                  )}
+                >
                   <p className={clx("text-dim leading-relaxed", isGUI && "min-h-[72px]")}>
                     {interpolate(metadata.description)}
                   </p>
                   {isGUI && (
                     <Button
                       variant="default"
-                      onClick={() => isGUI && setEdit("edit_description2", true)}
                       className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                       icon={<PencilIcon className="size-5" />}
                     />
@@ -310,14 +315,19 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative">
+                <div
+                  onClick={() => setEdit && setEdit("edit_last_updated", true)}
+                  className={clx(
+                    "group relative",
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                  )}
+                >
                   <p className="text-dim whitespace-pre-line" data-testid="catalogue-last-updated">
                     {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
                   </p>
                   {isGUI && (
                     <Button
                       variant="default"
-                      onClick={() => isGUI && setEdit("edit_last_updated", true)}
                       className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                       icon={<PencilIcon className="size-5" />}
                     />
@@ -379,14 +389,19 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative">
+                <div
+                  onClick={() => setEdit && setEdit("edit_next_update", true)}
+                  className={clx(
+                    "group relative",
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                  )}
+                >
                   <p className="text-dim" data-testid="catalogue-next-update">
                     {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
                   </p>
                   {isGUI && (
                     <Button
                       variant="default"
-                      onClick={() => isGUI && setEdit("edit_next_update", true)}
                       className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                       icon={<PencilIcon className="size-5" />}
                     />

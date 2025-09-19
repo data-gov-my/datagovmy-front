@@ -56,7 +56,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
       case "TABLE":
         return UNIVERSAL_TABLE_SCHEMA(
           columns,
-          data.translations,
+          toggleIndex === 0 ? data.translations_en : data.translations_ms,
           config.freeze_columns,
           (item, key) => item[key]
         );
@@ -81,6 +81,39 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     };
 
     setData("fields", updatedResource);
+  };
+
+  const generateOutputJSON = () => {
+    // Fields to exclude from the output
+    const excludeFields = ["file_name", "selected_category", "link_csv_preview", "data"];
+
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(([key]) => !excludeFields.includes(key))
+    );
+
+    return JSON.stringify(
+      {
+        ...filteredData,
+        geography: data.geography.map((geo: OptionType) => geo.value),
+        demography: data.demography.map((demo: OptionType) => demo.value),
+        data_source: data.data_source.map((source: OptionType) => source.value),
+        dataviz: [
+          {
+            dataviz_id: "table",
+            title_en: "Table",
+            title_ms: "Jadual",
+            chart_type: "TABLE",
+            config: {
+              precision: 0,
+              filter_columns: [],
+              freeze_columns: [],
+            },
+          },
+        ],
+      },
+      null,
+      4
+    );
   };
 
   return (
@@ -112,7 +145,14 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
               Draft with AI
               <SparklesIcon className="text-primary size-4" />
             </Button>
-            <Button variant="primary">
+            <Button
+              variant="primary"
+              onClick={() => {
+                const json = generateOutputJSON();
+
+                console.log(json);
+              }}
+            >
               Publish
               <ArrowRightIcon className="size-4 text-white" />
             </Button>
@@ -163,7 +203,10 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative w-full">
+                <div
+                  onClick={() => setEdit("edit_title", true)}
+                  className="hover:border-b-primary group relative w-full hover:rounded-sm hover:border"
+                >
                   <h4 className="w-full select-none">
                     {data.title_en && data.title_ms
                       ? toggleIndex === 0
@@ -176,7 +219,6 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
 
                   <Button
                     variant="default"
-                    onClick={() => setEdit("edit_title", true)}
                     className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                     icon={<PencilIcon className="size-5" />}
                   />
@@ -233,7 +275,10 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative w-full">
+                <div
+                  onClick={() => setEdit("edit_description", true)}
+                  className="hover:border-b-primary group relative w-full hover:rounded-sm hover:border"
+                >
                   <p
                     className="text-dim w-full select-none whitespace-pre-line text-base"
                     data-testid="catalogue-description"
@@ -250,7 +295,6 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   </p>
                   <Button
                     variant="default"
-                    onClick={() => setEdit("edit_description", true)}
                     className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                     icon={<PencilIcon className="size-5" />}
                   />

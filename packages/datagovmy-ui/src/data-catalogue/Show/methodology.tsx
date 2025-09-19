@@ -54,7 +54,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
         description={
           <div
             className={clx(
-              isGUI && "min-h-[20px] min-w-[500px] select-none",
+              isGUI && "min-h-[20px] min-w-[500px] select-none w-full",
               edit?.edit_methodology && "flex w-full flex-col items-end gap-2"
             )}
           >
@@ -106,14 +106,19 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="group relative">
+              <div
+                onClick={() => setEdit && setEdit("edit_methodology", true)}
+                className={clx(
+                  "group relative",
+                  isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                )}
+              >
                 <Markdown className="markdown" data-testid="catalogue-methodology">
                   {explanation.methodology || "[Click on the button to add methodology]"}
                 </Markdown>
                 {isGUI && (
                   <Button
                     variant="default"
-                    onClick={() => setEdit && setEdit("edit_methodology", true)}
                     className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                     icon={<PencilIcon className="size-5" />}
                   />
@@ -138,7 +143,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
           description={
             <div
               className={clx(
-                isGUI && "min-h-[20px] min-w-[500px] select-none",
+                isGUI && "min-h-[20px] min-w-[500px] select-none w-full",
                 edit?.edit_caveat && "flex w-full flex-col items-end gap-2"
               )}
             >
@@ -190,14 +195,19 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative">
+                <div
+                  onClick={() => setEdit && setEdit("edit_caveat", true)}
+                  className={clx(
+                    "group relative",
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                  )}
+                >
                   <Markdown className="markdown" data-testid="catalogue-caveat">
                     {explanation.caveat || "[Click on the button to add caveat]"}
                   </Markdown>
                   {isGUI && (
                     <Button
                       variant="default"
-                      onClick={() => isGUI && setEdit("edit_caveat", true)}
                       className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                       icon={<PencilIcon className="size-5" />}
                     />
@@ -227,7 +237,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
           description={
             <div
               className={clx(
-                isGUI && "min-h-[20px] min-w-[500px] select-none",
+                isGUI && "min-h-[20px] min-w-[500px] select-none w-full",
                 edit?.edit_publication && "flex w-full flex-col items-end gap-2"
               )}
             >
@@ -279,14 +289,19 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                   </div>
                 </div>
               ) : (
-                <div className="group relative">
+                <div
+                  onClick={() => setEdit && setEdit("edit_publication", true)}
+                  className={clx(
+                    "group relative",
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                  )}
+                >
                   <Markdown className="markdown" data-testid="catalogue-publication">
                     {explanation.publication! || "[Click on the button to add publication]"}
                   </Markdown>
                   {isGUI && (
                     <Button
                       variant="default"
-                      onClick={() => isGUI && setEdit("edit_publication", true)}
                       className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
                       icon={<PencilIcon className="size-5" />}
                     />

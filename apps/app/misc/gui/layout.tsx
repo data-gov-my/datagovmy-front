@@ -1,6 +1,14 @@
 import { useTranslation } from "datagovmy-ui/hooks";
 import { clx } from "datagovmy-ui/helpers";
-import { ForwardRefExoticComponent, Fragment, FunctionComponent, ReactNode, SVGProps } from "react";
+import {
+  Dispatch,
+  ForwardRefExoticComponent,
+  Fragment,
+  FunctionComponent,
+  ReactNode,
+  SetStateAction,
+  SVGProps,
+} from "react";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 /**
@@ -11,6 +19,7 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 interface GUIDCLayoutProps {
   children: ReactNode;
   currentIndex: number;
+  setIndex: Dispatch<SetStateAction<number>>;
   steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; name: string; desc: string }[];
   reset: ReactNode;
 }
@@ -18,6 +27,7 @@ interface GUIDCLayoutProps {
 const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
   children,
   currentIndex,
+  setIndex,
   steps,
   reset,
 }) => {
@@ -26,7 +36,7 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
   return (
     <div className="flex h-full w-full flex-1 justify-center">
       <div className="divide-outline md:px-4.5 dark:divide-washed-dark flex max-w-screen-2xl flex-1 divide-x px-3 max-lg:gap-6 max-lg:py-6 lg:px-6">
-        <div className="flex w-full max-w-[284px] flex-col items-center gap-3 lg:w-2/5 lg:gap-8 lg:py-12 lg:pr-6 xl:w-1/3">
+        <div className="flex w-full max-w-[284px] flex-col items-center gap-3 lg:w-2/5 lg:gap-8 lg:py-6 lg:pr-6 xl:w-1/3">
           <h3 className="font-body lg:font-header text-balance font-bold max-lg:text-base">
             {t("create_new")}
           </h3>
@@ -59,8 +69,10 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
                   i === currentIndex
                     ? "text-primary dark:text-primary-dark"
                     : "text-black dark:text-white",
-                  i > currentIndex && "opacity-40"
+                  i > currentIndex && "opacity-40",
+                  i <= currentIndex && "hover:cursor-pointer"
                 )}
+                onClick={() => i <= currentIndex && setIndex(i)}
               >
                 <div className="flex flex-col items-center gap-2">
                   <div className="border-outline dark:border-washed-dark size-12 rounded-lg border p-2.5">

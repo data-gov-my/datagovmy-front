@@ -1,5 +1,13 @@
 import { Banner, Button, Dropdown, Input, Label, Spinner, Textarea } from "datagovmy-ui/components";
-import { Dispatch, FunctionComponent, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { demographies, frequencies, geographies } from "datagovmy-ui/options";
 import {
@@ -10,6 +18,9 @@ import {
 } from "@heroicons/react/20/solid";
 import { clx } from "datagovmy-ui/helpers";
 import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { DateTime } from "luxon";
+import { CatalogueCategory } from "./landing";
+import { OptionType } from "datagovmy-ui/types";
 
 interface StepBasicProps {
   setIndex: Dispatch<SetStateAction<number>>;
@@ -18,6 +29,8 @@ interface StepBasicProps {
   setData: (key: string, value: any) => void;
   validation: Record<string, any>;
   setValidation: (key: string, value: any) => void;
+  categoryEn: CatalogueCategory;
+  categoryMs: CatalogueCategory;
 }
 
 const StepBasic: FunctionComponent<StepBasicProps> = ({
@@ -27,8 +40,10 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
   setData,
   validation,
   setValidation,
+  categoryEn,
+  categoryMs,
 }) => {
-  const { t } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
+  const { t, i18n } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
   const [validatedBanner, setValidatedBanner] = useState(false);
 
   const bannerRef = useRef<HTMLDivElement>(null);
@@ -41,6 +56,47 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
     label: t(`agencies:${source.toLowerCase()}.full`),
     value: source,
   }));
+
+  const categoryOptions = useMemo(() => {
+    const bilingualOptions: Array<
+      OptionType & {
+        category_en: string;
+        category_ms: string;
+        subcategory_en: string;
+        subcategory_ms: string;
+        category_sort: number;
+        subcategory_sort: number;
+      }
+    > = [];
+
+    Object.entries(categoryEn).forEach(([catEn, subcatsEn], catIndex) => {
+      const catMs = Object.keys(categoryMs)[catIndex];
+      const subcatsMs = categoryMs[catMs];
+
+      subcatsEn.forEach((subEn, subIndex) => {
+        const subMs = subcatsMs[subIndex];
+        const value = `${catEn.replace(/\s+/g, "_").toLowerCase()}_${subEn.subcategory
+          .replace(/\s+/g, "_")
+          .toLowerCase()}`;
+
+        bilingualOptions.push({
+          label:
+            i18n.language === "ms-MY"
+              ? `${catMs} - ${subMs.subcategory}`
+              : `${catEn} - ${subEn.subcategory}`,
+          value,
+          category_en: catEn,
+          category_ms: catMs,
+          subcategory_en: subEn.subcategory,
+          subcategory_ms: subMs.subcategory,
+          category_sort: subEn.category_sort,
+          subcategory_sort: subEn.subcategory_sort,
+        });
+      });
+    });
+
+    return bilingualOptions;
+  }, [i18n.language]);
 
   const getValidationMessage = (status?: number, errorMsg?: string) => {
     switch (status) {
@@ -134,9 +190,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
         key === "publication_ms" ||
         key === "related_datasets" ||
         key === "title_sort" ||
-        key === "manual_trigger" ||
-        key === "data_as_of" ||
-        key === "data_as_of_type"
+        key === "manual_trigger"
       ) {
         return [key, true];
       }
@@ -194,7 +248,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
   }, [validatedBanner]);
 
   return (
-    <form className="md:px-4.5 flex h-full w-full flex-col px-3 lg:min-h-0 lg:gap-8 lg:py-12 lg:pl-6 lg:pr-0">
+    <form className="md:px-4.5 flex h-full w-full flex-col px-3 lg:min-h-0 lg:gap-8 lg:py-6 lg:pl-6 lg:pr-0">
       <div className="flex w-full flex-1 flex-col gap-4">
         {validatedBanner && (
           <div ref={bannerRef} className="relative">
@@ -523,34 +577,114 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label label={t("forms.dataset_date")} name={t("forms.dataset_date")} required={true} />
-            <div className="flex flex-col gap-3 lg:flex-row lg:gap-2">
-              <Input
-                required
-                type="number"
-                className="w-full rounded-lg py-1.5"
-                name="dataset_begin"
-                placeholder={t("forms.dataset_begin")}
-                value={data.dataset_begin}
-                onChange={e => {
-                  setData("dataset_begin", e);
-                  setValidation("dataset_begin", false);
-                }}
-                validation={validation.dataset_begin}
+          <div className="flex gap-2 lg:grid lg:grid-cols-3">
+            <div className="space-y-2 lg:col-span-2">
+              <Label
+                label={t("forms.dataset_date")}
+                name={t("forms.dataset_date")}
+                required={true}
               />
+              <div className="flex flex-col gap-3 lg:col-span-1 lg:flex-row lg:gap-2">
+                <Input
+                  required
+                  type="number"
+                  className="w-full rounded-lg py-1.5"
+                  name="dataset_begin"
+                  placeholder={t("forms.dataset_begin")}
+                  value={data.dataset_begin}
+                  onChange={e => {
+                    setData("dataset_begin", e);
+                    setValidation("dataset_begin", false);
+                  }}
+                  validation={validation.dataset_begin}
+                />
+                <Input
+                  required
+                  type="number"
+                  className="w-full rounded-lg py-1.5"
+                  name="dataset_end"
+                  placeholder={t("forms.dataset_end")}
+                  value={data.dataset_end}
+                  onChange={e => {
+                    setData("dataset_end", e);
+                    setValidation("dataset_end", false);
+                  }}
+                  validation={validation.dataset_end}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label label={t("forms.data_as_of")} name={t("forms.data_as_of")} required={true} />
               <Input
+                required
+                autoFocus
+                type={"datetime-local"}
+                className="w-full rounded-lg py-1.5"
+                name="data_as_of"
+                value={DateTime.fromSQL(data.data_as_of).toFormat("yyyy-MM-dd'T'HH:mm")}
+                onChange={e => {
+                  setData("data_as_of", DateTime.fromISO(e).toSQL());
+                }}
+                validation={validation.data_as_of}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 lg:grid lg:grid-cols-3 lg:gap-2">
+            <div className="col-span-2 space-y-2">
+              <Label label={t("forms.category_sorting")} />
+              <Dropdown
+                anchor="left"
+                width="w-full"
+                className={
+                  validation.selected_category ? "border-danger dark:border-danger border-2" : ""
+                }
+                options={categoryOptions}
+                selected={
+                  categoryOptions.find(e => e.value === data.selected_category) ?? undefined
+                }
+                onChange={e => {
+                  setData("selected_category", e.value);
+                  setValidation("selected_category", false);
+
+                  const selectedOption = e as typeof e & {
+                    category_en: string;
+                    category_ms: string;
+                    subcategory_en: string;
+                    subcategory_ms: string;
+                    category_sort: number;
+                    subcategory_sort: number;
+                  };
+
+                  setData("site_category", [
+                    {
+                      site: "datagovmy",
+                      category_en: selectedOption.category_en,
+                      category_ms: selectedOption.category_ms,
+                      category_sort: selectedOption.category_sort,
+                      subcategory_en: selectedOption.subcategory_en,
+                      subcategory_ms: selectedOption.subcategory_ms,
+                      subcategory_sort: selectedOption.subcategory_sort,
+                    },
+                  ]);
+                }}
+              />
+              <p className="text-danger text-xs">{validation.selected_category}</p>
+            </div>
+            <div className="col-span-1">
+              <Input
+                label={t("forms.title_sort")}
                 required
                 type="number"
                 className="w-full rounded-lg py-1.5"
-                name="dataset_end"
-                placeholder={t("forms.dataset_end")}
-                value={data.dataset_end}
+                name="title_sort"
+                placeholder={t("forms.title_sort")}
+                value={data.title_sort}
                 onChange={e => {
-                  setData("dataset_end", e);
-                  setValidation("dataset_end", false);
+                  setData("title_sort", e);
+                  setValidation("title_sort", false);
                 }}
-                validation={validation.dataset_end}
+                validation={validation.title_sort}
               />
             </div>
           </div>
