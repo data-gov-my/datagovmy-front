@@ -24,9 +24,9 @@ const LogoutIcon: FunctionComponent = () => {
     >
       <path
         d="M11.5 5.40001L14.3 8.00001M14.3 8.00001L11.5 10.6M14.3 8.00001H6.69995M9.49995 2.20001H4.29995C3.4163 2.20001 2.69995 2.91636 2.69995 3.80001V12.2C2.69995 13.0837 3.4163 13.8 4.29995 13.8H9.49995"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -54,8 +54,8 @@ const StepAuth: FunctionComponent<StepAuthProps> = ({ onClickContinue }) => {
     return (
       <div className="flex w-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
-          <h4 className="text-xl font-bold">{t("step_auth.logged_in.heading")}</h4>
-          <p className="text-dim font- text-sm">{t("step_auth.logged_in.subheading")}</p>
+          <h4 className="text-xl font-bold">{t("step_auth.logged_in")}</h4>
+          <p className="text-dim font- text-sm">{t("step_auth.currently_logged_in")}</p>
           {session.data.user && (
             <div className="my-4 flex flex-col items-center gap-2">
               <div className="aspect-square w-16 overflow-hidden rounded-full border shadow">
@@ -89,8 +89,8 @@ const StepAuth: FunctionComponent<StepAuthProps> = ({ onClickContinue }) => {
   return (
     <div className="flex w-full items-center justify-center">
       <div className="flex flex-col items-center gap-2">
-        <h4 className="text-xl font-bold">{t("step_auth.login.heading")}</h4>
-        <p className="text-dim font- text-sm">{t("step_auth.login.subheading")}</p>
+        <h4 className="text-xl font-bold">{t("step_auth.connect_to_continue")}</h4>
+        <p className="text-dim font- text-sm">{t("step_auth.access_is_limited")}</p>
         <Button
           onClick={() => signIn("github")}
           className="bg-background-dark mt-4 h-[42px] text-white"

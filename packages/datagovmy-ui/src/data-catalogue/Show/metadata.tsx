@@ -228,7 +228,8 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                       variant={
                         validation &&
                         toggleIndex !== undefined &&
-                        !validation.fields.every((f: any) =>
+                        validation.fields &&
+                        !validation.fields?.every((f: any) =>
                           toggleIndex === 0
                             ? !f["title_en"] && !f["description_en"]
                             : !f["title_ms"] && !f["description_ms"]
@@ -240,7 +241,8 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                         "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
                         validation &&
                           toggleIndex !== undefined &&
-                          !validation.fields.every((f: any) =>
+                          validation.fields &&
+                          !validation.fields?.every((f: any) =>
                             toggleIndex === 0
                               ? !f["title_en"] && !f["description_en"]
                               : !f["title_ms"] && !f["description_ms"]
@@ -250,7 +252,8 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                       icon={
                         validation &&
                         toggleIndex !== undefined &&
-                        !validation.fields.every((f: any) =>
+                        validation.fields &&
+                        !validation.fields?.every((f: any) =>
                           toggleIndex === 0
                             ? !f["title_en"] && !f["description_en"]
                             : !f["title_ms"] && !f["description_ms"]

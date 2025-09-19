@@ -41,7 +41,7 @@ const STEPBASICDUMMY = {
   title_sort: 1,
   exclude_openapi: false,
   manual_trigger: "",
-  data_as_of: "",
+  data_as_of: DateTime.now().toSQL(),
   file_name: "annual",
   frequency: "YEARLY",
   geography: [{ label: "STATE", value: "STATE" }],
@@ -79,7 +79,7 @@ const STEPBASICDUMMY = {
 
   // Specific for render
   data: [],
-  selected_category: "",
+  selected_category: "demography_births",
 };
 
 const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
