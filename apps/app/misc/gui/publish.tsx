@@ -63,7 +63,7 @@ export function PublishDataCatalogueModal({
   onClickCreateAnotherPage,
   onClickRetry,
 }: PublishDataCatalogueModalProps) {
-  const { t } = useTranslation(["gui-opendosm-pub", "common"]);
+  const { t } = useTranslation("gui-data-catalogue");
 
   const logout = () => {
     signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}${routes.GUI_CATALOGUE}` });
