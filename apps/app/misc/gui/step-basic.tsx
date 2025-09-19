@@ -720,6 +720,10 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
             const isValid = (await validateInput()) as { ok: boolean; message: string };
             if (isValid.ok) {
               setIndex(2);
+              scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
             }
           } catch (error) {
             console.error("Validation failed:", error);

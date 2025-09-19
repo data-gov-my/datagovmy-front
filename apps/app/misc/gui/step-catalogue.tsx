@@ -1,8 +1,8 @@
 import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, CheckIcon } from "@heroicons/react/20/solid";
-import { PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { Button, Container, Input, Section, Textarea } from "datagovmy-ui/components";
 import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
-import { CatalogueMethodology, CatalogueMetadata, DCField } from "datagovmy-ui/data-catalogue";
+import { CatalogueMethodology, CatalogueMetadata } from "datagovmy-ui/data-catalogue";
 import { clx, interpolate } from "datagovmy-ui/helpers";
 import { useData, useTranslation } from "datagovmy-ui/hooks";
 import { languages } from "datagovmy-ui/options";
@@ -83,6 +83,86 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     setData("fields", updatedResource);
   };
 
+  const validateInput = async () => {
+    const validationPromises = Object.entries(data).map(async ([key, value]) => {
+      // skip these as it has been validated in prev step
+      if (
+        key === "link_csv" ||
+        key === "link_parquet" ||
+        key === "link_preview" ||
+        key === "title_sort" ||
+        key === "data_as_of" ||
+        key === "file_name" ||
+        key === "frequency" ||
+        key === "geography" ||
+        key === "demography" ||
+        key === "dataset_begin" ||
+        key === "dataset_end" ||
+        key === "data_source" ||
+        key === "related_datasets" ||
+        key === "translations_en" ||
+        key === "translations_ms" ||
+        key === "site_category" ||
+        key === "selected_category" ||
+        key === "manual_trigger"
+      ) {
+        return [key, true];
+      }
+
+      if (typeof value === "string" || typeof value === "number") {
+        if (value) {
+          setValidation(key, false);
+          return [key, true];
+        } else {
+          setValidation(key, t("validations.required"));
+          return [key, false];
+        }
+      }
+
+      if (Array.isArray(value) && key === "fields") {
+        const validatedFields = data.fields.map((item: any, index: number) => {
+          return Object.fromEntries(
+            Object.entries(item).map(([k, v]) => {
+              if (typeof v === "string") {
+                if (v) {
+                  return [k, false];
+                } else {
+                  return [k, "Required"];
+                }
+              }
+              return [k, false];
+            })
+          );
+        });
+
+        setValidation(key, validatedFields);
+        return [
+          key,
+          validatedFields.length > 0
+            ? validatedFields
+                .map((item: any) => Object.values(item).filter(i => Boolean(i) === true))
+                .every((arr: any) => arr.length === 0)
+            : false,
+        ];
+      }
+      return [key, true]; // Default case
+    });
+
+    const updatedValidation = await Promise.all(validationPromises);
+
+    if (updatedValidation.every(([key, validated]) => validated === true)) {
+      return {
+        ok: true,
+        message: "All fields are validated",
+      };
+    } else {
+      return {
+        ok: false,
+        message: "Some fields need to be validated",
+      };
+    }
+  };
+
   const generateOutputJSON = () => {
     // Fields to exclude from the output
     const excludeFields = ["file_name", "selected_category", "link_csv_preview", "data"];
@@ -116,6 +196,56 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     );
   };
 
+  console.log(validation);
+
+  /**
+   * Counts the number of validation errors for a specific language.
+   * Counts validations where:
+   * - Key includes the specified language, or
+   * - Key does not contain "en" or "ms" (language-agnostic validations)
+   * Handles arrays by counting invalid entries within them.
+   * @param lang - The language to filter by ("ms" or "en")
+   * @returns The count of validation errors
+   */
+  const getValidationCount = (lang: "ms" | "en"): number => {
+    if (!validation || typeof validation !== "object") return 0;
+
+    let count = 0;
+
+    Object.entries(validation).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        // Handle array validations (e.g., fields)
+        value.forEach(item => {
+          if (item && typeof item === "object") {
+            Object.entries(item).forEach(([k, v]) => {
+              if (v && v !== "success") {
+                if (
+                  (lang === "en" && k.includes("en")) ||
+                  (lang === "ms" && k.includes("ms")) ||
+                  (!k.includes("en") && !k.includes("ms"))
+                ) {
+                  count++;
+                }
+              }
+            });
+          }
+        });
+      } else {
+        // Handle non-array validations
+        if (value && value !== "success") {
+          if (
+            (lang === "en" && key.includes("en")) ||
+            (lang === "ms" && key.includes("ms")) ||
+            (!key.includes("en") && !key.includes("ms"))
+          ) {
+            count++;
+          }
+        }
+      }
+    });
+
+    return count;
+  };
   return (
     <>
       <Container className="divide-y-0 lg:px-0">
@@ -126,7 +256,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                 <li
                   key={option.value}
                   className={clx(
-                    "flex cursor-pointer select-none self-center whitespace-nowrap rounded-md px-2.5 py-1 text-sm outline-none transition-colors",
+                    "flex cursor-pointer select-none gap-2 self-center whitespace-nowrap rounded-md px-2.5 py-1 text-sm outline-none transition-colors",
                     toggleIndex === index
                       ? "dark:bg-washed-dark border-outline border bg-white font-medium text-black dark:text-white"
                       : "text-dim bg-transparent hover:text-black dark:hover:text-white"
@@ -134,6 +264,9 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   onClick={() => setToggleIndex(index)}
                 >
                   {option.label}
+                  <span className="text-danger">
+                    ({getValidationCount(option.value === "en-GB" ? "en" : "ms")})
+                  </span>
                 </li>
               ))}
             </ul>
@@ -147,10 +280,18 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
             </Button>
             <Button
               variant="primary"
-              onClick={() => {
-                const json = generateOutputJSON();
+              onClick={async () => {
+                try {
+                  const isValid = (await validateInput()) as { ok: boolean; message: string };
 
-                console.log(json);
+                  console.log("isvalid", isValid);
+
+                  if (isValid.ok) {
+                    const json = generateOutputJSON();
+
+                    console.log(json);
+                  }
+                } catch (error) {}
               }}
             >
               Publish
@@ -166,7 +307,12 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   <Input
                     required
                     autoFocus
-                    className="w-full py-1.5"
+                    className={clx(
+                      "w-full py-1.5",
+                      (toggleIndex === 0 ? validation.title_en : validation.title_ms)
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="title"
                     placeholder={
                       toggleIndex === 0
@@ -218,9 +364,23 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   </h4>
 
                   <Button
-                    variant="default"
-                    className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                    icon={<PencilIcon className="size-5" />}
+                    variant={
+                      (toggleIndex === 0 ? validation.title_en : validation.title_ms)
+                        ? "ghost"
+                        : "default"
+                    }
+                    className={clx(
+                      "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                      (toggleIndex === 0 ? validation.title_en : validation.title_ms) &&
+                        "opacity-100"
+                    )}
+                    icon={
+                      (toggleIndex === 0 ? validation.title_en : validation.title_ms) ? (
+                        <ExclamationTriangleIcon className="text-danger size-5" />
+                      ) : (
+                        <PencilIcon className="size-5" />
+                      )
+                    }
                   />
                 </div>
               )

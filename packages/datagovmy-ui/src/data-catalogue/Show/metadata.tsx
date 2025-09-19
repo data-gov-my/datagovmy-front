@@ -203,6 +203,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                           <div className="col-span-3">
                             <Input
                               className="w-full"
+                              required
                               label={t("meta_variable_name")}
                               value={field.name}
                               readOnly
@@ -211,13 +212,18 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                           <div className="col-span-3">
                             <Input
                               label={t("meta_variable")}
+                              required
                               className="w-full"
                               value={field.title}
                               onChange={e => isGUI && setMetadata("fields.title", e, index)}
                             />
                           </div>
                           <div className="col-span-6 space-y-2">
-                            <Label label={t("meta_definition")} name={t("meta_definition")} />
+                            <Label
+                              label={t("meta_definition")}
+                              name={t("meta_definition")}
+                              required={true}
+                            />
                             <Textarea
                               className="w-full"
                               rows={3}
