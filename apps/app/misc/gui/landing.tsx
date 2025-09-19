@@ -9,6 +9,8 @@ import StepBasic from "./step-basic";
 import { DateTime } from "luxon";
 import StepCatalogue from "./step-catalogue";
 import { CatalogueProvider, DatasetType } from "datagovmy-ui/contexts/catalogue";
+import { PublishDataCatalogueModal, usePublishDataCatalogue } from "./publish";
+import { useRouter } from "next/router";
 
 /**
  * GUI Data Catalogue Landing Page
@@ -88,6 +90,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
   categoryMs,
 }) => {
   const { t } = useTranslation("gui-data-catalogue");
+  const router = useRouter();
   const [index, setIndex] = useState(0);
 
   const { data, setData, reset } = useData({
@@ -112,6 +115,12 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
   const { data: validation, setData: setValidation } = useData(
     Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
+
+  const {
+    publishDataCatalogue,
+    status: publishStatus,
+    reset: resetPublish,
+  } = usePublishDataCatalogue();
 
   const dataset: DatasetType = useMemo(() => {
     return {
@@ -163,37 +172,32 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
           }}
         >
           <StepCatalogue
-            setIndex={setIndex}
             data={data}
             setData={setData}
             validation={validation}
             setValidation={setValidation}
+            onPublish={json => {
+              publishDataCatalogue({
+                fileName: `${data["file_name"]}.json`,
+                data: window.btoa(json),
+              });
+            }}
           />
         </CatalogueProvider>
       ),
     },
   ];
 
-  if (index === 3) {
+  if (publishStatus !== null) {
     return (
-      <div className="p-4.5 flex min-h-[90dvh] flex-col items-center justify-center gap-6 sm:gap-8">
-        <div className="flex flex-col items-center gap-y-6">
-          <CheckCircleIcon className="size-[72px] text-green-600" />
-          <div className="space-y-3 text-center sm:w-[450px]">
-            <h2 className="text-black dark:text-white">{t("success")}</h2>
-            <p className="text-dim text-sm">
-              {t("success_desc")}{" "}
-              <span className="text-primary dark:text-primary-dark">notif@opendosm.my</span>.
-            </p>
-          </div>
-        </div>
-        <At
-          className="btn-primary shadow-button w-full justify-center sm:w-fit"
-          href={routes.GUI_CATALOGUE}
-        >
-          {t("return")}
-        </At>
-      </div>
+      <PublishDataCatalogueModal
+        status={publishStatus}
+        onClickCreateAnotherPage={() => {
+          resetPublish();
+          // TODO: Properly reset state
+          router.replace(routes.GUI_CATALOGUE);
+        }}
+      />
     );
   }
 

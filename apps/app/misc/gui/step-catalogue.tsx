@@ -14,19 +14,19 @@ import { Dispatch, FunctionComponent, SetStateAction, useContext, useState } fro
 const Table = dynamic(() => import("datagovmy-ui/charts/table"), { ssr: false });
 
 interface StepCatalogueProps {
-  setIndex: Dispatch<SetStateAction<number>>;
   data: Record<string, any>;
   setData: (key: string, value: any) => void;
   validation: Record<string, any>;
   setValidation: (key: string, value: any) => void;
+  onPublish: (json: string) => void;
 }
 
 const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
-  setIndex,
   data,
   setData,
   validation,
   setValidation,
+  onPublish,
 }) => {
   const { t } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
   const [toggleIndex, setToggleIndex] = useState(0);
@@ -287,7 +287,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   if (isValid.ok) {
                     const json = generateOutputJSON();
 
-                    console.log(json);
+                    onPublish(json);
                   }
                 } catch (error) {}
               }}
