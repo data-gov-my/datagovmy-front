@@ -2,6 +2,7 @@ import { Spinner } from "datagovmy-ui/components";
 import { Dispatch, FunctionComponent, SetStateAction, useEffect, useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "datagovmy-ui/hooks";
+import { useSession } from "next-auth/react";
 
 interface StepAuthProps {
   setIndex: Dispatch<SetStateAction<number>>;
@@ -10,18 +11,9 @@ interface StepAuthProps {
 const StepAuth: FunctionComponent<StepAuthProps> = ({ setIndex }) => {
   const { t } = useTranslation(["gui-data-catalogue", "common"]);
 
-  const [authenticated, setAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Gimmick to emulate auth process
-    const timer = setTimeout(() => {
-      setAuthenticated(true);
-      setLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const session = useSession();
+  const authenticated = session.status === "authenticated";
+  const loading = session.status === "loading";
 
   useEffect(() => {
     if (authenticated) {

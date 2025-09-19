@@ -9,6 +9,7 @@ import { SHORT_LANG } from "datagovmy-ui/constants";
 import Layout from "@components/Layout";
 import { clx } from "datagovmy-ui/helpers";
 import { body } from "datagovmy-ui/configs/font";
+import { SessionProvider } from "next-auth/react";
 
 const GUICatalogue: Page = ({
   sources,
@@ -18,10 +19,10 @@ const GUICatalogue: Page = ({
   const { t } = useTranslation(["gui-data-catalogue"]);
 
   return (
-    <>
+    <SessionProvider>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <GUIDataCatalogueLanding sources={sources} categoryEn={categoryEn} categoryMs={categoryMs} />
-    </>
+    </SessionProvider>
   );
 };
 
