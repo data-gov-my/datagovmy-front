@@ -2,6 +2,8 @@ import { metaRepo } from "@lib/data-catalogue";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 import { OAuthApp as GithubOauthApp } from "@octokit/oauth-app";
+import { AUTH_ERROR, AUTH_ERROR_KEY } from "datagovmy-ui/constants";
+import { routes } from "@lib/routes";
 
 const ghApp = new GithubOauthApp({
   clientType: "github-app",
@@ -24,15 +26,22 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 60 * 60, // 1 hour
   },
+  pages: {
+    signIn: routes.GUI_CATALOGUE,
+    error: routes.GUI_CATALOGUE,
+  },
   callbacks: {
     signIn: async ({ account }) => {
       if (account?.provider === "github") {
         if (!account.access_token) {
           throw Error("access_token is missing from github sign-in");
         }
-        return metaRepo.isCollaborator(account.access_token);
+        if (!metaRepo.isCollaborator(account.access_token)) {
+          return `${routes.GUI_CATALOGUE}?${AUTH_ERROR_KEY}=${AUTH_ERROR.UNAUTHORIZED}`;
+        }
+        return true;
       }
-      return false;
+      return `${routes.GUI_CATALOGUE}?${AUTH_ERROR_KEY}=${AUTH_ERROR.UNKNOWN}`;
     },
     jwt: async ({ account, token, trigger }) => {
       if (trigger === "signIn" && account?.provider === "github") {
