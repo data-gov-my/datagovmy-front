@@ -4,7 +4,7 @@ import { useTranslation } from "../../hooks";
 import CatalogueCard from "../Card";
 import { clx } from "../../lib/helpers";
 import { DCVariable } from "../../../types/data-catalogue";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { ArrowDownIcon, ArrowUpIcon, CheckIcon } from "@heroicons/react/20/solid";
 
 type MethodologyGUI =
@@ -14,6 +14,8 @@ type MethodologyGUI =
       setMethodology: (key: string, value: string) => void;
       edit: any;
       setEdit: (key: string, value: boolean) => void;
+      validation?: any;
+      toggleIndex?: number;
     }
   | MethodologyDefault;
 
@@ -27,6 +29,8 @@ type MethodologyDefault = {
 
 type MethodologyProps = MethodologyGUI & {
   explanation: Pick<DCVariable, "methodology" | "caveat" | "publication" | "related_datasets">;
+  validation?: any;
+  toggleIndex?: number;
 };
 
 const DCMethodology: FunctionComponent<MethodologyProps> = ({
@@ -36,6 +40,8 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
   setMethodology,
   edit,
   setEdit,
+  validation,
+  toggleIndex,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
 
@@ -118,9 +124,33 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 </Markdown>
                 {isGUI && (
                   <Button
-                    variant="default"
-                    className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                    icon={<PencilIcon className="size-5" />}
+                    variant={
+                      validation &&
+                      toggleIndex !== undefined &&
+                      (toggleIndex === 0 ? validation.methodology_en : validation.methodology_ms)
+                        ? "ghost"
+                        : "default"
+                    }
+                    className={clx(
+                      "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                      validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0
+                          ? validation.methodology_en
+                          : validation.methodology_ms) &&
+                        "opacity-100"
+                    )}
+                    icon={
+                      validation &&
+                      toggleIndex !== undefined &&
+                      (toggleIndex === 0
+                        ? validation.methodology_en
+                        : validation.methodology_ms) ? (
+                        <ExclamationTriangleIcon className="text-danger size-5" />
+                      ) : (
+                        <PencilIcon className="size-5" />
+                      )
+                    }
                   />
                 )}
               </div>
@@ -153,7 +183,14 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                     required
                     autoFocus
                     rows={5}
-                    className="w-full py-1.5"
+                    className={clx(
+                      "w-full py-1.5",
+                      validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms)
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="caveat"
                     placeholder={"[Add caveat text]"}
                     value={explanation.caveat}
@@ -207,9 +244,29 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                   </Markdown>
                   {isGUI && (
                     <Button
-                      variant="default"
-                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                      icon={<PencilIcon className="size-5" />}
+                      variant={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms)
+                          ? "ghost"
+                          : "default"
+                      }
+                      className={clx(
+                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                        validation &&
+                          toggleIndex !== undefined &&
+                          (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms) &&
+                          "opacity-100"
+                      )}
+                      icon={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms) ? (
+                          <ExclamationTriangleIcon className="text-danger size-5" />
+                        ) : (
+                          <PencilIcon className="size-5" />
+                        )
+                      }
                     />
                   )}
                 </div>
@@ -247,7 +304,14 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                     required
                     autoFocus
                     rows={5}
-                    className="w-full py-1.5"
+                    className={clx(
+                      "w-full py-1.5",
+                      validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.publication_en : validation.publication_ms)
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="publication"
                     placeholder={"[Add publication text]"}
                     value={explanation.publication}
@@ -301,9 +365,33 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                   </Markdown>
                   {isGUI && (
                     <Button
-                      variant="default"
-                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                      icon={<PencilIcon className="size-5" />}
+                      variant={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.publication_en : validation.publication_ms)
+                          ? "ghost"
+                          : "default"
+                      }
+                      className={clx(
+                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                        validation &&
+                          toggleIndex !== undefined &&
+                          (toggleIndex === 0
+                            ? validation.publication_en
+                            : validation.publication_ms) &&
+                          "opacity-100"
+                      )}
+                      icon={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0
+                          ? validation.publication_en
+                          : validation.publication_ms) ? (
+                          <ExclamationTriangleIcon className="text-danger size-5" />
+                        ) : (
+                          <PencilIcon className="size-5" />
+                        )
+                      }
                     />
                   )}
                 </div>

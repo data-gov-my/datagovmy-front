@@ -7,7 +7,7 @@ import { METADATA_TABLE_SCHEMA } from "../../lib/schema/data-catalogue";
 import { DCVariable } from "../../../types/data-catalogue";
 import { CatalogueContext } from "../../contexts/catalogue";
 import { ArrowDownIcon, ArrowUpIcon, CheckIcon } from "@heroicons/react/20/solid";
-import { PencilIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { DateTime } from "luxon";
 
 type MetadataGUI =
@@ -17,6 +17,8 @@ type MetadataGUI =
       setMetadata: (key: string, value: any, index?: number) => void;
       edit: any;
       setEdit: (key: string, value: boolean) => void;
+      validation?: any;
+      toggleIndex?: number;
     }
   | MetadataDefault;
 
@@ -42,6 +44,8 @@ type MetadataProps = MetadataGUI & {
   >;
   selectedEdition: string | undefined;
   setSelectedEdition: (edition: string) => void;
+  validation?: any;
+  toggleIndex?: number;
 };
 
 const DCMetadata: FunctionComponent<MetadataProps> = ({
@@ -53,6 +57,8 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   metadata,
   selectedEdition,
   setSelectedEdition,
+  validation,
+  toggleIndex,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
   const { dataset } = useContext(CatalogueContext);
@@ -84,7 +90,14 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     required
                     rows={3}
                     autoFocus
-                    className="w-full py-1.5"
+                    className={clx(
+                      "w-full py-1.5",
+                      validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.description_en : validation.description_ms)
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="description"
                     placeholder={"[Add description text]"}
                     value={metadata.description}
@@ -138,9 +151,33 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   </p>
                   {isGUI && (
                     <Button
-                      variant="default"
-                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                      icon={<PencilIcon className="size-5" />}
+                      variant={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0 ? validation.description_en : validation.description_ms)
+                          ? "ghost"
+                          : "default"
+                      }
+                      className={clx(
+                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                        validation &&
+                          toggleIndex !== undefined &&
+                          (toggleIndex === 0
+                            ? validation.description_en
+                            : validation.description_ms) &&
+                          "opacity-100"
+                      )}
+                      icon={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        (toggleIndex === 0
+                          ? validation.description_en
+                          : validation.description_ms) ? (
+                          <ExclamationTriangleIcon className="text-danger size-5" />
+                        ) : (
+                          <PencilIcon className="size-5" />
+                        )
+                      }
                     />
                   )}
                 </div>
@@ -187,10 +224,42 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   <h5>{t("meta_def")}</h5>
                   {isGUI && (
                     <Button
-                      variant="default"
-                      onClick={() => isGUI && setEdit("edit_fields", true)}
-                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                      icon={<PencilIcon className="size-5" />}
+                      onClick={() => setEdit("edit_fields", true)}
+                      variant={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        !validation.fields.every((f: any) =>
+                          toggleIndex === 0
+                            ? !f["title_en"] && !f["description_en"]
+                            : !f["title_ms"] && !f["description_ms"]
+                        )
+                          ? "ghost"
+                          : "default"
+                      }
+                      className={clx(
+                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                        validation &&
+                          toggleIndex !== undefined &&
+                          !validation.fields.every((f: any) =>
+                            toggleIndex === 0
+                              ? !f["title_en"] && !f["description_en"]
+                              : !f["title_ms"] && !f["description_ms"]
+                          ) &&
+                          "opacity-100"
+                      )}
+                      icon={
+                        validation &&
+                        toggleIndex !== undefined &&
+                        !validation.fields.every((f: any) =>
+                          toggleIndex === 0
+                            ? !f["title_en"] && !f["description_en"]
+                            : !f["title_ms"] && !f["description_ms"]
+                        ) ? (
+                          <ExclamationTriangleIcon className="text-danger size-5" />
+                        ) : (
+                          <PencilIcon className="size-5" />
+                        )
+                      }
                     />
                   )}
                 </div>
@@ -216,6 +285,11 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                               className="w-full"
                               value={field.title}
                               onChange={e => isGUI && setMetadata("fields.title", e, index)}
+                              validation={
+                                validation.fields[index][
+                                  toggleIndex === 0 ? "title_en" : "title_ms"
+                                ]
+                              }
                             />
                           </div>
                           <div className="col-span-6 space-y-2">
@@ -225,13 +299,25 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                               required={true}
                             />
                             <Textarea
-                              className="w-full"
+                              className={clx(
+                                "w-full",
+                                validation.fields[index][
+                                  toggleIndex === 0 ? "description_en" : "description_ms"
+                                ] && "border-danger border-2"
+                              )}
                               rows={3}
                               value={field.description}
                               onChange={e =>
                                 isGUI && setMetadata("fields.description", e.target.value, index)
                               }
                             />
+                            <p className="text-danger text-xs">
+                              {
+                                validation.fields[index][
+                                  toggleIndex === 0 ? "description_en" : "description_ms"
+                                ]
+                              }
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -281,7 +367,12 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     required
                     autoFocus
                     type={"datetime-local"}
-                    className="w-fit py-1.5"
+                    className={clx(
+                      "w-fit py-1.5",
+                      validation && toggleIndex !== undefined && validation.last_updated
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="last_updated"
                     value={DateTime.fromSQL(metadata.last_updated).toFormat("yyyy-MM-dd'T'HH:mm")}
                     onChange={e => {
@@ -333,9 +424,18 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   </p>
                   {isGUI && (
                     <Button
-                      variant="default"
-                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                      icon={<PencilIcon className="size-5" />}
+                      variant={validation && validation.last_updated ? "ghost" : "default"}
+                      className={clx(
+                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                        validation && validation.last_updated && "opacity-100"
+                      )}
+                      icon={
+                        validation && validation.last_updated ? (
+                          <ExclamationTriangleIcon className="text-danger size-5" />
+                        ) : (
+                          <PencilIcon className="size-5" />
+                        )
+                      }
                     />
                   )}
                 </div>
@@ -360,7 +460,12 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     required
                     autoFocus
                     type={"datetime-local"}
-                    className="w-fit py-1.5"
+                    className={clx(
+                      "w-fit py-1.5",
+                      validation && validation.next_update
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="next_update"
                     value={DateTime.fromSQL(metadata.next_update).toFormat("yyyy-MM-dd'T'HH:mm")}
                     onChange={e => {
@@ -407,9 +512,18 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   </p>
                   {isGUI && (
                     <Button
-                      variant="default"
-                      className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                      icon={<PencilIcon className="size-5" />}
+                      variant={validation && validation.next_update ? "ghost" : "default"}
+                      className={clx(
+                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                        validation && validation.next_update && "opacity-100"
+                      )}
+                      icon={
+                        validation && validation.next_update ? (
+                          <ExclamationTriangleIcon className="text-danger size-5" />
+                        ) : (
+                          <PencilIcon className="size-5" />
+                        )
+                      }
                     />
                   )}
                 </div>

@@ -196,8 +196,6 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     );
   };
 
-  console.log(validation);
-
   /**
    * Counts the number of validation errors for a specific language.
    * Counts validations where:
@@ -264,9 +262,11 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   onClick={() => setToggleIndex(index)}
                 >
                   {option.label}
-                  <span className="text-danger">
-                    ({getValidationCount(option.value === "en-GB" ? "en" : "ms")})
-                  </span>
+                  {getValidationCount(option.value === "en-GB" ? "en" : "ms") > 0 && (
+                    <span className="text-danger">
+                      ({getValidationCount(option.value === "en-GB" ? "en" : "ms")})
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -283,8 +283,6 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
               onClick={async () => {
                 try {
                   const isValid = (await validateInput()) as { ok: boolean; message: string };
-
-                  console.log("isvalid", isValid);
 
                   if (isValid.ok) {
                     const json = generateOutputJSON();
@@ -392,7 +390,12 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                     required
                     rows={3}
                     autoFocus
-                    className="w-full py-1.5"
+                    className={clx(
+                      "w-full py-1.5",
+                      (toggleIndex === 0 ? validation.description_en : validation.description_ms)
+                        ? "border-danger border-2"
+                        : "border-outline dark:border-washed-dark"
+                    )}
                     name="description"
                     placeholder={
                       toggleIndex === 0
@@ -454,9 +457,25 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                         : `[${t("forms.description_ms_placeholder")}]`}
                   </p>
                   <Button
-                    variant="default"
-                    className="absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-                    icon={<PencilIcon className="size-5" />}
+                    variant={
+                      (toggleIndex === 0 ? validation.description_en : validation.description_ms)
+                        ? "ghost"
+                        : "default"
+                    }
+                    className={clx(
+                      "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+                      (toggleIndex === 0 ? validation.description_en : validation.description_ms) &&
+                        "opacity-100"
+                    )}
+                    icon={
+                      (
+                        toggleIndex === 0 ? validation.description_en : validation.description_ms
+                      ) ? (
+                        <ExclamationTriangleIcon className="text-danger size-5" />
+                      ) : (
+                        <PencilIcon className="size-5" />
+                      )
+                    }
                   />
                 </div>
               )
@@ -490,6 +509,8 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
             }
             edit={edit}
             setEdit={setEdit}
+            validation={validation}
+            toggleIndex={toggleIndex}
           />
           <CatalogueMetadata
             isGUI={true}
@@ -520,6 +541,8 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                     value
                   );
             }}
+            validation={validation}
+            toggleIndex={toggleIndex}
           />
         </div>
       </Container>
