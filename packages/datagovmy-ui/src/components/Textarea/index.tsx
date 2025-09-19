@@ -13,7 +13,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         className={clx(
           "block w-full appearance-none rounded-lg px-3 py-3 transition-colors",
           "text-base leading-tight md:text-sm",
-          "dark:border-outlineHover-dark dark:bg-background-dark ",
+          "border-outline dark:border-washed-dark dark:bg-black",
           "dark:focus:bg-dark focus:bg-white",
           "placeholder:text-gray-500 dark:placeholder:text-gray-400",
           "contrast-more:border contrast-more:border-current",

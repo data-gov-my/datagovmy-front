@@ -43,7 +43,7 @@ const namespaces = [
   "dashboard-business-creation-destruction",
   "dashboard-electronic-payments",
   "helpdesk",
-  "gui-opendosm-pub",
+  "gui-data-catalogue",
   "community-products",
   "data-request",
   "odin",

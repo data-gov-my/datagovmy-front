@@ -1,9 +1,15 @@
-import { At, Button, Container, Hero } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { clx } from "datagovmy-ui/helpers";
-import { routes } from "@lib/routes";
-import { ForwardRefExoticComponent, FunctionComponent, ReactNode, SVGProps } from "react";
-import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import {
+  Dispatch,
+  ForwardRefExoticComponent,
+  Fragment,
+  FunctionComponent,
+  ReactNode,
+  SetStateAction,
+  SVGProps,
+} from "react";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 
 /**
  * GUI DC Layout
@@ -13,31 +19,31 @@ import { ChevronRightIcon, XMarkIcon } from "@heroicons/react/20/solid";
 interface GUIDCLayoutProps {
   children: ReactNode;
   currentIndex: number;
-  header: string;
+  setIndex: Dispatch<SetStateAction<number>>;
   steps: { icon: ForwardRefExoticComponent<SVGProps<SVGSVGElement>>; name: string; desc: string }[];
+  reset: ReactNode;
 }
 
 const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
   children,
   currentIndex,
-  header,
+  setIndex,
   steps,
+  reset,
 }) => {
-  const { t } = useTranslation(["gui-opendosm-pub", "common"]);
+  const { t } = useTranslation(["gui-data-catalogue", "common"]);
 
   return (
-    <>
-      <Hero background="blue" header={[t("header")]} description={[t("description")]} />
-
-      <Container className="divide-outline flex flex-col max-lg:gap-6 max-lg:divide-none max-lg:py-6 lg:flex-row lg:divide-x">
-        <div className="flex w-full max-w-[300px] flex-col items-center gap-3 lg:w-2/5 lg:gap-8 lg:px-8 lg:py-12 xl:w-1/3">
-          <h1 className="font-body lg:font-header text-balance text-base font-bold lg:text-xl">
-            {header} Create a new data catalogue
-          </h1>
+    <div className="flex h-full w-full flex-1 justify-center">
+      <div className="divide-outline md:px-4.5 dark:divide-washed-dark flex max-w-screen-2xl flex-1 divide-x px-3 max-lg:gap-6 max-lg:py-6 lg:px-6">
+        <div className="flex w-full max-w-[284px] flex-col items-center gap-3 lg:w-2/5 lg:gap-8 lg:py-6 lg:pr-6 xl:w-1/3">
+          <h3 className="font-body lg:font-header text-balance font-bold max-lg:text-base">
+            {t("create_new")}
+          </h3>
 
           <div className="bg-washed dark:bg-washed-dark flex w-fit items-center gap-y-1 rounded-lg px-3 py-1 text-sm lg:hidden">
             {steps.map((step, i) => (
-              <>
+              <Fragment key={i}>
                 <div
                   className={clx(
                     i === currentIndex
@@ -50,7 +56,7 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
                 {i < steps.length - 1 && (
                   <ChevronRightIcon className="text-outlineHover dark:text-outlineHover-dark size-6" />
                 )}
-              </>
+              </Fragment>
             ))}
           </div>
 
@@ -63,8 +69,10 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
                   i === currentIndex
                     ? "text-primary dark:text-primary-dark"
                     : "text-black dark:text-white",
-                  i > currentIndex && "opacity-40"
+                  i > currentIndex && "opacity-40",
+                  i <= currentIndex && "hover:cursor-pointer"
                 )}
+                onClick={() => i <= currentIndex && setIndex(i)}
               >
                 <div className="flex flex-col items-center gap-2">
                   <div className="border-outline dark:border-washed-dark size-12 rounded-lg border p-2.5">
@@ -85,12 +93,13 @@ const GUIDCLayout: FunctionComponent<GUIDCLayoutProps> = ({
                 </div>
               </div>
             ))}
+            {reset}
           </div>
         </div>
 
         {children}
-      </Container>
-    </>
+      </div>
+    </div>
   );
 };
 

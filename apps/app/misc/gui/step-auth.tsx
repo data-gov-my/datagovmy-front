@@ -33,7 +33,7 @@ const LogoutIcon: FunctionComponent = () => {
 };
 
 const StepAuth: FunctionComponent<StepAuthProps> = ({ onClickContinue }) => {
-  const { t } = useTranslation(["gui-opendosm-pub", "common"]);
+  const { t } = useTranslation(["gui-data-catalogue", "common"]);
 
   const searchParams = useSearchParams();
   const session = useSession();
