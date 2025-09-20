@@ -15,6 +15,7 @@ type MethodologyGUI =
       edit: any;
       setEdit: (key: string, value: boolean) => void;
       validation?: any;
+      setValidation: (key: string, value: any) => void;
       toggleIndex?: number;
     }
   | MethodologyDefault;
@@ -23,14 +24,15 @@ type MethodologyDefault = {
   isGUI: false;
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   setMethodology?: never;
+  validation?: never;
+  setValidation?: never;
   edit?: never;
   setEdit?: never;
+  toggleIndex?: never;
 };
 
 type MethodologyProps = MethodologyGUI & {
   explanation: Pick<DCVariable, "methodology" | "caveat" | "publication" | "related_datasets">;
-  validation?: any;
-  toggleIndex?: number;
 };
 
 const DCMethodology: FunctionComponent<MethodologyProps> = ({
@@ -41,6 +43,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
   edit,
   setEdit,
   validation,
+  setValidation,
   toggleIndex,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
@@ -65,26 +68,38 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
             )}
           >
             {edit?.edit_methodology ? (
-              <div className="group relative flex w-full flex-col items-center justify-center gap-2">
+              <div className="group relative flex w-full flex-col items-start gap-2">
                 <Textarea
                   required
                   autoFocus
-                  rows={5}
-                  className="w-full py-1.5"
+                  rows={8}
+                  className={clx(
+                    "w-full py-1.5",
+                    (toggleIndex === 0 ? validation.methodology_en : validation.methodology_ms)
+                      ? "border-danger border-2"
+                      : "border-outline dark:border-washed-dark"
+                  )}
                   name="methodology"
                   placeholder={"[Add methodology text]"}
                   value={explanation.methodology}
                   onChange={e => {
                     if (isGUI) {
                       setMethodology("methodology", e.target.value);
+                      setValidation(toggleIndex === 0 ? "methodology_en" : "methodology_ms", false);
                     }
                   }}
                 />
+                <div className="bg-background dark:bg-washed-dark dark:border-washed-dark mt-4 w-full rounded-md border p-4">
+                  <p className="text-dim mb-2 text-sm">Markdown Preview:</p>
+                  <Markdown className="markdown">
+                    {explanation.methodology || "[Add methodology text]"}
+                  </Markdown>
+                </div>
                 <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
-                  <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                  <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                     <Button
                       className="hover:bg-washed size-8 justify-center p-1"
-                      icon={<ArrowUpIcon className="size-5 text-black" />}
+                      icon={<ArrowUpIcon className="size-5 text-black dark:text-white" />}
                       onClick={() => {
                         if (isGUI) {
                           setEdit("edit_description", true);
@@ -94,7 +109,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                     />
                     <Button
                       className="hover:bg-washed size-8 justify-center p-1"
-                      icon={<ArrowDownIcon className="size-5 text-black" />}
+                      icon={<ArrowDownIcon className="size-5 text-black dark:text-white" />}
                       onClick={() => {
                         if (isGUI) {
                           setEdit("edit_methodology", false);
@@ -170,11 +185,11 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
               )}
             >
               {edit?.edit_caveat ? (
-                <div className="group relative flex w-full flex-col items-center justify-center gap-2">
+                <div className="group relative flex w-full flex-col items-start gap-2">
                   <Textarea
                     required
                     autoFocus
-                    rows={5}
+                    rows={8}
                     className={clx(
                       "w-full py-1.5",
                       validation &&
@@ -189,14 +204,21 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                     onChange={e => {
                       if (isGUI) {
                         setMethodology("caveat", e.target.value);
+                        setValidation(toggleIndex === 0 ? "caveat_en" : "caveat_ms", false);
                       }
                     }}
                   />
+                  <div className="bg-background dark:bg-washed-dark dark:border-washed-dark mt-4 w-full rounded-md border p-4">
+                    <p className="text-dim mb-2 text-sm">Markdown Preview:</p>
+                    <Markdown className="markdown">
+                      {explanation.caveat || "[Add caveat text]"}
+                    </Markdown>
+                  </div>
                   <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowUpIcon className="size-5 text-black" />}
+                        icon={<ArrowUpIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_methodology", true);
@@ -206,7 +228,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        icon={<ArrowDownIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_caveat", false);
@@ -285,11 +307,11 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
               )}
             >
               {edit?.edit_publication ? (
-                <div className="group relative flex w-full flex-col items-center justify-center gap-2">
+                <div className="group relative flex w-full flex-col items-start gap-2">
                   <Textarea
                     required
                     autoFocus
-                    rows={5}
+                    rows={8}
                     className={clx(
                       "w-full py-1.5",
                       validation &&
@@ -304,14 +326,24 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                     onChange={e => {
                       if (isGUI) {
                         setMethodology("publication", e.target.value);
+                        setValidation(
+                          toggleIndex === 0 ? "publication_en" : "publication_ms",
+                          false
+                        );
                       }
                     }}
                   />
+                  <div className="bg-background dark:bg-washed-dark dark:border-washed-dark mt-4 w-full rounded-md border p-4">
+                    <p className="text-dim mb-2 text-sm">Markdown Preview:</p>
+                    <Markdown className="markdown">
+                      {explanation.publication || "[Add publication text]"}
+                    </Markdown>
+                  </div>
                   <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowUpIcon className="size-5 text-black" />}
+                        icon={<ArrowUpIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_caveat", true);
@@ -321,7 +353,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        icon={<ArrowDownIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_publication", false);

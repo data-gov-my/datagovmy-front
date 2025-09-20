@@ -18,6 +18,7 @@ type MetadataGUI =
       edit: any;
       setEdit: (key: string, value: boolean) => void;
       validation?: any;
+      setValidation: (key: string, value: any) => void;
       toggleIndex?: number;
     }
   | MetadataDefault;
@@ -26,8 +27,11 @@ type MetadataDefault = {
   isGUI: false;
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   setMetadata?: never;
+  validation?: never;
+  setValidation?: never;
   edit?: never;
   setEdit?: never;
+  toggleIndex?: never;
 };
 
 type MetadataProps = MetadataGUI & {
@@ -44,8 +48,6 @@ type MetadataProps = MetadataGUI & {
   >;
   selectedEdition: string | undefined;
   setSelectedEdition: (edition: string) => void;
-  validation?: any;
-  toggleIndex?: number;
 };
 
 const DCMetadata: FunctionComponent<MetadataProps> = ({
@@ -58,6 +60,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
   selectedEdition,
   setSelectedEdition,
   validation,
+  setValidation,
   toggleIndex,
 }) => {
   const { t, i18n } = useTranslation(["catalogue", "common"]);
@@ -104,14 +107,18 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     onChange={e => {
                       if (isGUI) {
                         setMetadata("description", e.target.value);
+                        setValidation(
+                          toggleIndex === 0 ? "description_en" : "description_ms",
+                          false
+                        );
                       }
                     }}
                   />
                   <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowUpIcon className="size-5" />}
+                        icon={<ArrowUpIcon className="size-5 " />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_publication", true);
@@ -181,10 +188,10 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                 <div className="group relative">
                   <h5>{t("meta_def")}</h5>
                   <div className="absolute -bottom-0 -right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowUpIcon className="size-5 text-black" />}
+                        icon={<ArrowUpIcon className="size-5" />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_description2", true);
@@ -194,7 +201,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        icon={<ArrowDownIcon className="size-5" />}
                         onClick={() => {
                           if (isGUI) {
                             setEdit("edit_fields", false);
@@ -360,12 +367,15 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     name="last_updated"
                     value={DateTime.fromSQL(metadata.last_updated).toFormat("yyyy-MM-dd'T'HH:mm")}
                     onChange={e => {
-                      isGUI && setMetadata("last_updated", DateTime.fromISO(e).toSQL());
+                      if (isGUI) {
+                        setMetadata("last_updated", DateTime.fromISO(e).toSQL());
+                        setValidation("last_updated", false);
+                      }
                     }}
                   />
 
                   <div className="absolute -bottom-0 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="size-8 justify-center p-1"
                         icon={<ArrowUpIcon className="size-5" />}
@@ -450,12 +460,15 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     name="next_update"
                     value={DateTime.fromSQL(metadata.next_update).toFormat("yyyy-MM-dd'T'HH:mm")}
                     onChange={e => {
-                      isGUI && setMetadata("next_update", DateTime.fromISO(e).toSQL());
+                      if (isGUI) {
+                        setMetadata("next_update", DateTime.fromISO(e).toSQL());
+                        setValidation("next_update", false);
+                      }
                     }}
                   />
 
                   <div className="absolute -bottom-0 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="size-8 justify-center p-1"
                         icon={<ArrowUpIcon className="size-5" />}

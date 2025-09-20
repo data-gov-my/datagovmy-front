@@ -153,10 +153,10 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               "fields",
               header.map((h: any) => ({
                 name: h,
-                title_en: "",
-                title_ms: "",
-                description_en: "",
-                description_ms: "",
+                title_en: "here",
+                title_ms: "sini",
+                description_en: "[Date] helloworld",
+                description_ms: "[Tarikh] hidunia",
               }))
             );
             setValidation(

@@ -79,8 +79,14 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
       ...updatedResource[index],
       [lastKey]: value,
     };
+    const updatedValidations = [...validation.fields];
+    updatedValidations[index] = {
+      ...updatedValidations[index],
+      [lastKey]: false,
+    };
 
     setData("fields", updatedResource);
+    setValidation("fields", updatedValidations);
   };
 
   const validateInput = async () => {
@@ -247,7 +253,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
   return (
     <>
       <Container className="divide-y-0 lg:px-0">
-        <div className="dark:border-washed-dark sticky top-14 z-10 flex border-b bg-white p-6">
+        <div className="dark:border-washed-dark sticky top-14 z-10 flex border-b bg-white p-6 dark:bg-black">
           <div className="flex-1 space-y-4">
             <ul className={clx("bg-washed flex w-fit flex-wrap rounded-md")}>
               {languages.map((option, index) => (
@@ -320,18 +326,19 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                     value={toggleIndex === 0 ? data.title_en : data.title_ms}
                     onChange={e => {
                       setData(toggleIndex === 0 ? "title_en" : "title_ms", e);
+                      setValidation(toggleIndex === 0 ? "title_en" : "title_ms", false);
                     }}
                   />
                   <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="size-8 justify-center p-1"
                         disabled
-                        icon={<ArrowUpIcon className="size-5" />}
+                        icon={<ArrowUpIcon className="size-5 text-black dark:text-white" />}
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        icon={<ArrowDownIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           setEdit("edit_title", false);
                           setEdit("edit_description", true);
@@ -404,13 +411,14 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                         toggleIndex === 0 ? "description_en" : "description_ms",
                         e.target.value
                       );
+                      setValidation(toggleIndex === 0 ? "description_en" : "description_ms", false);
                     }}
                   />
                   <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
-                    <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
+                    <div className="border-outline shadow-floating dark:border-washed-dark flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowUpIcon className="size-5 text-black" />}
+                        icon={<ArrowUpIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           setEdit("edit_title", true);
                           setEdit("edit_description", false);
@@ -418,7 +426,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                       />
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
-                        icon={<ArrowDownIcon className="size-5 text-black" />}
+                        icon={<ArrowDownIcon className="size-5 text-black dark:text-white" />}
                         onClick={() => {
                           setEdit("edit_description", false);
                           setEdit("edit_methodology", true);
@@ -502,6 +510,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
             edit={edit}
             setEdit={setEdit}
             validation={validation}
+            setValidation={setValidation}
             toggleIndex={toggleIndex}
           />
           <CatalogueMetadata
@@ -534,6 +543,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                   );
             }}
             validation={validation}
+            setValidation={setValidation}
             toggleIndex={toggleIndex}
           />
         </div>
