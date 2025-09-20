@@ -11,17 +11,13 @@ import { clx } from "datagovmy-ui/helpers";
 import { body } from "datagovmy-ui/configs/font";
 import { SessionProvider } from "next-auth/react";
 
-const GUICatalogue: Page = ({
-  sources,
-  categoryEn,
-  categoryMs,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const GUICatalogue: Page = ({ sources }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["gui-data-catalogue"]);
 
   return (
     <SessionProvider>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <GUIDataCatalogueLanding sources={sources} categoryEn={categoryEn} categoryMs={categoryMs} />
+      <GUIDataCatalogueLanding sources={sources} />
     </SessionProvider>
   );
 };
@@ -42,16 +38,6 @@ export const getStaticProps: GetStaticProps = withi18n(
       site: "datagovmy",
     });
 
-    const results = await Promise.allSettled([
-      get(`${process.env.S3_URL}/metadata/metadata_category_en.json`),
-      get(`${process.env.S3_URL}/metadata/metadata_category_ms.json`),
-    ]);
-
-    const [categoryEn, categoryMs] = results.map(e => {
-      if (e.status === "rejected") return null;
-      else return e.value.data;
-    });
-
     return {
       notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
       props: {
@@ -62,8 +48,6 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: null,
         },
         sources: data.source_filters.sort((a: string, b: string) => a.localeCompare(b)),
-        categoryEn,
-        categoryMs,
       },
     };
   }

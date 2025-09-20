@@ -1,5 +1,5 @@
 import { useData, useTranslation } from "datagovmy-ui/hooks";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
 import { Button } from "datagovmy-ui/components";
 import GUIDCLayout from "./layout";
@@ -26,8 +26,6 @@ export type CatalogueCategory = Record<
 
 interface GUIDCLandingProps {
   sources: string[];
-  categoryEn: CatalogueCategory;
-  categoryMs: CatalogueCategory;
 }
 
 const DEFAULT_STATE = {
@@ -69,13 +67,11 @@ const DEFAULT_STATE = {
   selected_category: "",
 };
 
-const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
-  sources,
-  categoryEn,
-  categoryMs,
-}) => {
+const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
   const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
+  const [categoryEn, setCategoryEn] = useState(null);
+  const [categoryMs, setCategoryMs] = useState(null);
 
   const { data, setData, reset } = useData({
     ...DEFAULT_STATE,
@@ -83,6 +79,27 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
   const { data: validation, setData: setValidation } = useData(
     Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
   );
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      if (!categoryEn && !categoryMs) {
+        try {
+          const response = await fetch("/api/data-catalogue/fetch-category");
+          if (response.ok) {
+            const data = await response.json();
+            setCategoryEn(data.en);
+            setCategoryMs(data.ms);
+          } else {
+            console.error("Failed to fetch categories");
+          }
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+        }
+      }
+    };
+
+    fetchCategory();
+  }, []);
 
   const {
     publishDataCatalogue,
@@ -122,8 +139,8 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
           setData={setData}
           validation={validation}
           setValidation={setValidation}
-          categoryEn={categoryEn}
-          categoryMs={categoryMs}
+          categoryEn={categoryEn || {}}
+          categoryMs={categoryMs || {}}
         />
       ),
     },
@@ -155,6 +172,10 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({
       ),
     },
   ];
+
+  if (!categoryEn && !categoryMs) {
+    return null;
+  }
 
   if (publishStatus !== null) {
     return (
