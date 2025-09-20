@@ -107,7 +107,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                       }
                     }}
                   />
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
@@ -158,15 +158,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                           ? "ghost"
                           : "default"
                       }
-                      className={clx(
-                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        validation &&
-                          toggleIndex !== undefined &&
-                          (toggleIndex === 0
-                            ? validation.description_en
-                            : validation.description_ms) &&
-                          "opacity-100"
-                      )}
+                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
                       icon={
                         validation &&
                         toggleIndex !== undefined &&
@@ -188,7 +180,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
               {edit?.edit_fields ? (
                 <div className="group relative">
                   <h5>{t("meta_def")}</h5>
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-0 -right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
@@ -237,18 +229,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                           ? "ghost"
                           : "default"
                       }
-                      className={clx(
-                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        validation &&
-                          toggleIndex !== undefined &&
-                          validation.fields &&
-                          !validation.fields?.every((f: any) =>
-                            toggleIndex === 0
-                              ? !f["title_en"] && !f["description_en"]
-                              : !f["title_ms"] && !f["description_ms"]
-                          ) &&
-                          "opacity-100"
-                      )}
+                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
                       icon={
                         validation &&
                         toggleIndex !== undefined &&
@@ -383,7 +364,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     }}
                   />
 
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-0 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="size-8 justify-center p-1"
@@ -428,10 +409,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   {isGUI && (
                     <Button
                       variant={validation && validation.last_updated ? "ghost" : "default"}
-                      className={clx(
-                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        validation && validation.last_updated && "opacity-100"
-                      )}
+                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
                       icon={
                         validation && validation.last_updated ? (
                           <ExclamationTriangleIcon className="text-danger size-5" />
@@ -476,7 +454,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                     }}
                   />
 
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-0 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="size-8 justify-center p-1"
@@ -516,10 +494,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                   {isGUI && (
                     <Button
                       variant={validation && validation.next_update ? "ghost" : "default"}
-                      className={clx(
-                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        validation && validation.next_update && "opacity-100"
-                      )}
+                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
                       icon={
                         validation && validation.next_update ? (
                           <ExclamationTriangleIcon className="text-danger size-5" />

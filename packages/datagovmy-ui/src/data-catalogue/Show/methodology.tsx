@@ -60,7 +60,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
         description={
           <div
             className={clx(
-              isGUI && "min-h-[20px] min-w-[500px] select-none w-full",
+              isGUI && "min-h-[20px] w-full min-w-[500px] select-none",
               edit?.edit_methodology && "flex w-full flex-col items-end gap-2"
             )}
           >
@@ -80,7 +80,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                     }
                   }}
                 />
-                <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
                   <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                     <Button
                       className="hover:bg-washed size-8 justify-center p-1"
@@ -131,15 +131,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                         ? "ghost"
                         : "default"
                     }
-                    className={clx(
-                      "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                      validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0
-                          ? validation.methodology_en
-                          : validation.methodology_ms) &&
-                        "opacity-100"
-                    )}
+                    className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
                     icon={
                       validation &&
                       toggleIndex !== undefined &&
@@ -173,7 +165,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
           description={
             <div
               className={clx(
-                isGUI && "min-h-[20px] min-w-[500px] select-none w-full",
+                isGUI && "min-h-[20px] w-full min-w-[500px] select-none",
                 edit?.edit_caveat && "flex w-full flex-col items-end gap-2"
               )}
             >
@@ -200,7 +192,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                       }
                     }}
                   />
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
@@ -251,13 +243,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                           ? "ghost"
                           : "default"
                       }
-                      className={clx(
-                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        validation &&
-                          toggleIndex !== undefined &&
-                          (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms) &&
-                          "opacity-100"
-                      )}
+                      className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
                       icon={
                         validation &&
                         toggleIndex !== undefined &&
@@ -294,7 +280,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
           description={
             <div
               className={clx(
-                isGUI && "min-h-[20px] min-w-[500px] select-none w-full",
+                isGUI && "min-h-[20px] w-full min-w-[500px] select-none",
                 edit?.edit_publication && "flex w-full flex-col items-end gap-2"
               )}
             >
@@ -321,7 +307,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                       }
                     }}
                   />
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
@@ -372,15 +358,7 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                           ? "ghost"
                           : "default"
                       }
-                      className={clx(
-                        "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                        validation &&
-                          toggleIndex !== undefined &&
-                          (toggleIndex === 0
-                            ? validation.publication_en
-                            : validation.publication_ms) &&
-                          "opacity-100"
-                      )}
+                      className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
                       icon={
                         validation &&
                         toggleIndex !== undefined &&

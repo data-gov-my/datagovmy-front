@@ -322,7 +322,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                       setData(toggleIndex === 0 ? "title_en" : "title_ms", e);
                     }}
                   />
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="size-8 justify-center p-1"
@@ -367,11 +367,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                         ? "ghost"
                         : "default"
                     }
-                    className={clx(
-                      "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                      (toggleIndex === 0 ? validation.title_en : validation.title_ms) &&
-                        "opacity-100"
-                    )}
+                    className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
                     icon={
                       (toggleIndex === 0 ? validation.title_en : validation.title_ms) ? (
                         <ExclamationTriangleIcon className="text-danger size-5" />
@@ -410,7 +406,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                       );
                     }}
                   />
-                  <div className="absolute -left-32 top-0 flex w-fit items-center gap-2">
+                  <div className="absolute -bottom-10 right-0 z-10 flex w-fit items-center gap-2">
                     <div className="border-outline shadow-floating flex items-center gap-[3px] overflow-hidden rounded-lg border">
                       <Button
                         className="hover:bg-washed size-8 justify-center p-1"
@@ -462,11 +458,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                         ? "ghost"
                         : "default"
                     }
-                    className={clx(
-                      "absolute -left-12 top-0 size-8 justify-center p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-                      (toggleIndex === 0 ? validation.description_en : validation.description_ms) &&
-                        "opacity-100"
-                    )}
+                    className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
                     icon={
                       (
                         toggleIndex === 0 ? validation.description_en : validation.description_ms

@@ -220,10 +220,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
         }
       }
 
-      if (
-        Array.isArray(value) &&
-        (key === "demography" || key === "geography" || key === "data_source")
-      ) {
+      if (Array.isArray(value) && (key === "geography" || key === "data_source")) {
         if (value.length > 0) {
           setValidation(key, false);
         } else {
