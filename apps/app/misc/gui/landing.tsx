@@ -75,9 +75,11 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
   const { data, setData, reset } = useData({
     ...DEFAULT_STATE,
   });
-  const { data: validation, setData: setValidation } = useData(
-    Object.fromEntries(Object.entries(data).map(([key]) => [key, false]))
-  );
+  const {
+    data: validation,
+    setData: setValidation,
+    reset: resetValidation,
+  } = useData(Object.fromEntries(Object.entries(data).map(([key]) => [key, false])));
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -186,6 +188,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
           resetPublish();
           setIndex(1);
           reset(DEFAULT_STATE);
+          resetValidation();
         }}
       />
     );
@@ -201,6 +204,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
           onClick={() => {
             setIndex(1);
             reset(DEFAULT_STATE);
+            resetValidation();
           }}
           variant="default"
           className="w-fit"

@@ -74,7 +74,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             return res.status(200).json({
               isValid: true,
               status: headResponse.status,
-              preview: lines.slice(0, 10),
+              preview: lines.slice(0, 11),
             });
           } else {
             return res.status(200).json({

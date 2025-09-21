@@ -345,21 +345,20 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
               disabled={edit.ai_draft}
               className="text-primary border border-[#C2D5FF] dark:bg-white"
               onClick={async () => {
+                setEdit("ai_draft", true);
+                Object.keys(edit).forEach(e => {
+                  if (e === "ai_draft") {
+                    return;
+                  }
+                  setEdit(e, false);
+                });
                 if (cache.has("data_state")) {
-                  setEdit("ai_draft", true);
                   const response = await revertDraftAI();
                   if (response.ok) {
                     cache.delete("data_state");
                   }
                 } else {
                   try {
-                    setEdit("ai_draft", true);
-                    Object.keys(edit).forEach(e => {
-                      if (e === "ai_draft") {
-                        return;
-                      }
-                      setEdit(e, false);
-                    });
                     const draft_response = await getDraftAI();
 
                     if (draft_response.ok) {
