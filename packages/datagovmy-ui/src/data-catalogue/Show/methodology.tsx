@@ -1,5 +1,5 @@
 import { FunctionComponent, MutableRefObject } from "react";
-import { Button, Markdown, Section, Textarea } from "../../components";
+import { Button, Markdown, Section, Skeleton, Textarea } from "../../components";
 import { useTranslation } from "../../hooks";
 import CatalogueCard from "../Card";
 import { clx } from "../../lib/helpers";
@@ -128,37 +128,53 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
               </div>
             ) : (
               <div
-                onClick={() => setEdit && setEdit("edit_methodology", true)}
+                onClick={() =>
+                  isGUI && !edit.ai_draft && setEdit && setEdit("edit_methodology", true)
+                }
                 className={clx(
                   "group relative",
-                  isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                  isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border",
+                  isGUI && edit.ai_draft && "hover:border-0"
                 )}
               >
-                <Markdown className="markdown" data-testid="catalogue-methodology">
-                  {explanation.methodology || "[Click on the button to add methodology]"}
-                </Markdown>
-                {isGUI && (
-                  <Button
-                    variant={
-                      validation &&
-                      toggleIndex !== undefined &&
-                      (toggleIndex === 0 ? validation.methodology_en : validation.methodology_ms)
-                        ? "ghost"
-                        : "default"
-                    }
-                    className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
-                    icon={
-                      validation &&
-                      toggleIndex !== undefined &&
-                      (toggleIndex === 0
-                        ? validation.methodology_en
-                        : validation.methodology_ms) ? (
-                        <ExclamationTriangleIcon className="text-danger size-5" />
-                      ) : (
-                        <PencilIcon className="size-5" />
-                      )
-                    }
-                  />
+                {isGUI && edit.ai_draft ? (
+                  <div className="space-y-1">
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton />
+                    <Skeleton className="w-1/2" />
+                  </div>
+                ) : (
+                  <>
+                    <Markdown className="markdown" data-testid="catalogue-methodology">
+                      {explanation.methodology || "[Click on the button to add methodology]"}
+                    </Markdown>
+                    {isGUI && (
+                      <Button
+                        variant={
+                          validation &&
+                          toggleIndex !== undefined &&
+                          (toggleIndex === 0
+                            ? validation.methodology_en
+                            : validation.methodology_ms)
+                            ? "ghost"
+                            : "default"
+                        }
+                        className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
+                        icon={
+                          validation &&
+                          toggleIndex !== undefined &&
+                          (toggleIndex === 0
+                            ? validation.methodology_en
+                            : validation.methodology_ms) ? (
+                            <ExclamationTriangleIcon className="text-danger size-5" />
+                          ) : (
+                            <PencilIcon className="size-5" />
+                          )
+                        }
+                      />
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -247,35 +263,47 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit && setEdit("edit_caveat", true)}
+                  onClick={() => isGUI && !edit.ai_draft && setEdit && setEdit("edit_caveat", true)}
                   className={clx(
                     "group relative",
-                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border",
+                    isGUI && edit.ai_draft && "hover:border-0"
                   )}
                 >
-                  <Markdown className="markdown" data-testid="catalogue-caveat">
-                    {explanation.caveat || "[Click on the button to add caveat]"}
-                  </Markdown>
-                  {isGUI && (
-                    <Button
-                      variant={
-                        validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms)
-                          ? "ghost"
-                          : "default"
-                      }
-                      className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
-                      icon={
-                        validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms) ? (
-                          <ExclamationTriangleIcon className="text-danger size-5" />
-                        ) : (
-                          <PencilIcon className="size-5" />
-                        )
-                      }
-                    />
+                  {isGUI && edit.ai_draft ? (
+                    <div className="space-y-1">
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton className="w-1/2" />
+                    </div>
+                  ) : (
+                    <>
+                      <Markdown className="markdown" data-testid="catalogue-caveat">
+                        {explanation.caveat || "[Click on the button to add caveat]"}
+                      </Markdown>
+                      {isGUI && (
+                        <Button
+                          variant={
+                            validation &&
+                            toggleIndex !== undefined &&
+                            (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms)
+                              ? "ghost"
+                              : "default"
+                          }
+                          className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
+                          icon={
+                            validation &&
+                            toggleIndex !== undefined &&
+                            (toggleIndex === 0 ? validation.caveat_en : validation.caveat_ms) ? (
+                              <ExclamationTriangleIcon className="text-danger size-5" />
+                            ) : (
+                              <PencilIcon className="size-5" />
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -372,37 +400,53 @@ const DCMethodology: FunctionComponent<MethodologyProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit && setEdit("edit_publication", true)}
+                  onClick={() =>
+                    isGUI && !edit.ai_draft && setEdit && setEdit("edit_publication", true)
+                  }
                   className={clx(
                     "group relative",
-                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border",
+                    isGUI && edit.ai_draft && "hover:border-0"
                   )}
                 >
-                  <Markdown className="markdown" data-testid="catalogue-publication">
-                    {explanation.publication! || "[Click on the button to add publication]"}
-                  </Markdown>
-                  {isGUI && (
-                    <Button
-                      variant={
-                        validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0 ? validation.publication_en : validation.publication_ms)
-                          ? "ghost"
-                          : "default"
-                      }
-                      className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
-                      icon={
-                        validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0
-                          ? validation.publication_en
-                          : validation.publication_ms) ? (
-                          <ExclamationTriangleIcon className="text-danger size-5" />
-                        ) : (
-                          <PencilIcon className="size-5" />
-                        )
-                      }
-                    />
+                  {isGUI && edit.ai_draft ? (
+                    <div className="space-y-1">
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton className="w-1/2" />
+                    </div>
+                  ) : (
+                    <>
+                      <Markdown className="markdown" data-testid="catalogue-publication">
+                        {explanation.publication! || "[If none, use 'N/A' or '-']"}
+                      </Markdown>
+                      {isGUI && (
+                        <Button
+                          variant={
+                            validation &&
+                            toggleIndex !== undefined &&
+                            (toggleIndex === 0
+                              ? validation.publication_en
+                              : validation.publication_ms)
+                              ? "ghost"
+                              : "default"
+                          }
+                          className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
+                          icon={
+                            validation &&
+                            toggleIndex !== undefined &&
+                            (toggleIndex === 0
+                              ? validation.publication_en
+                              : validation.publication_ms) ? (
+                              <ExclamationTriangleIcon className="text-danger size-5" />
+                            ) : (
+                              <PencilIcon className="size-5" />
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}

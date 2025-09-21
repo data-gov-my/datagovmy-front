@@ -1,5 +1,15 @@
 import { FunctionComponent, MutableRefObject, useContext } from "react";
-import { Card, Section, Tooltip, Dropdown, Textarea, Button, Input, Label } from "../../components";
+import {
+  Card,
+  Section,
+  Tooltip,
+  Dropdown,
+  Textarea,
+  Button,
+  Input,
+  Label,
+  Skeleton,
+} from "../../components";
 import { useAnalytics, useTranslation } from "../../hooks";
 import { clx, interpolate, toDate } from "../../lib/helpers";
 import Table from "../../charts/table";
@@ -147,37 +157,52 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit && setEdit("edit_description2", true)}
+                  onClick={() =>
+                    isGUI && !edit.ai_draft && setEdit && setEdit("edit_description2", true)
+                  }
                   className={clx(
                     "group relative",
-                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border",
+                    isGUI && edit.ai_draft && "hover:border-0"
                   )}
                 >
-                  <p className={clx("text-dim leading-relaxed", isGUI && "min-h-[72px]")}>
-                    {interpolate(metadata.description)}
-                  </p>
-                  {isGUI && (
-                    <Button
-                      variant={
-                        validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0 ? validation.description_en : validation.description_ms)
-                          ? "ghost"
-                          : "default"
-                      }
-                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
-                      icon={
-                        validation &&
-                        toggleIndex !== undefined &&
-                        (toggleIndex === 0
-                          ? validation.description_en
-                          : validation.description_ms) ? (
-                          <ExclamationTriangleIcon className="text-danger size-5" />
-                        ) : (
-                          <PencilIcon className="size-5" />
-                        )
-                      }
-                    />
+                  {isGUI && edit.ai_draft ? (
+                    <div className="space-y-1">
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton className="w-1/2" />
+                    </div>
+                  ) : (
+                    <>
+                      <p className={clx("text-dim leading-relaxed", isGUI && "min-h-[72px]")}>
+                        {interpolate(metadata.description)}
+                      </p>
+                      {isGUI && (
+                        <Button
+                          variant={
+                            validation &&
+                            toggleIndex !== undefined &&
+                            (toggleIndex === 0
+                              ? validation.description_en
+                              : validation.description_ms)
+                              ? "ghost"
+                              : "default"
+                          }
+                          className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
+                          icon={
+                            validation &&
+                            toggleIndex !== undefined &&
+                            (toggleIndex === 0
+                              ? validation.description_en
+                              : validation.description_ms) ? (
+                              <ExclamationTriangleIcon className="text-danger size-5" />
+                            ) : (
+                              <PencilIcon className="size-5" />
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -221,7 +246,7 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
               ) : (
                 <div className="group relative w-full">
                   <h5>{t("meta_def")}</h5>
-                  {isGUI && (
+                  {isGUI && !edit.ai_draft && (
                     <Button
                       onClick={() => setEdit("edit_fields", true)}
                       variant={
@@ -327,24 +352,42 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                         ))}
                       </ul>
                       <div className="hidden md:block">
-                        <Table
-                          className="table-slate table-default-slate md:w-full"
-                          data={metadata.fields.map(item => {
-                            const raw = item.description;
-                            const [type, definition] = [
-                              raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
-                              raw.substring(raw.indexOf("]") + 1),
-                            ];
+                        {isGUI && edit.ai_draft ? (
+                          <>
+                            {metadata.fields.map((field, index) => (
+                              <div key={index} className="grid grid-cols-12 gap-4">
+                                <div className="col-span-3 py-1">
+                                  <Skeleton />
+                                </div>
+                                <div className="col-span-3 py-1">
+                                  <Skeleton />
+                                </div>
+                                <div className="col-span-6 py-1">
+                                  <Skeleton />
+                                </div>
+                              </div>
+                            ))}
+                          </>
+                        ) : (
+                          <Table
+                            className="table-slate table-default-slate md:w-full"
+                            data={metadata.fields.map(item => {
+                              const raw = item.description;
+                              const [type, definition] = [
+                                raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
+                                raw.substring(raw.indexOf("]") + 1),
+                              ];
 
-                            return {
-                              variable: item.name,
-                              variable_name: item.title,
-                              data_type: type,
-                              definition: interpolate(definition),
-                            };
-                          })}
-                          config={METADATA_TABLE_SCHEMA(t, true)}
-                        />
+                              return {
+                                variable: item.name,
+                                variable_name: item.title,
+                                data_type: type,
+                                definition: interpolate(definition),
+                              };
+                            })}
+                            config={METADATA_TABLE_SCHEMA(t, true)}
+                          />
+                        )}
                       </div>
                     </>
                   )}
@@ -407,27 +450,41 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit && setEdit("edit_last_updated", true)}
+                  onClick={() =>
+                    isGUI && !edit.ai_draft && setEdit && setEdit("edit_last_updated", true)
+                  }
                   className={clx(
                     "group relative",
-                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border",
+                    isGUI && edit.ai_draft && "hover:border-0"
                   )}
                 >
-                  <p className="text-dim whitespace-pre-line" data-testid="catalogue-last-updated">
-                    {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
-                  </p>
-                  {isGUI && (
-                    <Button
-                      variant={validation && validation.last_updated ? "ghost" : "default"}
-                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
-                      icon={
-                        validation && validation.last_updated ? (
-                          <ExclamationTriangleIcon className="text-danger size-5" />
-                        ) : (
-                          <PencilIcon className="size-5" />
-                        )
-                      }
-                    />
+                  {isGUI && edit.ai_draft ? (
+                    <div className="space-y-1">
+                      <Skeleton />
+                    </div>
+                  ) : (
+                    <>
+                      <p
+                        className="text-dim whitespace-pre-line"
+                        data-testid="catalogue-last-updated"
+                      >
+                        {toDate(metadata.last_updated, "dd MMM yyyy, HH:mm", i18n.language)}
+                      </p>
+                      {isGUI && (
+                        <Button
+                          variant={validation && validation.last_updated ? "ghost" : "default"}
+                          className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
+                          icon={
+                            validation && validation.last_updated ? (
+                              <ExclamationTriangleIcon className="text-danger size-5" />
+                            ) : (
+                              <PencilIcon className="size-5" />
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}
@@ -495,27 +552,38 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit && setEdit("edit_next_update", true)}
+                  onClick={() =>
+                    isGUI && !edit.ai_draft && setEdit && setEdit("edit_next_update", true)
+                  }
                   className={clx(
                     "group relative",
-                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border"
+                    isGUI && "hover:border-b-primary  w-full hover:rounded-sm hover:border",
+                    isGUI && edit.ai_draft && "hover:border-0"
                   )}
                 >
-                  <p className="text-dim" data-testid="catalogue-next-update">
-                    {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
-                  </p>
-                  {isGUI && (
-                    <Button
-                      variant={validation && validation.next_update ? "ghost" : "default"}
-                      className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
-                      icon={
-                        validation && validation.next_update ? (
-                          <ExclamationTriangleIcon className="text-danger size-5" />
-                        ) : (
-                          <PencilIcon className="size-5" />
-                        )
-                      }
-                    />
+                  {isGUI && edit.ai_draft ? (
+                    <div className="space-y-1">
+                      <Skeleton />
+                    </div>
+                  ) : (
+                    <>
+                      <p className="text-dim" data-testid="catalogue-next-update">
+                        {toDate(metadata.next_update, "dd MMM yyyy, HH:mm", i18n.language)}
+                      </p>
+                      {isGUI && (
+                        <Button
+                          variant={validation && validation.next_update ? "ghost" : "default"}
+                          className={clx("absolute -right-[72px] top-0 size-8 justify-center p-1")}
+                          icon={
+                            validation && validation.next_update ? (
+                              <ExclamationTriangleIcon className="text-danger size-5" />
+                            ) : (
+                              <PencilIcon className="size-5" />
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   )}
                 </div>
               )}

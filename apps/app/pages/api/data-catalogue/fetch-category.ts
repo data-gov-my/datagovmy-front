@@ -9,9 +9,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const results = await Promise.allSettled([
     get(`${process.env.S3_URL}/metadata/metadata_category_en.json`),
     get(`${process.env.S3_URL}/metadata/metadata_category_ms.json`),
+    get(`${process.env.S3_URL}/metadata/metadata_agencies.json`),
   ]);
 
-  const [categoryEn, categoryMs] = results.map(e => {
+  const [categoryEn, categoryMs, agencies_source] = results.map(e => {
     if (e.status === "rejected") return null;
     else return e.value.data;
   });
@@ -19,5 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   return res.status(200).json({
     en: categoryEn,
     ms: categoryMs,
+    agencies_source: agencies_source,
   });
 }

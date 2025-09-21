@@ -1,10 +1,25 @@
-import { ArrowDownIcon, ArrowRightIcon, ArrowUpIcon, CheckIcon } from "@heroicons/react/20/solid";
+import {
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  ArrowUturnLeftIcon,
+  CheckIcon,
+} from "@heroicons/react/20/solid";
 import { ExclamationTriangleIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
-import { Button, Container, Input, Section, Textarea } from "datagovmy-ui/components";
+import { post } from "datagovmy-ui/api";
+import {
+  Button,
+  Container,
+  Input,
+  Section,
+  Skeleton,
+  Spinner,
+  Textarea,
+} from "datagovmy-ui/components";
 import { CatalogueContext } from "datagovmy-ui/contexts/catalogue";
 import { CatalogueMethodology, CatalogueMetadata } from "datagovmy-ui/data-catalogue";
 import { clx, interpolate } from "datagovmy-ui/helpers";
-import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { useCache, useData, useTranslation } from "datagovmy-ui/hooks";
 import { languages } from "datagovmy-ui/options";
 import { UNIVERSAL_TABLE_SCHEMA } from "datagovmy-ui/schema/data-catalogue";
 import { OptionType } from "datagovmy-ui/types";
@@ -19,6 +34,7 @@ interface StepCatalogueProps {
   validation: Record<string, any>;
   setValidation: (key: string, value: any) => void;
   onPublish: (json: string) => void;
+  resetData: (overridingState?: Record<string, any> | undefined) => void;
 }
 
 const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
@@ -27,10 +43,14 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
   validation,
   setValidation,
   onPublish,
+  resetData,
 }) => {
   const { t } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
   const [toggleIndex, setToggleIndex] = useState(0);
   const { dataset } = useContext(CatalogueContext);
+  const { cache } = useCache();
+
+  // Default table config to use.
   const config = {
     precision: 0,
     filter_columns: [],
@@ -47,6 +67,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
     edit_fields: false,
     edit_last_updated: false,
     edit_next_update: false,
+    ai_draft: false,
   });
 
   const generateTableSchema = () => {
@@ -189,11 +210,7 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
             title_en: "Table",
             title_ms: "Jadual",
             chart_type: "TABLE",
-            config: {
-              precision: 0,
-              filter_columns: [],
-              freeze_columns: [],
-            },
+            config: config,
           },
         ],
       },
@@ -250,6 +267,49 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
 
     return count;
   };
+
+  const getDraftAI = async () => {
+    try {
+      const response = await post(`${process.env.NEXT_PUBLIC_AI_URL}/generate-meta`, {
+        input_data: data,
+      });
+
+      return {
+        ok: true,
+        message: "Succesfully fetch draft metadata",
+        data: response.data,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: "Error fetching draft metadata",
+        data: null,
+      };
+    } finally {
+      setEdit("ai_draft", false);
+    }
+  };
+  const revertDraftAI = async () => {
+    try {
+      const oldData = cache.get("data_state");
+      resetData(oldData);
+      // Show illusion that reverting process happened
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      return {
+        ok: true,
+        message: "Successfully revert draft",
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: "Error reverting",
+      };
+    } finally {
+      setEdit("ai_draft", false);
+    }
+  };
+
   return (
     <>
       <Container className="divide-y-0 lg:px-0">
@@ -280,12 +340,70 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
             <p className="text-dim text-sm">{t("step_catalogue.section_explanation")}</p>
           </div>
           <div className="flex items-start justify-center gap-2">
-            <Button variant="base" className="text-primary border border-[#C2D5FF] dark:bg-white">
-              Draft with AI
-              <SparklesIcon className="text-primary size-4" />
+            <Button
+              variant="base"
+              disabled={edit.ai_draft}
+              className="text-primary border border-[#C2D5FF] dark:bg-white"
+              onClick={async () => {
+                if (cache.has("data_state")) {
+                  setEdit("ai_draft", true);
+                  const response = await revertDraftAI();
+                  if (response.ok) {
+                    cache.delete("data_state");
+                  }
+                } else {
+                  try {
+                    setEdit("ai_draft", true);
+                    Object.keys(edit).forEach(e => {
+                      if (e === "ai_draft") {
+                        return;
+                      }
+                      setEdit(e, false);
+                    });
+                    const draft_response = await getDraftAI();
+
+                    if (draft_response.ok) {
+                      cache.set("data_state", data);
+                      setData("title_en", draft_response.data.metadata.title_en);
+
+                      // Inform SH to change key returned here.
+                      const excludeFields = ["caveats_en", "caveats_ms"];
+
+                      const filteredData = Object.fromEntries(
+                        Object.entries(draft_response.data.metadata).filter(
+                          ([key]) => !excludeFields.includes(key)
+                        )
+                      );
+                      resetData({
+                        ...data,
+                        ...filteredData,
+                        caveat_en: draft_response.data.metadata.caveats_en,
+                        caveat_ms: draft_response.data.metadata.caveats_ms,
+                      });
+                    }
+                  } catch (error) {
+                    console.error("Something went wrong");
+                  }
+                }
+              }}
+            >
+              {edit.ai_draft ? (
+                <Spinner loading={edit.ai_draft} />
+              ) : cache.has("data_state") ? (
+                <>
+                  Revert
+                  <ArrowUturnLeftIcon className="text-primary size-4" />
+                </>
+              ) : (
+                <>
+                  Draft with AI
+                  <SparklesIcon className="text-primary size-4" />
+                </>
+              )}
             </Button>
             <Button
               variant="primary"
+              disabled={edit.ai_draft}
               onClick={async () => {
                 try {
                   const isValid = (await validateInput()) as { ok: boolean; message: string };
@@ -355,34 +473,43 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit("edit_title", true)}
-                  className="hover:border-b-primary group relative w-full hover:rounded-sm hover:border"
+                  onClick={() => !edit.ai_draft && setEdit("edit_title", true)}
+                  className={clx(
+                    "hover:border-b-primary group relative w-full hover:rounded-sm hover:border",
+                    edit.ai_draft && "hover:border-0"
+                  )}
                 >
-                  <h4 className="w-full select-none">
-                    {data.title_en && data.title_ms
-                      ? toggleIndex === 0
-                        ? data.title_en
-                        : data.title_ms
-                      : toggleIndex === 0
-                        ? `[${t("forms.title_en_placeholder")}]`
-                        : `[${t("forms.title_ms_placeholder")}]`}
-                  </h4>
+                  {edit.ai_draft ? (
+                    <Skeleton />
+                  ) : (
+                    <>
+                      <h4 className="w-full select-none">
+                        {data.title_en && data.title_ms
+                          ? toggleIndex === 0
+                            ? data.title_en
+                            : data.title_ms
+                          : toggleIndex === 0
+                          ? `[${t("forms.title_en_placeholder")}]`
+                          : `[${t("forms.title_ms_placeholder")}]`}
+                      </h4>
 
-                  <Button
-                    variant={
-                      (toggleIndex === 0 ? validation.title_en : validation.title_ms)
-                        ? "ghost"
-                        : "default"
-                    }
-                    className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
-                    icon={
-                      (toggleIndex === 0 ? validation.title_en : validation.title_ms) ? (
-                        <ExclamationTriangleIcon className="text-danger size-5" />
-                      ) : (
-                        <PencilIcon className="size-5" />
-                      )
-                    }
-                  />
+                      <Button
+                        variant={
+                          (toggleIndex === 0 ? validation.title_en : validation.title_ms)
+                            ? "ghost"
+                            : "default"
+                        }
+                        className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
+                        icon={
+                          (toggleIndex === 0 ? validation.title_en : validation.title_ms) ? (
+                            <ExclamationTriangleIcon className="text-danger size-5" />
+                          ) : (
+                            <PencilIcon className="size-5" />
+                          )
+                        }
+                      />
+                    </>
+                  )}
                 </div>
               )
             }
@@ -443,40 +570,63 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
                 </div>
               ) : (
                 <div
-                  onClick={() => setEdit("edit_description", true)}
-                  className="hover:border-b-primary group relative w-full hover:rounded-sm hover:border"
+                  onClick={() => !edit.ai_draft && setEdit("edit_description", true)}
+                  className={clx(
+                    "hover:border-b-primary group relative w-full hover:rounded-sm hover:border",
+                    edit.ai_draft && "hover:border-0"
+                  )}
                 >
-                  <p
-                    className="text-dim w-full select-none whitespace-pre-line text-base"
-                    data-testid="catalogue-description"
-                  >
-                    {data.description_en && data.description_ms
-                      ? interpolate(
-                          toggleIndex === 0
-                            ? data.description_en.substring(data.description_en.indexOf("]") + 1)
-                            : data.description_ms.substring(data.description_ms.indexOf("]") + 1)
-                        )
-                      : toggleIndex === 0
-                        ? `[${t("forms.description_en_placeholder")}]`
-                        : `[${t("forms.description_ms_placeholder")}]`}
-                  </p>
-                  <Button
-                    variant={
-                      (toggleIndex === 0 ? validation.description_en : validation.description_ms)
-                        ? "ghost"
-                        : "default"
-                    }
-                    className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
-                    icon={
-                      (
-                        toggleIndex === 0 ? validation.description_en : validation.description_ms
-                      ) ? (
-                        <ExclamationTriangleIcon className="text-danger size-5" />
-                      ) : (
-                        <PencilIcon className="size-5" />
-                      )
-                    }
-                  />
+                  {edit.ai_draft ? (
+                    <div className="space-y-1">
+                      <Skeleton />
+                      <Skeleton />
+                      <Skeleton className="w-1/2" />
+                    </div>
+                  ) : (
+                    <>
+                      <p
+                        className="text-dim w-full select-none whitespace-pre-line text-base"
+                        data-testid="catalogue-description"
+                      >
+                        {data.description_en && data.description_ms
+                          ? interpolate(
+                              toggleIndex === 0
+                                ? data.description_en.substring(
+                                    data.description_en.indexOf("]") + 1
+                                  )
+                                : data.description_ms.substring(
+                                    data.description_ms.indexOf("]") + 1
+                                  )
+                            )
+                          : toggleIndex === 0
+                          ? `[${t("forms.description_en_placeholder")}]`
+                          : `[${t("forms.description_ms_placeholder")}]`}
+                      </p>
+                      <Button
+                        variant={
+                          (
+                            toggleIndex === 0
+                              ? validation.description_en
+                              : validation.description_ms
+                          )
+                            ? "ghost"
+                            : "default"
+                        }
+                        className={clx("absolute -right-12 top-0 size-8 justify-center p-1")}
+                        icon={
+                          (
+                            toggleIndex === 0
+                              ? validation.description_en
+                              : validation.description_ms
+                          ) ? (
+                            <ExclamationTriangleIcon className="text-danger size-5" />
+                          ) : (
+                            <PencilIcon className="size-5" />
+                          )
+                        }
+                      />
+                    </>
+                  )}
                 </div>
               )
             }

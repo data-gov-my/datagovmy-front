@@ -24,9 +24,7 @@ export type CatalogueCategory = Record<
   }>
 >;
 
-interface GUIDCLandingProps {
-  sources: string[];
-}
+interface GUIDCLandingProps {}
 
 const DEFAULT_STATE = {
   link_csv: "",
@@ -67,11 +65,12 @@ const DEFAULT_STATE = {
   selected_category: "",
 };
 
-const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
+const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
   const { t } = useTranslation("gui-data-catalogue");
   const [index, setIndex] = useState(0);
   const [categoryEn, setCategoryEn] = useState(null);
   const [categoryMs, setCategoryMs] = useState(null);
+  const [sources, setSources] = useState(null);
 
   const { data, setData, reset } = useData({
     ...DEFAULT_STATE,
@@ -89,6 +88,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
             const data = await response.json();
             setCategoryEn(data.en);
             setCategoryMs(data.ms);
+            setSources(data.agencies_source);
           } else {
             console.error("Failed to fetch categories");
           }
@@ -134,7 +134,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
       content: (
         <StepBasic
           setIndex={setIndex}
-          sources={sources}
+          sources={sources || []}
           data={data}
           setData={setData}
           validation={validation}
@@ -167,13 +167,14 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({ sources }) => {
                 data: window.btoa(json),
               });
             }}
+            resetData={reset}
           />
         </CatalogueProvider>
       ),
     },
   ];
 
-  if (!categoryEn && !categoryMs) {
+  if (!categoryEn && !categoryMs && !sources) {
     return null;
   }
 

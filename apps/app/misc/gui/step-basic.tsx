@@ -125,7 +125,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
     setValidation(field, "loading");
 
     try {
-      const response = await fetch("/api/validate-link", {
+      const response = await fetch("/api/data-catalogue/validate-link", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,10 +153,10 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               "fields",
               header.map((h: any) => ({
                 name: h,
-                title_en: "here",
-                title_ms: "sini",
-                description_en: "[Date] helloworld",
-                description_ms: "[Tarikh] hidunia",
+                title_en: "",
+                title_ms: "",
+                description_en: "",
+                description_ms: "",
               }))
             );
             setValidation(
@@ -324,8 +324,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_csv === "loading"
                 ? t("forms.fetching")
                 : validation.link_csv === "success"
-                  ? t("forms.success")
-                  : t("forms.test_link")}
+                ? t("forms.success")
+                : t("forms.test_link")}
             </Button>
           </div>
           <div className="flex">
@@ -377,8 +377,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_parquet === "loading"
                 ? t("forms.fetching")
                 : validation.link_parquet === "success"
-                  ? t("forms.success")
-                  : t("forms.test_link")}
+                ? t("forms.success")
+                : t("forms.test_link")}
             </Button>
           </div>
           <div className="flex">
@@ -429,8 +429,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_preview === "loading"
                 ? t("forms.fetching")
                 : validation.link_preview === "success"
-                  ? t("forms.success")
-                  : t("forms.test_link")}
+                ? t("forms.success")
+                : t("forms.test_link")}
             </Button>
           </div>
         </div>
