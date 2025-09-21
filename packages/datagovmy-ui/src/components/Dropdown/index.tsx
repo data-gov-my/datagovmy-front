@@ -151,7 +151,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         <span className="absolute inset-y-0 left-3 flex items-center">
           <input
             type="checkbox"
-            checked={
+            defaultChecked={
               selected && (selected as OptionType[]).some(item => item.value === option.value)
             }
             className="border-outline text-primary dark:border-outlineHover-dark dark:bg-washed-dark dark:checked:border-primary dark:checked:bg-primary-dark h-4 w-4 rounded focus:ring-0"

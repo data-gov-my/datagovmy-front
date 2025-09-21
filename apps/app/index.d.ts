@@ -2,6 +2,7 @@ declare namespace NodeJS {
   export interface ProcessEnv {
     APP_URL: string;
     APP_ENV: string;
+    S3_URL: string;
     NEXT_PUBLIC_APP_URL: string;
     NEXT_PUBLIC_APP_ENV: "development" | "staging" | "production";
     NEXT_PUBLIC_AI_URL: string;
@@ -19,6 +20,11 @@ declare namespace NodeJS {
     MIXPANEL_SA_USER: string;
     MIXPANEL_SA_SECRET: string;
     NEXT_PUBLIC_MIXPANEL_TOKEN: string;
+
+    NEXTAUTH_URL: string;
+    NEXAUTH_SECRET: string;
+    GITHUB_CLIENT_ID: string;
+    GITHUB_CLIENT_SECRET: string;
   }
 }
 

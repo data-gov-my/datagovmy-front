@@ -11,6 +11,7 @@ import { FunctionComponent, ReactNode, useState } from "react";
 type NavRootProps = {
   children: (close: () => void) => ReactNode;
   stateSelector?: ReactNode;
+  hideLanguage?: boolean;
 };
 
 type NavItemProps = {
@@ -53,7 +54,7 @@ const Item: FunctionComponent<NavItemProps> = ({
   );
 };
 
-const Nav: NavFunctionComponent = ({ children, stateSelector }) => {
+const Nav: NavFunctionComponent = ({ children, stateSelector, hideLanguage }) => {
   const [showMobile, setShowMobile] = useState<boolean>(false);
   const { language, onLanguageChange } = useLanguage();
 
@@ -67,24 +68,28 @@ const Nav: NavFunctionComponent = ({ children, stateSelector }) => {
       <div className="hidden w-fit gap-4 lg:flex">
         {stateSelector}
         <ThemeToggle />
-        <Dropdown
-          width="w-fit"
-          selected={languages.find(lang => lang.value === language)}
-          onChange={onLanguageChange}
-          options={languages}
-        />
+        {!hideLanguage && (
+          <Dropdown
+            width="w-fit"
+            selected={languages.find(lang => lang.value === language)}
+            onChange={onLanguageChange}
+            options={languages}
+          />
+        )}
       </div>
 
       {/* Mobile - Header*/}
       <div className="flex w-full items-center justify-end gap-3 lg:hidden">
         {stateSelector}
         <ThemeToggle />
-        <Dropdown
-          width="w-fit"
-          selected={languages.find(lang => lang.value === language)}
-          onChange={onLanguageChange}
-          options={languages}
-        />
+        {!hideLanguage && (
+          <Dropdown
+            width="w-fit"
+            selected={languages.find(lang => lang.value === language)}
+            onChange={onLanguageChange}
+            options={languages}
+          />
+        )}
         {showMobile ? (
           <XMarkIcon
             className="box-content block h-5 w-5 text-black dark:text-white lg:hidden"

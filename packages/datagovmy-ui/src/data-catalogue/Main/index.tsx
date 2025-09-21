@@ -149,7 +149,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
         }
       />
 
-      <Container className="min-h-screen max-w-full lg:px-0 lg:pl-6">
+      <Container className="min-h-screen lg:px-0 lg:pl-6">
         <Sidebar
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
@@ -280,7 +280,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
     });
 
     return (
-      <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 dark:bg-black lg:pl-2">
+      <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 lg:pl-2 dark:bg-black">
         <div className="flex-1">
           <Search
             className="border-none"
@@ -292,7 +292,7 @@ const CatalogueFilter: ForwardRefExoticComponent<CatalogueFilterProps> = forward
         {actives.length > 0 && actives.findIndex(active => active[0] !== "source") !== -1 && (
           <Button
             variant="reset"
-            className="hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black dark:hover:text-white xl:hidden"
+            className="hover:bg-washed dark:hover:bg-washed-dark text-dim group block rounded-full p-1 hover:text-black xl:hidden dark:hover:text-white"
             disabled={!actives.length}
             onClick={reset}
           >

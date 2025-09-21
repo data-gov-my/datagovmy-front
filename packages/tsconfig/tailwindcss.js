@@ -68,6 +68,11 @@ module.exports = {
           from: { height: "var(--from-height)" },
           to: { height: "var(--to-height)" },
         },
+        shimmer: {
+          to: {
+            transform: "translateX(100%)",
+          },
+        },
       },
       animation: {
         slide: "slide 1.5s ease-out",
@@ -77,5 +82,5 @@ module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [require("@tailwindcss/forms"), require("tailwindcss-animate")],
 };

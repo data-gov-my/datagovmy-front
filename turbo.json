@@ -7,15 +7,19 @@
       "env": [
         "ANALYZE",
         "AUTH_TOKEN",
+        "S3_URL",
         "REVALIDATE_TOKEN",
         "NEXT_PUBLIC_GA_TAG",
         "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_AI_URL",
         "NEXT_PUBLIC_APP_URL",
         "NEXT_PUBLIC_APP_ENV",
         "NEXT_PUBLIC_AUTHORIZATION_TOKEN",
         "NEXT_PUBLIC_TILESERVER_URL",
         "NEXT_PUBLIC_TINYBIRD_TOKEN",
-        "NEXT_PUBLIC_TINYBIRD_URL"
+        "NEXT_PUBLIC_TINYBIRD_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET"
       ],
       "outputMode": "new-only",
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
