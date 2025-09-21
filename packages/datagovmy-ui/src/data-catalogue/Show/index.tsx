@@ -208,7 +208,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
 
   return (
     <div>
-      <Container className="minh-screen max-w-full">
+      <Container className="min-h-screen">
         <Sidebar
           categories={Object.entries(
             getSideBarCollection({
