@@ -363,21 +363,10 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
 
                     if (draft_response.ok) {
                       cache.set("data_state", data);
-                      setData("title_en", draft_response.data.metadata.title_en);
 
-                      // Inform SH to change key returned here.
-                      const excludeFields = ["caveats_en", "caveats_ms"];
-
-                      const filteredData = Object.fromEntries(
-                        Object.entries(draft_response.data.metadata).filter(
-                          ([key]) => !excludeFields.includes(key)
-                        )
-                      );
                       resetData({
                         ...data,
-                        ...filteredData,
-                        caveat_en: draft_response.data.metadata.caveats_en,
-                        caveat_ms: draft_response.data.metadata.caveats_ms,
+                        ...draft_response.data.metadata,
                       });
                     }
                   } catch (error) {
