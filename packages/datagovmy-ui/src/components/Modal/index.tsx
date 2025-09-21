@@ -20,6 +20,7 @@ export interface ModalInterface {
 
 interface ModalProps {
   className?: string;
+  titleClassName?: string;
   trigger?: (open: () => void) => ReactNode;
   children: (close: () => void) => ReactNode;
   title?: ReactNode;
@@ -27,7 +28,7 @@ interface ModalProps {
 }
 
 const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
-  ({ trigger, title, children, className }, ref) => {
+  ({ trigger, title, children, className, titleClassName }, ref) => {
     const [show, setShow] = useState(false);
     const open = () => setShow(true);
     const close = () => setShow(false);
@@ -70,7 +71,12 @@ const Modal: ForwardRefExoticComponent<ModalProps> = forwardRef(
                   )}
                 >
                   <div onClick={close} className="min-h-[15vh] grow lg:hidden"></div>
-                  <div className="dark:border-washed-dark relative flex w-full items-center justify-between rounded-t-xl border-b bg-white p-3 dark:bg-black">
+                  <div
+                    className={clx(
+                      "dark:border-washed-dark relative flex w-full items-center justify-between rounded-t-xl border-b bg-white p-3 dark:bg-black",
+                      titleClassName
+                    )}
+                  >
                     <Dialog.Title as="div" className="mr-9 flex grow">
                       {title}
                     </Dialog.Title>

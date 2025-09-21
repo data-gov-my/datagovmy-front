@@ -6,9 +6,10 @@ import { FunctionComponent, ReactNode } from "react";
 
 interface HeaderProps {
   stateSelector?: ReactNode;
+  hideLanguage?: boolean;
 }
 
-const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
+const Header: FunctionComponent<HeaderProps> = ({ stateSelector, hideLanguage }) => {
   const { t } = useTranslation("common");
 
   return (
@@ -24,7 +25,7 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector }) => {
             </div>
           </Link>
 
-          <Nav stateSelector={stateSelector}>
+          <Nav stateSelector={stateSelector} hideLanguage={hideLanguage}>
             {close => (
               <>
                 <Nav.Item key={"/"} title={t("common:nav.home")} link="/" onClick={close} />
