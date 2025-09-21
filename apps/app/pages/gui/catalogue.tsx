@@ -32,7 +32,7 @@ export const getStaticProps: GetStaticProps = withi18n(
   ["gui-data-catalogue", "catalogue"],
   async ({}) => {
     return {
-      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
+      notFound: false,
       props: {
         meta: {
           id: "gui",

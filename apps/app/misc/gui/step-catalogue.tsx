@@ -5,12 +5,18 @@ import {
   ArrowUturnLeftIcon,
   CheckIcon,
 } from "@heroicons/react/20/solid";
-import { ExclamationTriangleIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  PencilIcon,
+  SparklesIcon,
+} from "@heroicons/react/24/outline";
 import { post } from "datagovmy-ui/api";
 import {
   Button,
   Container,
   Input,
+  Modal,
   Section,
   Skeleton,
   Spinner,
@@ -340,55 +346,102 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
             <p className="text-dim text-sm">{t("step_catalogue.section_explanation")}</p>
           </div>
           <div className="flex items-start justify-center gap-2">
-            <Button
-              variant="base"
-              disabled={edit.ai_draft}
-              className="text-primary border border-[#C2D5FF] dark:bg-white"
-              onClick={async () => {
-                setEdit("ai_draft", true);
-                Object.keys(edit).forEach(e => {
-                  if (e === "ai_draft") {
-                    return;
-                  }
-                  setEdit(e, false);
-                });
-                if (cache.has("data_state")) {
-                  const response = await revertDraftAI();
-                  if (response.ok) {
-                    cache.delete("data_state");
-                  }
-                } else {
-                  try {
-                    const draft_response = await getDraftAI();
-
-                    if (draft_response.ok) {
-                      cache.set("data_state", data);
-
-                      resetData({
-                        ...data,
-                        ...draft_response.data.metadata,
-                      });
-                    }
-                  } catch (error) {
-                    console.error("Something went wrong");
-                  }
-                }
-              }}
-            >
-              {edit.ai_draft ? (
-                <Spinner loading={edit.ai_draft} />
-              ) : cache.has("data_state") ? (
-                <>
-                  Revert
-                  <ArrowUturnLeftIcon className="text-primary size-4" />
-                </>
-              ) : (
-                <>
-                  Draft with AI
-                  <SparklesIcon className="text-primary size-4" />
-                </>
+            <Modal
+              trigger={open => (
+                <Button
+                  variant="base"
+                  disabled={edit.ai_draft}
+                  className="text-primary border border-[#C2D5FF] dark:bg-white"
+                  onClick={open}
+                >
+                  {edit.ai_draft ? (
+                    <Spinner loading={edit.ai_draft} />
+                  ) : cache.has("data_state") ? (
+                    <>
+                      Revert
+                      <ArrowUturnLeftIcon className="text-primary size-4" />
+                    </>
+                  ) : (
+                    <>
+                      Draft with AI
+                      <SparklesIcon className="text-primary size-4" />
+                    </>
+                  )}
+                </Button>
               )}
-            </Button>
+              title={<ExclamationCircleIcon className="text-warning mt-4 size-10" />}
+              titleClassName="rounded-t-none border-b-0"
+              className="w-[400px] lg:rounded-lg lg:rounded-b-lg lg:rounded-t-lg"
+            >
+              {close => (
+                <div className="dark:divide-washed-dark flex h-max flex-col space-y-6 bg-white px-6 pb-6 dark:bg-black">
+                  <div className="space-y-2">
+                    <h5>
+                      {cache.has("data_state")
+                        ? t("step_catalogue.revert_draft")
+                        : t("step_catalogue.draft_with_ai")}
+                    </h5>
+                    <p className="text-dim text-sm">
+                      {cache.has("data_state")
+                        ? t("step_catalogue.revert_draft_desc")
+                        : t("step_catalogue.draft_with_ai_desc")}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Button
+                      onClick={close}
+                      className="w-full justify-center py-3"
+                      variant="default"
+                    >
+                      {t("step_catalogue.cancel")}
+                    </Button>
+                    <Button
+                      variant="base"
+                      className={clx(
+                        "bg-primary w-full justify-center py-3 text-white",
+                        cache.has("data_state") && "bg-danger"
+                      )}
+                      onClick={async () => {
+                        close();
+                        setEdit("ai_draft", true);
+                        Object.keys(edit).forEach(e => {
+                          if (e === "ai_draft") {
+                            return;
+                          }
+                          setEdit(e, false);
+                        });
+                        if (cache.has("data_state")) {
+                          const response = await revertDraftAI();
+                          if (response.ok) {
+                            cache.delete("data_state");
+                          }
+                        } else {
+                          try {
+                            const draft_response = await getDraftAI();
+
+                            if (draft_response.ok) {
+                              cache.set("data_state", data);
+
+                              resetData({
+                                ...data,
+                                ...draft_response.data.metadata,
+                              });
+                            }
+                          } catch (error) {
+                            console.error("Something went wrong");
+                          }
+                        }
+                      }}
+                    >
+                      {cache.has("data_state")
+                        ? t("step_catalogue.revert")
+                        : t("step_catalogue.continue")}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Modal>
             <Button
               variant="primary"
               disabled={edit.ai_draft}
