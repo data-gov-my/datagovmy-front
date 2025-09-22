@@ -22,7 +22,7 @@ async function isCollaborator(ghAccessToken: string): Promise<boolean> {
       username: user.login,
     });
   } catch (error) {
-    if (error instanceof OctokitRequestError && error.status === 404) {
+    if (error instanceof OctokitRequestError && (error.status === 404 || error.status === 403)) {
       return false;
     }
     throw error;
