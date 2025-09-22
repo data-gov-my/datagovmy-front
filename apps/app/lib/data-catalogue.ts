@@ -57,7 +57,7 @@ async function openDataCataloguePR(
     sha: baseSha,
   });
 
-  const commitMessage = `Automated: Create/update data catalogue '${fileName}'`;
+  const commitMessage = `Automated: Create data catalogue '${fileName}'`;
   await octokit.rest.repos.createOrUpdateFileContents({
     ...REPO_INFO,
     path: `data-catalogue/${fileName}`,

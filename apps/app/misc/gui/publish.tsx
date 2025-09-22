@@ -2,7 +2,7 @@ import {
   CheckCircleIcon,
   PlusIcon,
   ExclamationCircleIcon,
-  ArrowPathIcon,
+  ArrowDownTrayIcon,
 } from "@heroicons/react/24/solid";
 import { routes } from "@lib/routes";
 import { Button, Spinner } from "datagovmy-ui/components";
@@ -10,35 +10,32 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 
-const STATUS = {
-  LOADING: "loading",
-  SUCCESS: "success",
-  ERROR: "error",
-} as const;
-
-type Status = (typeof STATUS)[keyof typeof STATUS];
+type Status =
+  | { state: "loading" }
+  | { state: "success" }
+  | { state: "error"; data: { fileName: string; json: string } };
 
 export function usePublishDataCatalogue() {
   const [status, setStatus] = useState<Status | null>(null);
 
   const reset = () => setStatus(null);
 
-  const publishDataCatalogue = async ({ fileName, data }: { fileName: string; data: string }) => {
-    setStatus(STATUS.LOADING);
+  const publishDataCatalogue = async ({ fileName, json }: { fileName: string; json: string }) => {
+    setStatus({ state: "loading" });
     try {
       const response = await fetch("/api/data-catalogue/open-pr", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fileName, data }),
+        body: JSON.stringify({ fileName, data: window.btoa(json) }),
       });
       if (!response.ok) {
         throw Error("Response was not ok");
       }
-      setStatus(STATUS.SUCCESS);
+      setStatus({ state: "success" });
     } catch (error) {
-      setStatus(STATUS.ERROR);
+      setStatus({ state: "error", data: { fileName, json } });
     }
   };
 
@@ -54,14 +51,12 @@ function CenteredContainer({ children }: { children: React.ReactNode }) {
 }
 
 type PublishDataCatalogueModalProps = {
-  status: Status | null;
+  status: Status;
   onClickCreateAnotherPage: () => void;
-  onClickRetry?: () => void;
 };
 export function PublishDataCatalogueModal({
   status,
   onClickCreateAnotherPage,
-  onClickRetry,
 }: PublishDataCatalogueModalProps) {
   const { t } = useTranslation("gui-data-catalogue");
 
@@ -69,7 +64,7 @@ export function PublishDataCatalogueModal({
     signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}${routes.GUI_CATALOGUE}` });
   };
 
-  if (status === "loading") {
+  if (status.state === "loading") {
     return (
       <CenteredContainer>
         <div className="flex flex-col items-center gap-4">
@@ -80,7 +75,8 @@ export function PublishDataCatalogueModal({
     );
   }
 
-  if (status === "error") {
+  if (status.state === "error") {
+    const { fileName, json } = status.data;
     return (
       <CenteredContainer>
         <div className="flex flex-col items-center gap-6">
@@ -97,16 +93,25 @@ export function PublishDataCatalogueModal({
             >
               {t("step_auth.logout")}
             </Button>
-            {onClickRetry && (
-              <Button
-                variant="primary"
-                className="flex-1 justify-center text-center"
-                icon={<ArrowPathIcon className="h-4 w-4" />}
-                onClick={() => onClickRetry()}
-              >
-                {t("retry")}
-              </Button>
-            )}
+            <Button
+              variant="primary"
+              className="flex-1 justify-center text-center"
+              onClick={() => {
+                const jsonBlob = new Blob([json], { type: "application/json" });
+
+                // Create a temporary link
+                const url = URL.createObjectURL(jsonBlob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = fileName; // filename for user
+                a.click();
+
+                // Cleanup
+                URL.revokeObjectURL(url);
+              }}
+            >
+              {t("publish.save_output")} <ArrowDownTrayIcon className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </CenteredContainer>
