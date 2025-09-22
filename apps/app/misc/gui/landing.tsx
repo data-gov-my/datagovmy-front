@@ -166,7 +166,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
             onPublish={json => {
               publishDataCatalogue({
                 fileName: `${data["file_name"]}.json`,
-                data: window.btoa(json),
+                json,
               });
             }}
             resetData={reset}

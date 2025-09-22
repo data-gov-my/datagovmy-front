@@ -324,8 +324,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_csv === "loading"
                 ? t("forms.fetching")
                 : validation.link_csv === "success"
-                ? t("forms.success")
-                : t("forms.test_link")}
+                  ? t("forms.success")
+                  : t("forms.test_link")}
             </Button>
           </div>
           <div className="flex">
@@ -377,8 +377,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_parquet === "loading"
                 ? t("forms.fetching")
                 : validation.link_parquet === "success"
-                ? t("forms.success")
-                : t("forms.test_link")}
+                  ? t("forms.success")
+                  : t("forms.test_link")}
             </Button>
           </div>
           <div className="flex">
@@ -429,8 +429,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_preview === "loading"
                 ? t("forms.fetching")
                 : validation.link_preview === "success"
-                ? t("forms.success")
-                : t("forms.test_link")}
+                  ? t("forms.success")
+                  : t("forms.test_link")}
             </Button>
           </div>
         </div>
@@ -625,7 +625,6 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               <Label label={t("forms.data_as_of")} name={t("forms.data_as_of")} required={true} />
               <Input
                 required
-                autoFocus
                 type={"datetime-local"}
                 className="w-full rounded-lg py-1.5"
                 name="data_as_of"
