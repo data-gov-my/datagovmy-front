@@ -36,7 +36,7 @@ export const authOptions: NextAuthOptions = {
         if (!account.access_token) {
           throw Error("access_token is missing from github sign-in");
         }
-        if (!metaRepo.isCollaborator(account.access_token)) {
+        if (!(await metaRepo.isCollaborator(account.access_token))) {
           return `${routes.GUI_CATALOGUE}?${AUTH_ERROR_KEY}=${AUTH_ERROR.UNAUTHORIZED}`;
         }
         return true;
