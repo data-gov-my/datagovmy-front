@@ -1,4 +1,4 @@
-import { useData, useTranslation } from "datagovmy-ui/hooks";
+import { useCache, useData, useTranslation } from "datagovmy-ui/hooks";
 import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { LinkIcon, TableCellsIcon, UserIcon } from "@heroicons/react/20/solid";
 import { Button } from "datagovmy-ui/components";
@@ -49,8 +49,8 @@ const DEFAULT_STATE = {
   methodology_ms: "",
   caveat_en: "",
   caveat_ms: "",
-  publication_en: "",
-  publication_ms: "",
+  publication_en: "N/A",
+  publication_ms: "N/A",
   related_datasets: [],
   last_updated: DateTime.now().toSQL(),
   next_update: "-",
@@ -71,6 +71,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
   const [categoryEn, setCategoryEn] = useState(null);
   const [categoryMs, setCategoryMs] = useState(null);
   const [sources, setSources] = useState(null);
+  const { cache } = useCache();
 
   const { data, setData, reset } = useData({
     ...DEFAULT_STATE,
@@ -143,6 +144,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
           setValidation={setValidation}
           categoryEn={categoryEn || {}}
           categoryMs={categoryMs || {}}
+          cache={cache}
         />
       ),
     },
@@ -170,6 +172,7 @@ const GUIDCLanding: FunctionComponent<GUIDCLandingProps> = ({}) => {
               });
             }}
             resetData={reset}
+            cache={cache}
           />
         </CatalogueProvider>
       ),
