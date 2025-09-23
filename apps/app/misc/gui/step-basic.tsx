@@ -31,6 +31,7 @@ interface StepBasicProps {
   setValidation: (key: string, value: any) => void;
   categoryEn: CatalogueCategory;
   categoryMs: CatalogueCategory;
+  cache: Map<string, any>;
 }
 
 const StepBasic: FunctionComponent<StepBasicProps> = ({
@@ -42,6 +43,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
   setValidation,
   categoryEn,
   categoryMs,
+  cache,
 }) => {
   const { t, i18n } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
   const [validatedBanner, setValidatedBanner] = useState(false);
@@ -149,26 +151,28 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               return obj;
             });
             setData("data", _result);
-            setData(
-              "fields",
-              header.map((h: any) => ({
-                name: h,
-                title_en: "",
-                title_ms: "",
-                description_en: "",
-                description_ms: "",
-              }))
-            );
-            setValidation(
-              "fields",
-              header.map((h: any) => ({
-                name: false,
-                title_en: false,
-                title_ms: false,
-                description_en: false,
-                description_ms: false,
-              }))
-            );
+            if (!cache.has("data_state")) {
+              setData(
+                "fields",
+                header.map((h: any) => ({
+                  name: h,
+                  title_en: "",
+                  title_ms: "",
+                  description_en: "",
+                  description_ms: "",
+                }))
+              );
+              setValidation(
+                "fields",
+                header.map((h: any) => ({
+                  name: false,
+                  title_en: false,
+                  title_ms: false,
+                  description_en: false,
+                  description_ms: false,
+                }))
+              );
+            }
           }
           setValidation(field, "success");
           return true;
@@ -324,8 +328,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_csv === "loading"
                 ? t("forms.fetching")
                 : validation.link_csv === "success"
-                  ? t("forms.success")
-                  : t("forms.test_link")}
+                ? t("forms.success")
+                : t("forms.test_link")}
             </Button>
           </div>
           <div className="flex">
@@ -377,8 +381,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_parquet === "loading"
                 ? t("forms.fetching")
                 : validation.link_parquet === "success"
-                  ? t("forms.success")
-                  : t("forms.test_link")}
+                ? t("forms.success")
+                : t("forms.test_link")}
             </Button>
           </div>
           <div className="flex">
@@ -429,8 +433,8 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
               {validation.link_preview === "loading"
                 ? t("forms.fetching")
                 : validation.link_preview === "success"
-                  ? t("forms.success")
-                  : t("forms.test_link")}
+                ? t("forms.success")
+                : t("forms.test_link")}
             </Button>
           </div>
         </div>
@@ -639,7 +643,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
 
           <div className="flex flex-col gap-3 lg:grid lg:grid-cols-3 lg:gap-2">
             <div className="col-span-2 space-y-2">
-              <Label label={t("forms.category_sorting")} />
+              <Label label={t("forms.category_sorting")} required={true} />
               <Dropdown
                 anchor="left"
                 width="w-full"
@@ -697,7 +701,7 @@ const StepBasic: FunctionComponent<StepBasicProps> = ({
           </div>
 
           <div className="flex flex-col gap-2">
-            <Label label={t("forms.select_data_sources")} />
+            <Label label={t("forms.select_data_sources")} required={true} />
             <Dropdown
               icon={<BuildingLibraryIcon className="text-dim h-4 w-4" />}
               anchor="left"

@@ -41,6 +41,7 @@ interface StepCatalogueProps {
   setValidation: (key: string, value: any) => void;
   onPublish: (json: string) => void;
   resetData: (overridingState?: Record<string, any> | undefined) => void;
+  cache: Map<string, any>;
 }
 
 const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
@@ -50,11 +51,11 @@ const StepCatalogue: FunctionComponent<StepCatalogueProps> = ({
   setValidation,
   onPublish,
   resetData,
+  cache,
 }) => {
   const { t } = useTranslation(["gui-data-catalogue", "catalogue", "common"]);
   const [toggleIndex, setToggleIndex] = useState(0);
   const { dataset } = useContext(CatalogueContext);
-  const { cache } = useCache();
 
   // Default table config to use.
   const config = {

@@ -18,6 +18,8 @@ export const statesOptions: OptionType[] = [MALAYSIA]
   }));
 
 export const frequencies = (t: (key: string) => string): OptionType[] => [
+  { label: t("catalogue:filter_options.daily"), value: "DAILY" },
+  { label: t("catalogue:filter_options.weekly"), value: "WEEKLY" },
   { label: t("catalogue:filter_options.monthly"), value: "MONTHLY" },
   { label: t("catalogue:filter_options.quarterly"), value: "QUARTERLY" },
   { label: t("catalogue:filter_options.yearly"), value: "YEARLY" },
