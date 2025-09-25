@@ -38,6 +38,15 @@ const nextConfig = {
     META_IMAGE: `${process.env.NEXT_PUBLIC_APP_URL}/static/images/og_{{lang}}.png`,
   },
   webpack(config) {
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+      syncWebAssembly: true,
+    };
+    config.module.rules.push({
+      test: /\.wasm$/,
+      type: "webassembly/async",
+    });
     config.module.rules.push({
       test: /index\.(js|mjs|jsx|ts|tsx)$/,
       include: mPath => mPath.includes("datagovmy-ui"),

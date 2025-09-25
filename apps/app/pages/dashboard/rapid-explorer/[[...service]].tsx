@@ -1,14 +1,14 @@
 import Layout from "@components/Layout";
 import RapidExplorerDashboard from "@dashboards/transportation/rapid-explorer";
 import { get } from "datagovmy-ui/api";
-import { Metadata, Spinner } from "datagovmy-ui/components";
+import { Container, Metadata, Spinner } from "datagovmy-ui/components";
 import { body } from "datagovmy-ui/configs/font";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
 import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { useTranslation as _useTranslation } from "next-i18next";
-import { DashboardPeriod, Page, WithData } from "datagovmy-ui/types";
+import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useDuckDb } from "duckdb-wasm-kit";
 import { useEffect, useState } from "react";
@@ -25,51 +25,70 @@ const RapidExplorer: Page = ({
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboard-rapid-explorer");
-  const [forward, setForward] =
-    useState<
-      WithData<
-        Record<Extract<DashboardPeriod, "daily" | "monthly">, Record<"x" | "passengers", number[]>>
-      >
-    >();
-  const [reverse, setReverse] =
-    useState<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>();
+  const [forward, setForward] = useState<any>();
+  const [reverse, setReverse] = useState<any>();
+  const [forwardCallout, setForwardCallout] = useState<any>();
+  const [reverseCallout, setReverseCallout] = useState<any>();
 
   const { db, loading, error } = useDuckDb();
 
   const executeQuery = async () => {
     try {
       if (db) {
+        const startTime = performance.now();
         const connection = await db.connect();
-        const [forwardResult, reverseResult] = await Promise.all([
-          // Query 1: Origin → Destination
-          connection.query(`
+        const [forwardResult, reverseResult, forwardTotalResult, reverseTotalResult] =
+          await Promise.all([
+            // Query 1: Origin → Destination
+            connection.query(`
           SELECT
             origin,
             destination,
             date,
             passengers
           FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = 'KJ10: KLCC'
-            AND destination = 'KJ15: KL Sentral'
-          ORDER BY date DESC
-          LIMIT 61
+          WHERE origin = '${params.origin}'
+            AND destination = '${params.destination}'
+          ORDER BY date ASC
         `),
 
-          // Query 2: Destination → Origin (reverse direction)
-          connection.query(`
+            // Query 2: Destination → Origin (reverse direction)
+            connection.query(`
           SELECT
             origin,
             destination,
             date,
             passengers
           FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = 'KJ15: KL Sentral'
-            AND destination = 'KJ10: KLCC'
-          ORDER BY date DESC
-          LIMIT 61
+          WHERE origin = '${params.destination}'
+            AND destination = '${params.origin}'
+          ORDER BY date ASC
         `),
-        ]);
-        console.log("hm11");
+
+            // Query 3: Total passengers for current month forward
+            connection.query(`
+          SELECT SUM(passengers) as total
+          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+          WHERE origin = '${params.origin}'
+            AND destination = '${params.destination}'
+            AND date >= '2025-09-01'
+            AND date <= '2025-09-30'
+        `),
+
+            // Query 4: Total passengers for current month reverse
+            connection.query(`
+          SELECT SUM(passengers) as total
+          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+          WHERE origin = '${params.destination}'
+            AND destination = '${params.origin}'
+            AND date >= '2025-09-01'
+            AND date <= '2025-09-30'
+        `),
+          ]);
+
+        const endTime = performance.now();
+        const totalInitTime = endTime - startTime;
+        console.log(`🚀 DuckDB query in ${totalInitTime.toFixed(2)}ms`);
 
         if (forwardResult && forwardResult.numRows > 0) {
           const rows = forwardResult.toArray();
@@ -94,7 +113,13 @@ const RapidExplorer: Page = ({
             },
           });
 
-          console.log("forward", data);
+          if (forwardTotalResult && forwardTotalResult.numRows > 0) {
+            const total = forwardTotalResult.toArray()[0].total[0];
+            setForwardCallout({
+              daily: data[data.length - 1].passengers,
+              monthly: total,
+            });
+          }
         }
         if (reverseResult && reverseResult.numRows > 0) {
           const rows = reverseResult.toArray();
@@ -123,7 +148,14 @@ const RapidExplorer: Page = ({
               x: data.map(row => row.date),
             },
           });
-          console.log("reverse", data);
+
+          if (reverseTotalResult && reverseTotalResult.numRows > 0) {
+            const total = reverseTotalResult.toArray()[0].total[0];
+            setReverseCallout({
+              daily: data[data.length - 1].passengers,
+              monthly: total,
+            });
+          }
         }
       }
     } catch (error) {}
@@ -131,10 +163,16 @@ const RapidExplorer: Page = ({
 
   useEffect(() => {
     executeQuery();
-  }, []);
+  }, [db, params]);
 
   if (loading) {
-    return <Spinner loading={true} />;
+    return (
+      <Container>
+        <div className="flex min-h-screen w-full items-center justify-center">
+          <Spinner loading={true} />
+        </div>
+      </Container>
+    );
   }
 
   if (error) {
@@ -150,9 +188,9 @@ const RapidExplorer: Page = ({
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <RapidExplorerDashboard
         A_to_B={forward}
-        A_to_B_callout={A_to_B_callout}
+        A_to_B_callout={forwardCallout}
         B_to_A={reverse}
-        B_to_A_callout={B_to_A_callout}
+        B_to_A_callout={reverseCallout}
         dropdown={dropdown}
         last_updated={last_updated}
         next_update={next_update}
@@ -237,7 +275,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         dropdown: dropdown,
         last_updated: A_to_B.data_last_updated,
         next_update: A_to_B.data_next_update ?? null,
-        params: params?.service ? { service, origin, destination } : {},
+        params: { service, origin, destination },
       },
       revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };

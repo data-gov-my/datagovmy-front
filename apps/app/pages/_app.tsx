@@ -68,7 +68,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
         castBigIntToDouble: true,
       },
     };
-    initializeDuckDb({ config, debug: true });
+    initializeDuckDb({ config });
   }, []);
 
   return (
