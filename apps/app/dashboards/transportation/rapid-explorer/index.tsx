@@ -33,10 +33,15 @@ import { FunctionComponent, useMemo } from "react";
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
 interface RapidExplorerProps {
-  A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
-  A_to_B_callout: Record<DashboardPeriod, number>;
-  B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
-  B_to_A_callout?: Record<DashboardPeriod, number>;
+  A_to_B: WithData<
+    Record<Extract<DashboardPeriod, "daily" | "monthly">, Record<"x" | "passengers", number[]>>
+  >;
+  A_to_B_callout: Record<Extract<DashboardPeriod, "daily" | "monthly">, number>;
+  B_to_A?: Record<
+    Extract<DashboardPeriod, "daily" | "monthly">,
+    Record<"x" | "passengers", number[]>
+  >;
+  B_to_A_callout?: Record<Extract<DashboardPeriod, "daily" | "monthly">, number>;
   dropdown: Record<string, Record<string, string[]>>;
   last_updated: string;
   next_update: string;
