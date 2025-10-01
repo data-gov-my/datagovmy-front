@@ -109,7 +109,9 @@ const CatalogueTimeseries: FunctionComponent<CatalogueTimeseriesProps> = ({
               <Slider
                 className="pt-4"
                 type="range"
-                data={dataset.chart.x}
+                data={dataset.chart.x.sort(
+                  (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()
+                )}
                 value={data.minmax}
                 period={SHORT_PERIOD[config.range]}
                 onChange={e => setData("minmax", e)}
