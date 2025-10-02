@@ -37,8 +37,6 @@ The following are the environment variables (.env) used for data.gov.my. Please 
 | NEXT_PUBLIC_API_URL             | ✅       | http://localhost:8000 (development)  | AKSARA BE base URL                              |
 | NEXT_PUBLIC_GA_TAG              | ⬜️       | _Create own_                         | Google Analytics Tag. Optional                  |
 | NEXT_PUBLIC_TILESERVER_URL      | ⬜️       | _Create own_                         | OpenStreetMap API key. Optional                 |
-| MIXPANEL_TOKEN                  | ⬜️       | _Create own_                         | Mixpanel token. Optional                        |
-| NEXT_PUBLIC_MIXPANEL_TOKEN      | ⬜️       | $MIXPANEL_TOKEN                      | Mixpanel token, made public. Optional           |
 
 ## Commands to Know
 

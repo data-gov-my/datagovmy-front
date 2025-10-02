@@ -31,7 +31,6 @@
     "./icons": "./src/icons/index.tsx",
     "./icons/*": "./src/icons/*.tsx",
     "./misc": "./src/misc/index.tsx",
-    "./mixpanel": "./src/lib/mixpanel.ts",
     "./options": "./src/lib/options.ts",
     "./schema/*": "./src/lib/schema/*.tsx",
     "./schema/exchange-rates": "./src/lib/schema/exchange-rates.ts",
@@ -109,9 +108,6 @@
       "misc": [
         "./types/misc.d.ts"
       ],
-      "mixpanel": [
-        "./src/lib/mixpanel.ts"
-      ],
       "options": [
         "./src/lib/options.ts"
       ],
@@ -179,7 +175,6 @@
     "@types/leaflet.markercluster": "^1.5.1",
     "@types/lodash": "^4.14.185",
     "@types/luxon": "^3.0.1",
-    "@types/mixpanel-browser": "^2.38.1",
     "@types/node": "^20.3.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
