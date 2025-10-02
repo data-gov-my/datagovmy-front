@@ -15,12 +15,6 @@ declare namespace NodeJS {
     NEXT_PUBLIC_TILESERVER_URL: string;
     NEXT_PUBLIC_GA_TAG: string;
 
-    MIXPANEL_TOKEN: string;
-    MIXPANEL_PROJECT_ID: string;
-    MIXPANEL_SA_USER: string;
-    MIXPANEL_SA_SECRET: string;
-    NEXT_PUBLIC_MIXPANEL_TOKEN: string;
-
     NEXTAUTH_URL: string;
     NEXAUTH_SECRET: string;
     GITHUB_CLIENT_ID: string;
