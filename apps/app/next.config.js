@@ -11,6 +11,7 @@ const pwa = require("next-pwa")({
   register: true,
   skipWaiting: true,
   buildExcludes: ["./public/static/images/opendosm-github.png"],
+  disable: process.env.NODE_ENV === "development",
 });
 
 /**
