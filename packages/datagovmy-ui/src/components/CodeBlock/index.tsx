@@ -1,7 +1,6 @@
 import Dropdown from "../../components/Dropdown";
 import { useTranslation } from "../../hooks/useTranslation";
 import { clx, copyClipboard } from "../../lib/helpers";
-import { track } from "../../lib/mixpanel";
 import { GithubThemes } from "./theme";
 import { DocumentDuplicateIcon, GlobeAltIcon } from "@heroicons/react/24/outline";
 import hljs from "highlight.js/lib/core";
@@ -103,7 +102,6 @@ const CodeBlock: FunctionComponent<CodeBlockProps> = ({ children, hidden, event,
   );
 
   const handleCopy = () => {
-    track("code_copy", { language: language.value, ...event });
     copyClipboard(children[language.value] ?? "");
     setCopyText(t("common.copied"));
     setTimeout(() => {

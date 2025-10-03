@@ -8,6 +8,7 @@
         "ANALYZE",
         "AUTH_TOKEN",
         "S3_URL",
+        "NODE_ENV",
         "REVALIDATE_TOKEN",
         "NEXT_PUBLIC_GA_TAG",
         "NEXT_PUBLIC_API_URL",
