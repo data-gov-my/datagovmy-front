@@ -133,8 +133,8 @@
     "@radix-ui/react-slider": "^1.1.1",
     "@tanstack/match-sorter-utils": "^8.8.4",
     "@tanstack/react-table": "^8.11.2",
-    "@tanstack/react-virtual": "^3.0.0-beta.54",
-    "axios": "^1.6.0",
+    "@tanstack/react-virtual": "^3.13.12",
+    "axios": "^1.12.2",
     "canvas2svg": "^1.0.16",
     "chart.js": "^3.9.1",
     "chartjs-adapter-luxon": "^1.2.0",
@@ -170,7 +170,6 @@
     "ua-parser-js": "^1.0.38"
   },
   "devDependencies": {
-    "@types/cookie": "^0.5.1",
     "@types/d3-interpolate": "^3.0.4",
     "@types/d3-scale": "^4.0.2",
     "@types/d3-shape": "^3.1.0",
@@ -190,7 +189,7 @@
     "@typescript-eslint/eslint-plugin": "^5.59.0",
     "@typescript-eslint/parser": "^5.59.0",
     "autoprefixer": "^10.4.7",
-    "cookie": "^0.5.0",
+    "cookie": "^0.7.2",
     "eslint": "^8.40.0",
     "eslint-config-datagovmy": "*",
     "eslint-plugin-react-hooks": "^4.6.0",
