@@ -10,8 +10,8 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { useTranslation as _useTranslation } from "next-i18next";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
-import { useDuckDb } from "duckdb-wasm-kit";
-import { useEffect, useState } from "react";
+import { useDuckDb, DuckDBQuery } from "datagovmy-ui/hooks";
+import { useEffect } from "react";
 
 const RapidExplorer: Page = ({
   meta,
@@ -25,145 +25,173 @@ const RapidExplorer: Page = ({
   params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboard-rapid-explorer");
-  const [forward, setForward] = useState<any>();
-  const [reverse, setReverse] = useState<any>();
-  const [forwardCallout, setForwardCallout] = useState<any>();
-  const [reverseCallout, setReverseCallout] = useState<any>();
 
-  const { db, loading, error } = useDuckDb();
+  // Define query configurations for the rapid explorer dashboard
+  const queryConfigs: DuckDBQuery[] = [
+    {
+      name: "forward",
+      defaultValue: null,
+      query: `
+        SELECT
+          origin,
+          destination,
+          date,
+          passengers
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.origin}'
+          AND destination = '${params.destination}'
+        ORDER BY date ASC
+      `,
+    },
+    {
+      name: "reverse",
+      defaultValue: null,
+      query: `
+        SELECT
+          origin,
+          destination,
+          date,
+          passengers
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.destination}'
+          AND destination = '${params.origin}'
+        ORDER BY date ASC
+      `,
+    },
+    {
+      name: "forwardCallout",
+      defaultValue: { daily: 0, monthly: 0 },
+      query: `
+        SELECT SUM(passengers) as total
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.origin}'
+          AND destination = '${params.destination}'
+          AND date >= '2025-10-01'
+          AND date <= '2025-10-05'
+      `,
+    },
+    {
+      name: "reverseCallout",
+      defaultValue: { daily: 0, monthly: 0 },
+      query: `
+        SELECT SUM(passengers) as total
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.destination}'
+          AND destination = '${params.origin}'
+          AND date >= '2025-10-01'
+          AND date <= '2025-10-05'
+      `,
+    },
+  ];
 
-  const executeQuery = async () => {
-    try {
-      if (db) {
-        const startTime = performance.now();
-        const connection = await db.connect();
-        const [forwardResult, reverseResult, forwardTotalResult, reverseTotalResult] =
-          await Promise.all([
-            // Query 1: Origin → Destination
-            connection.query(`
-          SELECT
-            origin,
-            destination,
-            date,
-            passengers
-          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = '${params.origin}'
-            AND destination = '${params.destination}'
-          ORDER BY date ASC
-        `),
+  const { queryData, setQueryData, executeQueries, loading, error, db } = useDuckDb(queryConfigs);
 
-            // Query 2: Destination → Origin (reverse direction)
-            connection.query(`
-          SELECT
-            origin,
-            destination,
-            date,
-            passengers
-          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = '${params.destination}'
-            AND destination = '${params.origin}'
-          ORDER BY date ASC
-        `),
+  // Process query results and update hook data
+  const processQueryResults = (queryResults: any[]) => {
+    // Process forward direction data
+    const forwardResult = queryResults.find(r => r.name === "forward");
+    if (forwardResult?.success && forwardResult.data) {
+      const rows = forwardResult.data.toArray() || [];
+      const data = rows.map((row: any) => ({
+        origin: row.origin,
+        destination: row.destination,
+        date: row.date,
+        passengers: Number(row.passengers),
+      }));
 
-            // Query 3: Total passengers for current month forward
-            connection.query(`
-          SELECT SUM(passengers) as total
-          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = '${params.origin}'
-            AND destination = '${params.destination}'
-            AND date >= '2025-09-01'
-            AND date <= '2025-09-30'
-        `),
+      const processedForward = {
+        data_as_of: "2025-09-24 23:59",
+        data: {
+          daily: {
+            passengers: data.map((row: any) => row.passengers),
+            x: data.map((row: any) => row.date),
+          },
+          monthly: {
+            passengers: data.map((row: any) => row.passengers),
+            x: data.map((row: any) => row.date),
+          },
+        },
+      };
 
-            // Query 4: Total passengers for current month reverse
-            connection.query(`
-          SELECT SUM(passengers) as total
-          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = '${params.destination}'
-            AND destination = '${params.origin}'
-            AND date >= '2025-09-01'
-            AND date <= '2025-09-30'
-        `),
-          ]);
+      setQueryData("forward", processedForward);
 
-        const endTime = performance.now();
-        const totalInitTime = endTime - startTime;
-        console.log(`🚀 DuckDB query in ${totalInitTime.toFixed(2)}ms`);
+      const forwardCalloutResult = queryResults.find(r => r.name === "forwardCallout");
+      if (forwardCalloutResult?.success && forwardCalloutResult.data) {
+        const totalData = forwardCalloutResult.data.toArray() || [];
+        const total = totalData[0]?.total?.[0] || 0;
 
-        if (forwardResult && forwardResult.numRows > 0) {
-          const rows = forwardResult.toArray();
-          const data = rows.map(row => ({
-            origin: row.origin,
-            destination: row.destination,
-            date: row.date,
-            passengers: Number(row.passengers),
-          }));
+        const dailyValue = data[data.length - 1].passengers || 0;
 
-          setForward({
-            data_as_of: "2025-09-24 23:59",
-            data: {
-              daily: {
-                passengers: data.map(row => row.passengers),
-                x: data.map(row => row.date),
-              },
-              monthly: {
-                passengers: data.map(row => row.passengers),
-                x: data.map(row => row.date),
-              },
-            },
-          });
-
-          if (forwardTotalResult && forwardTotalResult.numRows > 0) {
-            const total = forwardTotalResult.toArray()[0].total[0];
-            setForwardCallout({
-              daily: data[data.length - 1].passengers,
-              monthly: total,
-            });
-          }
-        }
-        if (reverseResult && reverseResult.numRows > 0) {
-          const rows = reverseResult.toArray();
-          const data = rows.map(row => ({
-            origin: row.origin,
-            destination: row.destination,
-            date: row.date,
-            passengers: Number(row.passengers),
-          }));
-
-          setReverse({
-            daily: {
-              passengers: data.map(row => row.passengers),
-              x: data.map(row => row.date),
-            },
-            monthly: {
-              passengers: data.map(row => row.passengers),
-              x: data.map(row => row.date),
-            },
-            daily_7d: {
-              passengers: data.map(row => row.passengers),
-              x: data.map(row => row.date),
-            },
-            yearly: {
-              passengers: data.map(row => row.passengers),
-              x: data.map(row => row.date),
-            },
-          });
-
-          if (reverseTotalResult && reverseTotalResult.numRows > 0) {
-            const total = reverseTotalResult.toArray()[0].total[0];
-            setReverseCallout({
-              daily: data[data.length - 1].passengers,
-              monthly: total,
-            });
-          }
-        }
+        setQueryData("forwardCallout", {
+          daily: dailyValue,
+          monthly: total,
+        });
       }
-    } catch (error) {}
+    }
+
+    // Process reverse direction data
+    const reverseResult = queryResults.find(r => r.name === "reverse");
+    if (reverseResult?.success && reverseResult.data) {
+      const rows = reverseResult.data.toArray() || [];
+      const data = rows.map((row: any) => ({
+        origin: row.origin,
+        destination: row.destination,
+        date: row.date,
+        passengers: Number(row.passengers),
+      }));
+
+      const processedReverse = {
+        daily: {
+          passengers: data.map((row: any) => row.passengers),
+          x: data.map((row: any) => row.date),
+        },
+        monthly: {
+          passengers: data.map((row: any) => row.passengers),
+          x: data.map((row: any) => row.date),
+        },
+        daily_7d: {
+          passengers: data.map((row: any) => row.passengers),
+          x: data.map((row: any) => row.date),
+        },
+        yearly: {
+          passengers: data.map((row: any) => row.passengers),
+          x: data.map((row: any) => row.date),
+        },
+      };
+
+      setQueryData("reverse", processedReverse);
+
+      const reverseCalloutResult = queryResults.find(r => r.name === "reverseCallout");
+      if (reverseCalloutResult?.success && reverseCalloutResult.data) {
+        const totalData = reverseCalloutResult.data.toArray() || [];
+        const total = totalData[0]?.total?.[0] || 0;
+
+        // Get reverse data for daily calculation
+        const dailyValue = data[data.length - 1].passengers || 0;
+
+        setQueryData("reverseCallout", {
+          daily: dailyValue,
+          monthly: total,
+        });
+      }
+    }
   };
 
+  // Execute queries when component mounts or params change
   useEffect(() => {
-    executeQuery();
-  }, [db, params]);
+    const runQueries = async () => {
+      try {
+        const results = await executeQueries();
+        if (results) {
+          processQueryResults(results);
+        }
+      } catch (error) {}
+    };
+
+    if (params?.origin && params?.destination) {
+      runQueries();
+    }
+  }, [params, db]);
 
   if (loading) {
     return (
@@ -176,8 +204,31 @@ const RapidExplorer: Page = ({
   }
 
   if (error) {
-    return <div>error</div>;
+    return (
+      <Container>
+        <div className="flex min-h-screen w-full flex-col items-center justify-center space-y-4">
+          <div className="text-center">
+            <h2 className="text-lg font-semibold text-red-600">
+              Failed to load transportation data
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              {typeof error === "string" ? error : error.message}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </Container>
+    );
   }
+
+  const { forward, reverse, forwardCallout, reverseCallout } = queryData;
+
+  console.log(forwardCallout);
 
   if (!forward || !reverse) {
     return null;

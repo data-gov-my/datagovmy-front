@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { createElement, ReactElement } from "react";
+import { createElement, ReactElement, useId } from "react";
 import { CountryAndStates } from "./constants";
 import DomToImage from "dom-to-image";
 import canvasToSvg from "canvas2svg";
@@ -347,11 +347,13 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
 
   return matches.map(item => {
     const match = item.split("](");
-    if (match.length <= 1) return createElement("span", { className: "text-inherit" }, item);
+    if (match.length <= 1)
+      return createElement("span", { key: `span-${useId()}`, className: "text-inherit" }, item);
     const [text, url] = match;
     return createElement(
       "a",
       {
+        key: `link-${useId()}-${text.replace(/\s+/g, "-").toLowerCase()}`,
         href: url,
         className:
           "text-primary dark:text-primary-dark hover:underline inline [text-underline-position:from-font]",
