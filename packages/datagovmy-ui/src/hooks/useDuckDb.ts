@@ -1,19 +1,18 @@
 import { useDuckDb as _useDuckDb } from "duckdb-wasm-kit";
 import { useData } from "./useData";
 
-/**
- * Query configuration for DuckDB
- */
-export interface DuckDBQuery {
-  name: string;
+export interface DuckDBQuery<T> {
+  name: T;
   defaultValue: any;
-  query: string;
+  filters: string; // e.g. "AND origin = 'KUL' AND destination = 'PEN'"
+  select: string; // e.g. "SUM(passengers) AS total"
 }
 
 /**
- * Enhanced useDuckDb hook with better error handling and data management
+ * DuckDB hook that accepts multiple query definitions
+ * and a shared baseQuery with a {{select}} placeholder
  */
-export const useDuckDb = (queries: DuckDBQuery[]) => {
+export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[], baseQuery: string) => {
   const { db, loading, error } = _useDuckDb();
   const { data: queryData, setData: setQueryData } = useData(
     queries.reduce(
@@ -25,23 +24,25 @@ export const useDuckDb = (queries: DuckDBQuery[]) => {
     )
   );
 
-  /**
-   * Execute all queries and return the query data in default Arrow
-   */
   const executeQueries = async () => {
     if (!db || !queries.length) return;
 
-    try {
-      const connection = await db.connect();
-      const startTime = performance.now();
+    const connection = await db.connect();
+    const startTime = performance.now();
 
+    try {
       const results = await Promise.all(
         queries.map(async query => {
           try {
-            const result = await connection.query(query.query);
+            // Build full SQL dynamically by injecting SELECT and filters
+            const fullQuery =
+              baseQuery.replace(/\{\{\s*select\s*\}\}/i, query.select).trim() +
+              `\n${query.filters.trim()}`;
+
+            const result = await connection.query(fullQuery);
             return { name: query.name, data: result, success: true };
           } catch (err) {
-            console.error(`Query ${query.name} failed:`, err);
+            console.error(`❌ Query ${query.name} failed:`, err);
             return { name: query.name, error: err, success: false };
           }
         })
@@ -52,11 +53,12 @@ export const useDuckDb = (queries: DuckDBQuery[]) => {
         console.log(`🚀 DuckDB queries completed in ${(endTime - startTime).toFixed(2)}ms`);
       }
 
-      await connection.close();
       return results;
     } catch (err) {
       console.error("DuckDB execution failed:", err);
       throw err;
+    } finally {
+      await connection.close();
     }
   };
 

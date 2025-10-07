@@ -13,6 +13,8 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useDuckDb, DuckDBQuery } from "datagovmy-ui/hooks";
 import { useEffect } from "react";
 
+type RapidExplorerVariable = "forward" | "reverse" | "forwardCallout" | "reverseCallout";
+
 const RapidExplorer: Page = ({
   meta,
   A_to_B,
@@ -27,18 +29,15 @@ const RapidExplorer: Page = ({
   const { t } = useTranslation("dashboard-rapid-explorer");
 
   // Define query configurations for the rapid explorer dashboard
-  const queryConfigs: DuckDBQuery[] = [
+  const queryConfigs: DuckDBQuery<RapidExplorerVariable>[] = [
     {
       name: "forward",
       defaultValue: null,
-      query: `
-        SELECT
-          origin,
+      select: `origin,
           destination,
           date,
-          passengers
-        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-        WHERE origin = '${params.origin}'
+          passengers`,
+      filters: `origin = '${params.origin}'
           AND destination = '${params.destination}'
         ORDER BY date ASC
       `,
@@ -46,14 +45,11 @@ const RapidExplorer: Page = ({
     {
       name: "reverse",
       defaultValue: null,
-      query: `
-        SELECT
-          origin,
+      select: `origin,
           destination,
           date,
-          passengers
-        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-        WHERE origin = '${params.destination}'
+          passengers`,
+      filters: `origin = '${params.destination}'
           AND destination = '${params.origin}'
         ORDER BY date ASC
       `,
@@ -61,11 +57,9 @@ const RapidExplorer: Page = ({
     {
       name: "forwardCallout",
       defaultValue: { daily: 0, monthly: 0 },
-      query: `
-        SELECT SUM(passengers) as total
-        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-        WHERE origin = '${params.origin}'
-          AND destination = '${params.destination}'
+      select: `SUM(passengers) as total`,
+      filters: `origin = '${params.origin}'
+   AND destination = '${params.destination}'
           AND date >= '2025-10-01'
           AND date <= '2025-10-05'
       `,
@@ -73,10 +67,9 @@ const RapidExplorer: Page = ({
     {
       name: "reverseCallout",
       defaultValue: { daily: 0, monthly: 0 },
-      query: `
-        SELECT SUM(passengers) as total
-        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-        WHERE origin = '${params.destination}'
+      select: `SUM(passengers) as total`,
+      filters: `
+        origin = '${params.destination}'
           AND destination = '${params.origin}'
           AND date >= '2025-10-01'
           AND date <= '2025-10-05'
@@ -84,7 +77,12 @@ const RapidExplorer: Page = ({
     },
   ];
 
-  const { queryData, setQueryData, executeQueries, loading, error, db } = useDuckDb(queryConfigs);
+  const { queryData, setQueryData, executeQueries, loading, error, db } = useDuckDb(
+    queryConfigs,
+    `SELECT {{select}}
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE`
+  );
 
   // Process query results and update hook data
   const processQueryResults = (queryResults: any[]) => {
@@ -120,7 +118,7 @@ const RapidExplorer: Page = ({
         const totalData = forwardCalloutResult.data.toArray() || [];
         const total = totalData[0]?.total?.[0] || 0;
 
-        const dailyValue = data[data.length - 1].passengers || 0;
+        const dailyValue = data[data.length - 1]?.passengers || 0;
 
         setQueryData("forwardCallout", {
           daily: dailyValue,
@@ -167,7 +165,7 @@ const RapidExplorer: Page = ({
         const total = totalData[0]?.total?.[0] || 0;
 
         // Get reverse data for daily calculation
-        const dailyValue = data[data.length - 1].passengers || 0;
+        const dailyValue = data[data.length - 1]?.passengers || 0;
 
         setQueryData("reverseCallout", {
           daily: dailyValue,
@@ -227,8 +225,6 @@ const RapidExplorer: Page = ({
   }
 
   const { forward, reverse, forwardCallout, reverseCallout } = queryData;
-
-  console.log(forwardCallout);
 
   if (!forward || !reverse) {
     return null;
