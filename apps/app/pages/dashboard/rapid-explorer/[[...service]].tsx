@@ -13,7 +13,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useDuckDb, DuckDBQuery } from "datagovmy-ui/hooks";
 import { useEffect } from "react";
 
-type RapidExplorerVariable = "forward" | "reverse" | "forwardCallout" | "reverseCallout";
+type RapidExplorerVariable = "forward" | "reverse";
 
 const RapidExplorer: Page = ({
   meta,
@@ -33,145 +33,142 @@ const RapidExplorer: Page = ({
     {
       name: "forward",
       defaultValue: null,
-      select: `origin,
-          destination,
-          date,
-          passengers`,
-      filters: `origin = '${params.origin}'
+      query: `
+        WITH daily_data AS (
+          SELECT origin, destination, date, passengers
+          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+          WHERE origin = '${params.origin}'
           AND destination = '${params.destination}'
-        ORDER BY date ASC
+        )
+        SELECT origin, destination, date, passengers, 'daily' as period
+        FROM daily_data
+
+        UNION ALL
+
+        SELECT ANY_VALUE(origin) as origin, ANY_VALUE(destination) as destination,
+               (strftime('%Y-%m', date) || '-01') as date, SUM(passengers) as passengers,
+               'monthly' as period
+        FROM daily_data
+        GROUP BY strftime('%Y-%m', date)
+
+        ORDER BY period, date
       `,
     },
     {
       name: "reverse",
       defaultValue: null,
-      select: `origin,
-          destination,
-          date,
-          passengers`,
-      filters: `origin = '${params.destination}'
+      query: `
+        WITH daily_data AS (
+          SELECT origin, destination, date, passengers
+          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+          WHERE origin = '${params.destination}'
           AND destination = '${params.origin}'
-        ORDER BY date ASC
-      `,
-    },
-    {
-      name: "forwardCallout",
-      defaultValue: { daily: 0, monthly: 0 },
-      select: `SUM(passengers) as total`,
-      filters: `origin = '${params.origin}'
-   AND destination = '${params.destination}'
-          AND date >= '2025-10-01'
-          AND date <= '2025-10-05'
-      `,
-    },
-    {
-      name: "reverseCallout",
-      defaultValue: { daily: 0, monthly: 0 },
-      select: `SUM(passengers) as total`,
-      filters: `
-        origin = '${params.destination}'
-          AND destination = '${params.origin}'
-          AND date >= '2025-10-01'
-          AND date <= '2025-10-05'
+        )
+        SELECT origin, destination, date, passengers, 'daily' as period
+        FROM daily_data
+
+        UNION ALL
+
+        SELECT ANY_VALUE(origin) as origin, ANY_VALUE(destination) as destination,
+               (strftime('%Y-%m', date) || '-01') as date, SUM(passengers) as passengers,
+               'monthly' as period
+        FROM daily_data
+        GROUP BY strftime('%Y-%m', date)
+
+        ORDER BY period, date
       `,
     },
   ];
 
-  const { queryData, setQueryData, executeQueries, loading, error, db } = useDuckDb(
-    queryConfigs,
-    `SELECT {{select}}
-        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-        WHERE`
-  );
+  const { queryData, setQueryData, executeQueries, loading, error, db } = useDuckDb(queryConfigs);
 
   // Process query results and update hook data
-  const processQueryResults = (queryResults: any[]) => {
+  const processQueryResults = (queryResults: Record<RapidExplorerVariable, any>) => {
     // Process forward direction data
-    const forwardResult = queryResults.find(r => r.name === "forward");
-    if (forwardResult?.success && forwardResult.data) {
-      const rows = forwardResult.data.toArray() || [];
-      const data = rows.map((row: any) => ({
-        origin: row.origin,
-        destination: row.destination,
-        date: row.date,
-        passengers: Number(row.passengers),
-      }));
+    if (queryResults.forward) {
+      const rows = queryResults.forward.toArray() || [];
+      const dailyData = rows
+        .filter((row: any) => row.period === "daily")
+        .map((row: any) => ({
+          origin: row.origin,
+          destination: row.destination,
+          date: row.date,
+          passengers: Number(row.passengers),
+        }));
+      const monthlyData = rows
+        .filter((row: any) => row.period === "monthly")
+        .map((row: any) => ({
+          origin: row.origin,
+          destination: row.destination,
+          date: row.date,
+          passengers: Number(row.passengers),
+        }));
 
       const processedForward = {
         data_as_of: "2025-09-24 23:59",
         data: {
           daily: {
-            passengers: data.map((row: any) => row.passengers),
-            x: data.map((row: any) => row.date),
+            passengers: dailyData.map((row: any) => row.passengers),
+            x: dailyData.map((row: any) => row.date),
           },
           monthly: {
-            passengers: data.map((row: any) => row.passengers),
-            x: data.map((row: any) => row.date),
+            passengers: monthlyData.map((row: any) => row.passengers),
+            x: monthlyData.map((row: any) => row.date),
           },
         },
       };
 
       setQueryData("forward", processedForward);
 
-      const forwardCalloutResult = queryResults.find(r => r.name === "forwardCallout");
-      if (forwardCalloutResult?.success && forwardCalloutResult.data) {
-        const totalData = forwardCalloutResult.data.toArray() || [];
-        const total = totalData[0]?.total?.[0] || 0;
+      const dailyValue = dailyData[dailyData.length - 1]?.passengers || 0;
+      const monthlyValue = monthlyData[monthlyData.length - 1]?.passengers || 0;
 
-        const dailyValue = data[data.length - 1]?.passengers || 0;
-
-        setQueryData("forwardCallout", {
-          daily: dailyValue,
-          monthly: total,
-        });
-      }
+      setQueryData("forwardCallout", {
+        daily: dailyValue,
+        monthly: monthlyValue,
+      });
     }
 
     // Process reverse direction data
-    const reverseResult = queryResults.find(r => r.name === "reverse");
-    if (reverseResult?.success && reverseResult.data) {
-      const rows = reverseResult.data.toArray() || [];
-      const data = rows.map((row: any) => ({
-        origin: row.origin,
-        destination: row.destination,
-        date: row.date,
-        passengers: Number(row.passengers),
-      }));
+    if (queryResults.reverse) {
+      const rows = queryResults.reverse.toArray() || [];
+      const dailyData = rows
+        .filter((row: any) => row.period === "daily")
+        .map((row: any) => ({
+          origin: row.origin,
+          destination: row.destination,
+          date: row.date,
+          passengers: Number(row.passengers),
+        }));
+      const monthlyData = rows
+        .filter((row: any) => row.period === "monthly")
+        .map((row: any) => ({
+          origin: row.origin,
+          destination: row.destination,
+          date: row.date,
+          passengers: Number(row.passengers),
+        }));
 
       const processedReverse = {
         daily: {
-          passengers: data.map((row: any) => row.passengers),
-          x: data.map((row: any) => row.date),
+          passengers: dailyData.map((row: any) => row.passengers),
+          x: dailyData.map((row: any) => row.date),
         },
         monthly: {
-          passengers: data.map((row: any) => row.passengers),
-          x: data.map((row: any) => row.date),
-        },
-        daily_7d: {
-          passengers: data.map((row: any) => row.passengers),
-          x: data.map((row: any) => row.date),
-        },
-        yearly: {
-          passengers: data.map((row: any) => row.passengers),
-          x: data.map((row: any) => row.date),
+          passengers: monthlyData.map((row: any) => row.passengers),
+          x: monthlyData.map((row: any) => row.date),
         },
       };
 
       setQueryData("reverse", processedReverse);
 
-      const reverseCalloutResult = queryResults.find(r => r.name === "reverseCallout");
-      if (reverseCalloutResult?.success && reverseCalloutResult.data) {
-        const totalData = reverseCalloutResult.data.toArray() || [];
-        const total = totalData[0]?.total?.[0] || 0;
+      const dailyValue = dailyData[dailyData.length - 1]?.passengers || 0;
+      const monthlyValue = monthlyData[monthlyData.length - 1]?.passengers || 0;
 
-        // Get reverse data for daily calculation
-        const dailyValue = data[data.length - 1]?.passengers || 0;
-
-        setQueryData("reverseCallout", {
-          daily: dailyValue,
-          monthly: total,
-        });
-      }
+      setQueryData("reverseCallout", {
+        daily: dailyValue,
+        monthly: monthlyValue,
+      });
     }
   };
 

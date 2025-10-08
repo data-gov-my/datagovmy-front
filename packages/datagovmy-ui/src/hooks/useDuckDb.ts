@@ -4,15 +4,29 @@ import { useData } from "./useData";
 export interface DuckDBQuery<T> {
   name: T;
   defaultValue: any;
-  filters: string; // e.g. "AND origin = 'KUL' AND destination = 'PEN'"
-  select: string; // e.g. "SUM(passengers) AS total"
+  query: string;
 }
 
 /**
- * DuckDB hook that accepts multiple query definitions
- * and a shared baseQuery with a {{select}} placeholder
+ * DuckDB hook for executing multiple SQL queries asynchronously.
+ *
+ * @template T - Union type of query name keys (e.g., "forward" | "reverse")
+ * @param queries - Array of query configurations with name, defaultValue, and full SQL query
+ * @returns Object containing queryData state, setQueryData updater, executeQueries function, db instance, loading state, and error state
+ *
+ * @example
+ * ```typescript
+ * type QueryKeys = "users" | "stats";
+ *
+ * const queries: DuckDBQuery<QueryKeys>[] = [
+ *   { name: "users", defaultValue: [], query: "SELECT * FROM users" },
+ *   { name: "stats", defaultValue: {}, query: "SELECT COUNT(*) as count FROM users" }
+ * ];
+ *
+ * const { queryData, executeQueries, loading } = useDuckDb<QueryKeys>(queries);
+ * ```
  */
-export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[], baseQuery: string) => {
+export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
   const { db, loading, error } = _useDuckDb();
   const { data: queryData, setData: setQueryData } = useData(
     queries.reduce(
@@ -31,21 +45,19 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[], baseQuery
     const startTime = performance.now();
 
     try {
-      const results = await Promise.all(
-        queries.map(async query => {
+      const resultsObject = await queries.reduce(
+        async (accPromise, query) => {
+          const acc = await accPromise;
           try {
-            // Build full SQL dynamically by injecting SELECT and filters
-            const fullQuery =
-              baseQuery.replace(/\{\{\s*select\s*\}\}/i, query.select).trim() +
-              `\n${query.filters.trim()}`;
-
-            const result = await connection.query(fullQuery);
-            return { name: query.name, data: result, success: true };
+            const result = await connection.query(query.query);
+            acc[query.name] = result;
+            return acc;
           } catch (err) {
-            console.error(`❌ Query ${query.name} failed:`, err);
-            return { name: query.name, error: err, success: false };
+            acc[query.name] = null;
+            return acc;
           }
-        })
+        },
+        Promise.resolve({} as Record<string, any>)
       );
 
       const endTime = performance.now();
@@ -53,7 +65,7 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[], baseQuery
         console.log(`🚀 DuckDB queries completed in ${(endTime - startTime).toFixed(2)}ms`);
       }
 
-      return results;
+      return resultsObject;
     } catch (err) {
       console.error("DuckDB execution failed:", err);
       throw err;
