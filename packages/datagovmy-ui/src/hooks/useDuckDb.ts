@@ -55,8 +55,21 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
         async (accPromise, query) => {
           const acc = await accPromise;
           try {
-            const result = await connection.query(query.query);
-            acc[query.name] = result;
+            const statements = query.query
+              .split(";")
+              .map(s => s.trim())
+              .filter(s => s.length > 0);
+            if (statements.length === 1) {
+              const result = await connection.query(statements[0]);
+              acc[query.name] = result;
+            } else {
+              const results = [];
+              for (const stmt of statements) {
+                const result = await connection.query(stmt);
+                results.push(result);
+              }
+              acc[query.name] = results;
+            }
             return acc;
           } catch (err) {
             acc[query.name] = null;
@@ -85,8 +98,21 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
 
     const connection = await db.connect();
     try {
-      const result = await connection.query(query);
-      return result;
+      const statements = query
+        .split(";")
+        .map(s => s.trim())
+        .filter(s => s.length > 0);
+      if (statements.length === 1) {
+        const result = await connection.query(statements[0]);
+        return result;
+      } else {
+        const results = [];
+        for (const stmt of statements) {
+          const result = await connection.query(stmt);
+          results.push(result);
+        }
+        return results;
+      }
     } catch (err) {
       console.error("DuckDB query execution failed:", err);
       throw err;

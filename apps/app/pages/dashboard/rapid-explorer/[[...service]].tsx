@@ -12,6 +12,7 @@ import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useDuckDb, DuckDBQuery } from "datagovmy-ui/hooks";
 import { useEffect } from "react";
+import { Arrow } from "duckdb-wasm-kit";
 
 type RapidExplorerVariable = "forward" | "reverse";
 
@@ -34,94 +35,67 @@ const RapidExplorer: Page = ({
       name: "forward",
       defaultValue: null,
       query: `
-        WITH daily_data AS (
-          SELECT origin, destination, date, passengers
-          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = '${params.origin}'
-          AND destination = '${params.destination}'
-        )
-        SELECT origin, destination, date, passengers, 'daily' as period
-        FROM daily_data
-
-        UNION ALL
-
+        SELECT origin, destination, date, CAST(passengers AS INTEGER) as passengers
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.origin}'
+        AND destination = '${params.destination}'
+        ORDER BY date
+        ;
         SELECT ANY_VALUE(origin) as origin, ANY_VALUE(destination) as destination,
-               (strftime('%Y-%m', date) || '-01') as date, SUM(passengers) as passengers,
-               'monthly' as period
-        FROM daily_data
+               (strftime('%Y-%m', date) || '-01') as date, CAST(SUM(passengers) AS INTEGER) as passengers
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.origin}'
+        AND destination = '${params.destination}'
         GROUP BY strftime('%Y-%m', date)
-
-        ORDER BY period, date
+        ORDER BY date
       `,
     },
     {
       name: "reverse",
       defaultValue: null,
       query: `
-        WITH daily_data AS (
-          SELECT origin, destination, date, passengers
-          FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
-          WHERE origin = '${params.destination}'
-          AND destination = '${params.origin}'
-        )
-        SELECT origin, destination, date, passengers, 'daily' as period
-        FROM daily_data
-
-        UNION ALL
-
+        SELECT origin, destination, date, CAST(passengers AS INTEGER) as passengers
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.destination}'
+        AND destination = '${params.origin}'
+        ORDER BY date
+        ;
         SELECT ANY_VALUE(origin) as origin, ANY_VALUE(destination) as destination,
-               (strftime('%Y-%m', date) || '-01') as date, SUM(passengers) as passengers,
-               'monthly' as period
-        FROM daily_data
+               (strftime('%Y-%m', date) || '-01') as date, CAST(SUM(passengers) AS INTEGER) as passengers
+        FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'
+        WHERE origin = '${params.destination}'
+        AND destination = '${params.origin}'
         GROUP BY strftime('%Y-%m', date)
-
-        ORDER BY period, date
+        ORDER BY date
       `,
     },
   ];
 
-  const { queryData, setQueryData, executeQueries, loading, error, db } = useDuckDb(queryConfigs);
+  const { queryData, setQueryData, executeQueries, loading, db } = useDuckDb(queryConfigs);
 
-  // Process query results and update hook data
-  const processQueryResults = (queryResults: Record<RapidExplorerVariable, any>) => {
-    // Process forward direction data
-    if (queryResults.forward) {
-      const rows = queryResults.forward.toArray() || [];
-      const dailyData = rows
-        .filter((row: any) => row.period === "daily")
-        .map((row: any) => ({
-          origin: row.origin,
-          destination: row.destination,
-          date: row.date,
-          passengers: Number(row.passengers),
-        }));
-      const monthlyData = rows
-        .filter((row: any) => row.period === "monthly")
-        .map((row: any) => ({
-          origin: row.origin,
-          destination: row.destination,
-          date: row.date,
-          passengers: Number(row.passengers),
-        }));
+  const processQueryResults = (queryResults: Record<RapidExplorerVariable, Arrow>) => {
+    if (queryResults.forward && Array.isArray(queryResults.forward)) {
+      const dailyRows = queryResults.forward[0].toArray() || [];
+      const monthlyRows = queryResults.forward[1].toArray() || [];
 
       const processedForward = {
-        data_as_of: "2025-09-24 23:59",
+        data_as_of: A_to_B.data_as_of,
         data: {
           daily: {
-            passengers: dailyData.map((row: any) => row.passengers),
-            x: dailyData.map((row: any) => row.date),
+            passengers: dailyRows.map((row: any) => row.passengers),
+            x: dailyRows.map((row: any) => row.date),
           },
           monthly: {
-            passengers: monthlyData.map((row: any) => row.passengers),
-            x: monthlyData.map((row: any) => row.date),
+            passengers: monthlyRows.map((row: any) => row.passengers),
+            x: monthlyRows.map((row: any) => row.date),
           },
         },
       };
 
       setQueryData("forward", processedForward);
 
-      const dailyValue = dailyData[dailyData.length - 1]?.passengers || 0;
-      const monthlyValue = monthlyData[monthlyData.length - 1]?.passengers || 0;
+      const dailyValue = dailyRows[dailyRows.length - 1]?.passengers || 0;
+      const monthlyValue = monthlyRows[monthlyRows.length - 1]?.passengers || 0;
 
       setQueryData("forwardCallout", {
         daily: dailyValue,
@@ -129,41 +103,25 @@ const RapidExplorer: Page = ({
       });
     }
 
-    // Process reverse direction data
-    if (queryResults.reverse) {
-      const rows = queryResults.reverse.toArray() || [];
-      const dailyData = rows
-        .filter((row: any) => row.period === "daily")
-        .map((row: any) => ({
-          origin: row.origin,
-          destination: row.destination,
-          date: row.date,
-          passengers: Number(row.passengers),
-        }));
-      const monthlyData = rows
-        .filter((row: any) => row.period === "monthly")
-        .map((row: any) => ({
-          origin: row.origin,
-          destination: row.destination,
-          date: row.date,
-          passengers: Number(row.passengers),
-        }));
+    if (queryResults.reverse && Array.isArray(queryResults.reverse)) {
+      const dailyRows = queryResults.reverse[0].toArray() || [];
+      const monthlyRows = queryResults.reverse[1].toArray() || [];
 
       const processedReverse = {
         daily: {
-          passengers: dailyData.map((row: any) => row.passengers),
-          x: dailyData.map((row: any) => row.date),
+          passengers: dailyRows.map((row: any) => row.passengers),
+          x: dailyRows.map((row: any) => row.date),
         },
         monthly: {
-          passengers: monthlyData.map((row: any) => row.passengers),
-          x: monthlyData.map((row: any) => row.date),
+          passengers: monthlyRows.map((row: any) => row.passengers),
+          x: monthlyRows.map((row: any) => row.date),
         },
       };
 
       setQueryData("reverse", processedReverse);
 
-      const dailyValue = dailyData[dailyData.length - 1]?.passengers || 0;
-      const monthlyValue = monthlyData[monthlyData.length - 1]?.passengers || 0;
+      const dailyValue = dailyRows[dailyRows.length - 1]?.passengers || 0;
+      const monthlyValue = monthlyRows[monthlyRows.length - 1]?.passengers || 0;
 
       setQueryData("reverseCallout", {
         daily: dailyValue,
@@ -193,29 +151,6 @@ const RapidExplorer: Page = ({
       <Container>
         <div className="flex min-h-screen w-full items-center justify-center">
           <Spinner loading={true} />
-        </div>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container>
-        <div className="flex min-h-screen w-full flex-col items-center justify-center space-y-4">
-          <div className="text-center">
-            <h2 className="text-lg font-semibold text-red-600">
-              Failed to load transportation data
-            </h2>
-            <p className="mt-2 text-sm text-gray-600">
-              {typeof error === "string" ? error : error.message}
-            </p>
-            <button
-              onClick={() => window.location.reload()}
-              className="mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-            >
-              Retry
-            </button>
-          </div>
         </div>
       </Container>
     );
