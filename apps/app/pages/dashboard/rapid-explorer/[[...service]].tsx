@@ -115,6 +115,12 @@ const RapidExplorer: Page = ({
 
     if (params?.origin && params?.destination) {
       runQueries();
+    } else {
+      // Use default data
+      setQueryData("forward", A_to_B);
+      setQueryData("forwardCallout", A_to_B_callout);
+      setQueryData("reverse", B_to_A);
+      setQueryData("reverseCallout", B_to_A_callout);
     }
   }, [params, db]);
 
@@ -226,7 +232,7 @@ export const getStaticProps: GetStaticProps = withi18n(
         dropdown: dropdown,
         last_updated: A_to_B.data_last_updated,
         next_update: A_to_B.data_next_update ?? null,
-        params: { service, origin, destination },
+        params: params?.service ? { service, origin, destination } : {},
       },
       revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
