@@ -32,7 +32,10 @@ export interface DuckDBQuery<T> {
  * const result = await executeQuery("SELECT COUNT(*) FROM users");
  * ```
  */
-export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
+export const useDuckDb = <T extends string>(
+  queries: DuckDBQuery<T>[],
+  verbose: boolean = process.env.NEXT_PUBLIC_APP_ENV !== "production"
+) => {
   const { db, loading, error } = _useDuckDb();
   const { data: queryData, setData: setQueryData } = useData(
     queries.reduce(
@@ -80,7 +83,7 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
       );
 
       const endTime = performance.now();
-      if (process.env.NEXT_PUBLIC_APP_ENV !== "production") {
+      if (verbose) {
         console.log(`🚀 DuckDB queries completed in ${(endTime - startTime).toFixed(2)}ms`);
       }
 
@@ -97,6 +100,8 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
     if (!db) return null;
 
     const connection = await db.connect();
+    const startTime = performance.now();
+
     try {
       const statements = query
         .split(";")
@@ -104,12 +109,20 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
         .filter(s => s.length > 0);
       if (statements.length === 1) {
         const result = await connection.query(statements[0]);
+        const endTime = performance.now();
+        if (verbose) {
+          console.log(`🚀 DuckDB queries completed in ${(endTime - startTime).toFixed(2)}ms`);
+        }
         return result;
       } else {
         const results = [];
         for (const stmt of statements) {
           const result = await connection.query(stmt);
           results.push(result);
+        }
+        const endTime = performance.now();
+        if (verbose) {
+          console.log(`🚀 DuckDB queries completed in ${(endTime - startTime).toFixed(2)}ms`);
         }
         return results;
       }
