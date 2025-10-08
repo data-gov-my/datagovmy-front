@@ -12,7 +12,7 @@ export interface DuckDBQuery<T> {
  *
  * @template T - Union type of query name keys (e.g., "forward" | "reverse")
  * @param queries - Array of query configurations with name, defaultValue, and full SQL query
- * @returns Object containing queryData state, setQueryData updater, executeQueries function, db instance, loading state, and error state
+ * @returns Object containing queryData state, setQueryData updater, executeQuery function, executeQueries function, db instance, loading state, and error state
  *
  * @example
  * ```typescript
@@ -23,7 +23,13 @@ export interface DuckDBQuery<T> {
  *   { name: "stats", defaultValue: {}, query: "SELECT COUNT(*) as count FROM users" }
  * ];
  *
- * const { queryData, executeQueries, loading } = useDuckDb<QueryKeys>(queries);
+ * const { queryData, executeQuery, executeQueries, loading } = useDuckDb<QueryKeys>(queries);
+ *
+ * // Execute all configured queries
+ * await executeQueries();
+ *
+ * // Execute a single ad-hoc query
+ * const result = await executeQuery("SELECT COUNT(*) FROM users");
  * ```
  */
 export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
@@ -74,9 +80,25 @@ export const useDuckDb = <T extends string>(queries: DuckDBQuery<T>[]) => {
     }
   };
 
+  const executeQuery = async (query: string) => {
+    if (!db) return null;
+
+    const connection = await db.connect();
+    try {
+      const result = await connection.query(query);
+      return result;
+    } catch (err) {
+      console.error("DuckDB query execution failed:", err);
+      throw err;
+    } finally {
+      await connection.close();
+    }
+  };
+
   return {
     queryData,
     setQueryData,
+    executeQuery,
     executeQueries,
     db,
     loading,
