@@ -50,6 +50,12 @@ GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
 # ZIP file is returned
 ```
 
+- The possible `<category>` values are `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder`, `rapid-rail-kl` and `rapid-bus-kl`.
+- Note: A small number of trips (~2%, fully specified in [this CSV](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv))
+  for the `rapid-bus-kl` endpoint have been removed from the `stop_times.txt` file due to operational issues which affect data accuracy.
+  We are actively working to resolve and restore them to our GTFS feed.
+
+
 ### BAS.MY Johor Bahru
 
 ```http
@@ -91,11 +97,6 @@ GET https://api.data.gov.my/gtfs-static/mybas-kota-bharu
 GET https://api.data.gov.my/gtfs-static/mybas-kuching
 # ZIP file is returned
 ```
-
-- The possible `<category>` values are `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder`, `rapid-rail-kl` and `rapid-bus-kl`.
-- Note: A small number of trips (~2%, fully specified in [this CSV](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv))
-  for the `rapid-bus-kl` endpoint have been removed from the `stop_times.txt` file due to operational issues which affect data accuracy.
-  We are actively working to resolve and restore them to our GTFS feed.
 
 ### Understanding the data
 
