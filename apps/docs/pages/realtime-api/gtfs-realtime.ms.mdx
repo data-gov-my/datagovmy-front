@@ -25,11 +25,12 @@ _Nota: Ralat pengesahan bagi setiap \_endpoint_ dalam bahagian [Kedudukan Kender
 
 ### Sumber Data bagi GTFS _Realtime_
 
-API GTFS _Realtime_ menggabungkan data dari pelbagai agensi pengangkutan di Malaysia. Buat masa ini, agensi-agensi berikut menyumbang data pengangkutan mereka:
+API GTFS _Realtime_ menggabungkan data dari pelbagai agensi pengangkutan di Malaysia. Data kami kini merangkumi:
 
-- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): Pengendali perkhidmatan bas di Johor Bahru yang menyediakan pengangkutan bas di 19 laluan merentasi 5 koridor, termasuk Kota Tinggi, Masai, Kulai, Gelang Patah, dan Pontian.
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): Pengendali keretapi yang menyediakan perkhidmatan keretapi di seluruh negara.
 - [**Prasarana**](https://myrapid.com.my/): Pengendali pengangkutan awam yang bertanggungjawab mengurus pelbagai mod pengangkutan termasuk LRT (Transit Aliran Ringan), MRT (Transit Aliran Massa), monorel, dan perkhidmatan bas.
+- [**BAS.MY**](https://www.apad.gov.my/index.php/en/projects-programs/bas-projek-program/program-transformasi-bas-berhenti-henti-sbst): Program Transformasi Bas Berhenti-Henti (SBST) di seluruh Malaysia yang dikendalikan oleh pelbagai pengendali perkhidmatan. Endpoint untuk Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, dan Kuching sudahpun tersedia. Kami merancang untuk menambah liputan ke Melaka, Seremban, dan Ipoh menjelang 15 November 2025.
+
 
 ### Format Permintaan (_Query_) dan Respon
 
@@ -41,26 +42,11 @@ API GTFS _Realtime_ menepati piawaian format _protobuf_ GTFS _Realtime_ (`.proto
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/<agency>
 ```
 
+Pengguna data harus mengambil maklum bahawa penilaian terhadap data realtime untuk perkhidmatan bas mungkin akan menunjukkan ralat [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) dari semasa ke semasa, bermakna kedudukan kenderaan yang dilaporkan berada di luar kawasan liputan seperti yang ditakrifkan dalam data statik. Untuk perkhidmatan bas khususnya, pengguna tidak perlu risau kerana tiada ralat pada data statik yang digunakan. Punca ralat ini biasanya adalah data GPS dari transponder kenderaan yang mungkin terlari daripada lokasi sebenar, menyebabkan kedudukan bas berada di luar kawasan liputan agensi buat sementara waktu.
+
 ### Kekerapan Kemaskini Data
 
 - Semua data kedudukan kenderaan dikemaskini setiap **30 saat**.
-
-### myBAS Johor Bahru
-
-```http
-GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
-# .proto file dkembalikan
-```
-
-- Ralat yang sudah dikenalpasti:
-  - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
-    - ~50% daripada perjalanan tidak wujud (_undefined_) dalam GTFS Statik.
-  - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
-    - ~15% daripada laluan tidak wujud (_undefined_) dalam GTFS Statik.
-  - [E023](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E023) - `start_time` bagi perjalanan tidak sepadan dengan `arrival_time` GTFS yang pertama
-    - medan `start_time` tidak sah; ini memerlukan pembetulan yang kecil kepada sistem operasi.
-  - [E028](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E028) - Kedudukan kenderaan di luar kawasan liputan agensi
-    - Walaupun ralat ini tidak nyahsahkan data secara sendiri, namun tetap memerlukan penambahbaikan bagi data GTFS Statik untuk menyempurnakan padanan data statik dan _realtime_
 
 ### KTMB
 
@@ -74,6 +60,48 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/ktmb
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<category>
 # .proto file dkembalikan
+```
+
+### BAS.MY Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
+# .proto file dikembalikan
+```
+
+### BAS.MY Kangar
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kangar
+# .proto file dikembalikan
+```
+
+### BAS.MY Alor Setar
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-alor-setar
+# .proto file dikembalikan
+```
+
+### BAS.MY Kuala Terengganu
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuala-terengganu
+# .proto file dikembalikan
+```
+
+### BAS.MY Kota Bharu
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
+# .proto file dikembalikan
+```
+
+### BAS.MY Kuching
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuching
+# .proto file dikembalikan
 ```
 
 - Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-mrtfeeder`, `rapid-bus-kuantan` dan `rapid-bus-penang`.
