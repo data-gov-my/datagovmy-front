@@ -2,7 +2,7 @@
 
 Welcome to the official repository for Datagovmy, a comprehensive monorepo project meticulously crafted to enhance the development, management, and deployment of a suite of projects that power Malaysian government data initiatives.
 
-## About Datagovmy
+## About data.gov.my
 
 At Datagovmy, our mission is to transform data into actionable insights, and this monorepo is the central hub for displaying the our data. Our projects span a wide range of applications and packages, each playing a vital role in advancing data accessibility and utilization. Explore our projects below:
 
