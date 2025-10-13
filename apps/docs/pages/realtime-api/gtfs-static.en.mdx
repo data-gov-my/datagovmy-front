@@ -21,7 +21,7 @@ The GTFS Static API incorporates data from various transport operators across Ma
 
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
 - [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
-- [**BAS.MY**](https://www.apad.gov.my/index.php/en/projects-programs/bas-projek-program/program-transformasi-bas-berhenti-henti-sbst): Stage bus services across Malaysia, run by various operators. Endpoints for Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, and Kuching are currently available. We plan to expand the feed to cover Melaka, Seremban, and Ipoh by 15 November 2025.
+- [**BAS.MY**](https://bas.my/): Stage bus services across Malaysia, run by various operators. Endpoints for Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, and Kuching are currently available. We plan to expand the feed to cover Melaka, Seremban, and Ipoh by 15 November 2025.
 
 ### Frequency of Data Update
 
@@ -56,13 +56,6 @@ GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
   We are actively working to resolve and restore them to our GTFS feed.
 
 
-### BAS.MY Johor Bahru
-
-```http
-GET https://api.data.gov.my/gtfs-static/mybas-johor
-# ZIP file is returned
-```
-
 ### BAS.MY Kangar
 
 ```http
@@ -77,6 +70,13 @@ GET https://api.data.gov.my/gtfs-static/mybas-alor-setar
 # ZIP file is returned
 ```
 
+### BAS.MY Kota Bharu
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-kota-bharu
+# ZIP file is returned
+```
+
 ### BAS.MY Kuala Terengganu
 
 ```http
@@ -84,10 +84,17 @@ GET https://api.data.gov.my/gtfs-static/mybas-kuala-terengganu
 # ZIP file is returned
 ```
 
-### BAS.MY Kota Bharu
+### BAS.MY Melaka
 
 ```http
-GET https://api.data.gov.my/gtfs-static/mybas-kota-bharu
+GET https://api.data.gov.my/gtfs-static/mybas-melaka
+# ZIP file is returned
+```
+
+### BAS.MY Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-johor
 # ZIP file is returned
 ```
 
