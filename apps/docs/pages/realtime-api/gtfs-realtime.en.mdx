@@ -13,7 +13,7 @@ GET https://api.data.gov.my/gtfs-realtime/<feed>/<agency>
 ### What does GTFS Realtime do?
 
 GTFS Realtime is an extension of the [GTFS Static API](gtfs-static) that enables public transportation agencies to share live trip updates, service alerts and vehicle positions.
-At present, our GTFS Realtime API only offers vehicle position data - service alerts and and trip updates are in our pipeline for 2024-25. For more details on GTFS Realtime and its broader functionalities, please refer to https://gtfs.org/realtime/.
+At present, our GTFS Realtime API only offers vehicle position data - service alerts and and trip updates are in our pipeline for 2026. For more details on GTFS Realtime and its broader functionalities, please refer to https://gtfs.org/realtime/.
 
 _Note: The validation errors specific to each feed in the [Vehicle Position](#vehicle-position) section were generated using using the [GTFS Realtime Validator](https://github.com/MobilityData/gtfs-realtime-validator)._
 
@@ -23,7 +23,7 @@ The GTFS Realtime API incorporates data from various transport agencies in Malay
 
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
 - [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
-- [**BAS.MY**](https://www.apad.gov.my/index.php/en/projects-programs/bas-projek-program/program-transformasi-bas-berhenti-henti-sbst): Stage bus services across Malaysia, run by various operators. Endpoints for Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, and Kuching are currently available. We plan to expand the feed to cover Melaka, Seremban, and Ipoh by 15 November 2025.
+- [**BAS.MY**](https://bas.my/): Stage bus services across Malaysia, run by various operators. Endpoints for Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, and Kuching are currently available. We plan to expand the feed to cover Melaka, Seremban, and Ipoh by 15 November 2025.
 
 
 ### Request Query & Response Format
@@ -69,14 +69,8 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<c
       - `weekend_30000001_1000000855_053000_02`
       - `weekday_30000001_1000000855_053000_02`
       - `23102302_30000001_1000000855_053000_02`
-    - We took the decision not to modify the realtime feed received from operational systems to avoid jeopardising performance; a deeper fix will be deployed in future to ensure out-of-the-box synchronicity between the realtime and static trip IDs.
-  
-### BAS.MY Johor Bahru
+    - We took the decision not to modify the realtime feed received from operational systems to avoid jeopardising performance; a deeper fix will be deployed in future to ensure out-of-the-box synchronicity between the realtime and static trip IDs. 
 
-```http
-GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
-# .proto file is returned
-```
 
 ### BAS.MY Kangar
 
@@ -92,6 +86,13 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-alor-setar
 # .proto file is returned
 ```
 
+### BAS.MY Kota Bharu
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
+# .proto file is returned
+```
+
 ### BAS.MY Kuala Terengganu
 
 ```http
@@ -99,10 +100,17 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuala-terenggan
 # .proto file is returned
 ```
 
-### BAS.MY Kota Bharu
+### BAS.MY Melaka
 
 ```http
-GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-melaka
+# .proto file is returned
+```
+
+### BAS.MY Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
 # .proto file is returned
 ```
 

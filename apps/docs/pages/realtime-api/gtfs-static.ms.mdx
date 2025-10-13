@@ -20,7 +20,7 @@ API GTFS Statik menggabungkan data dari pelbagai agensi pengangkutan di Malaysia
 
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): Pengendali keretapi yang menyediakan perkhidmatan keretapi di seluruh negara.
 - [**Prasarana**](https://myrapid.com.my/): Pengendali pengangkutan awam yang bertanggungjawab mengurus pelbagai mod pengangkutan termasuk LRT (Transit Aliran Ringan), MRT (Transit Aliran Massa), monorel, dan perkhidmatan bas.
-- [**BAS.MY**](https://www.apad.gov.my/index.php/en/projects-programs/bas-projek-program/program-transformasi-bas-berhenti-henti-sbst): Program Transformasi Bas Berhenti-Henti (SBST) di seluruh Malaysia yang dikendalikan oleh pelbagai pengendali perkhidmatan. Endpoint untuk Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, dan Kuching sudahpun tersedia. Kami merancang untuk menambah liputan ke Melaka, Seremban, dan Ipoh menjelang 15 November 2025.
+- [**BAS.MY**](https://bas.my/): Program Transformasi Bas Berhenti-Henti (SBST) di seluruh Malaysia yang dikendalikan oleh pelbagai pengendali perkhidmatan. Endpoint untuk Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, dan Kuching sudahpun tersedia. Kami merancang untuk menambah liputan ke Melaka, Seremban, dan Ipoh menjelang 15 November 2025.
 
 ### Kekerapan Kemaskini
 
@@ -52,13 +52,6 @@ GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
 - Senarai nilai sah bagi `<category>` adalah `rapid-bus-penang`, `rapid-bus-kuantan`, `rapid-bus-mrtfeeder`, `rapid-rail-kl` & `rapid-bus-kl`.
 - Nota: Segelintir kecil perjalanan (~2%, diperincikan sepenuhnya dalam [CSV ini](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv)) bagi _endpoint_ `rapid-bus-kl` telah dikeluarkan daripada fail `stop_times.txt` kerana isu operasi yang memberi kesan kepada ketepatan data. Kami sedang berusaha untuk menyempurnakan dan memasukkan semula perjalanan tersebut dalam data GTFS yang dibekalkan.
 
-### BAS.MY Johor Bahru
-
-```http
-GET https://api.data.gov.my/gtfs-static/mybas-johor
-# Fail ZIP dikembalikan
-```
-
 ### BAS.MY Kangar
 
 ```http
@@ -73,6 +66,13 @@ GET https://api.data.gov.my/gtfs-static/mybas-alor-setar
 # Fail ZIP dikembalikan
 ```
 
+### BAS.MY Kota Bharu
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-kota-bharu
+# Fail ZIP dikembalikan
+```
+
 ### BAS.MY Kuala Terengganu
 
 ```http
@@ -80,10 +80,17 @@ GET https://api.data.gov.my/gtfs-static/mybas-kuala-terengganu
 # Fail ZIP dikembalikan
 ```
 
-### BAS.MY Kota Bharu
+### BAS.MY Melaka
 
 ```http
-GET https://api.data.gov.my/gtfs-static/mybas-kota-bharu
+GET https://api.data.gov.my/gtfs-static/mybas-melaka
+# Fail ZIP dikembalikan
+```
+
+### BAS.MY Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-johor
 # Fail ZIP dikembalikan
 ```
 
