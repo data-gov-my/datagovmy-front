@@ -69,14 +69,8 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/prasarana?category=<c
       - `weekend_30000001_1000000855_053000_02`
       - `weekday_30000001_1000000855_053000_02`
       - `23102302_30000001_1000000855_053000_02`
-    - We took the decision not to modify the realtime feed received from operational systems to avoid jeopardising performance; a deeper fix will be deployed in future to ensure out-of-the-box synchronicity between the realtime and static trip IDs.
-  
-### BAS.MY Johor Bahru
+    - We took the decision not to modify the realtime feed received from operational systems to avoid jeopardising performance; a deeper fix will be deployed in future to ensure out-of-the-box synchronicity between the realtime and static trip IDs. 
 
-```http
-GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
-# .proto file is returned
-```
 
 ### BAS.MY Kangar
 
@@ -92,6 +86,13 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-alor-setar
 # .proto file is returned
 ```
 
+### BAS.MY Kota Bharu
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
+# .proto file is returned
+```
+
 ### BAS.MY Kuala Terengganu
 
 ```http
@@ -99,10 +100,17 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuala-terenggan
 # .proto file is returned
 ```
 
-### BAS.MY Kota Bharu
+### BAS.MY Melaka
 
 ```http
-GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-melaka
+# .proto file is returned
+```
+
+### BAS.MY Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-johor
 # .proto file is returned
 ```
 
