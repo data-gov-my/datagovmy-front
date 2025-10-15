@@ -1,7 +1,7 @@
 import Layout from "@components/Layout";
 import RapidExplorerDashboard from "@dashboards/transportation/rapid-explorer";
 import { get } from "datagovmy-ui/api";
-import { Banner, Metadata } from "datagovmy-ui/components";
+import { Container, Metadata, Spinner } from "datagovmy-ui/components";
 import { body } from "datagovmy-ui/configs/font";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { withi18n } from "datagovmy-ui/decorators";
@@ -10,6 +10,12 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { useTranslation as _useTranslation } from "next-i18next";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { useDuckDb, DuckDBQuery } from "datagovmy-ui/hooks";
+import { useEffect } from "react";
+import { Arrow } from "duckdb-wasm-kit";
+import { getTimeseriesData } from "@queries/rapid-explorer";
+
+type RapidExplorerVariable = "forward" | "reverse";
 
 const RapidExplorer: Page = ({
   meta,
@@ -24,14 +30,124 @@ const RapidExplorer: Page = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboard-rapid-explorer");
 
+  // Define query configurations for the rapid explorer dashboard
+  const queryConfigs: DuckDBQuery<RapidExplorerVariable>[] = [
+    {
+      name: "forward",
+      defaultValue: null,
+      query: getTimeseriesData({ origin: params.origin, destination: params.destination }),
+    },
+    {
+      name: "reverse",
+      defaultValue: null,
+      query: getTimeseriesData({ origin: params.destination, destination: params.origin }),
+    },
+  ];
+
+  const { queryData, setQueryData, executeQueries, loading, db } = useDuckDb(queryConfigs);
+
+  const processQueryResults = (queryResults: Record<RapidExplorerVariable, Arrow>) => {
+    if (queryResults.forward && Array.isArray(queryResults.forward)) {
+      const dailyRows = queryResults.forward[0].toArray() || [];
+      const monthlyRows = queryResults.forward[1].toArray() || [];
+
+      const processedForward = {
+        data_as_of: A_to_B.data_as_of,
+        data: {
+          daily: {
+            passengers: dailyRows.map((row: any) => row.passengers),
+            x: dailyRows.map((row: any) => row.date),
+          },
+          monthly: {
+            passengers: monthlyRows.map((row: any) => row.passengers),
+            x: monthlyRows.map((row: any) => row.date),
+          },
+        },
+      };
+
+      setQueryData("forward", processedForward);
+
+      const dailyValue = dailyRows[dailyRows.length - 1]?.passengers || 0;
+      const monthlyValue = monthlyRows[monthlyRows.length - 1]?.passengers || 0;
+
+      setQueryData("forwardCallout", {
+        daily: dailyValue,
+        monthly: monthlyValue,
+      });
+    }
+
+    if (queryResults.reverse && Array.isArray(queryResults.reverse)) {
+      const dailyRows = queryResults.reverse[0].toArray() || [];
+      const monthlyRows = queryResults.reverse[1].toArray() || [];
+
+      const processedReverse = {
+        daily: {
+          passengers: dailyRows.map((row: any) => row.passengers),
+          x: dailyRows.map((row: any) => row.date),
+        },
+        monthly: {
+          passengers: monthlyRows.map((row: any) => row.passengers),
+          x: monthlyRows.map((row: any) => row.date),
+        },
+      };
+
+      setQueryData("reverse", processedReverse);
+
+      const dailyValue = dailyRows[dailyRows.length - 1]?.passengers || 0;
+      const monthlyValue = monthlyRows[monthlyRows.length - 1]?.passengers || 0;
+
+      setQueryData("reverseCallout", {
+        daily: dailyValue,
+        monthly: monthlyValue,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const runQueries = async () => {
+      try {
+        const results = await executeQueries();
+        if (results) {
+          processQueryResults(results);
+        }
+      } catch (error) {}
+    };
+
+    if (params?.origin && params?.destination) {
+      runQueries();
+    } else {
+      // Use default data
+      setQueryData("forward", A_to_B);
+      setQueryData("forwardCallout", A_to_B_callout);
+      setQueryData("reverse", B_to_A);
+      setQueryData("reverseCallout", B_to_A_callout);
+    }
+  }, [params, db]);
+
+  if (loading) {
+    return (
+      <Container>
+        <div className="flex min-h-screen w-full items-center justify-center">
+          <Spinner loading={true} />
+        </div>
+      </Container>
+    );
+  }
+
+  const { forward, reverse, forwardCallout, reverseCallout } = queryData;
+
+  if (!forward || !reverse) {
+    return null;
+  }
+
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
       <RapidExplorerDashboard
-        A_to_B={A_to_B}
-        A_to_B_callout={A_to_B_callout}
-        B_to_A={B_to_A}
-        B_to_A_callout={B_to_A_callout}
+        A_to_B={forward}
+        A_to_B_callout={forwardCallout}
+        B_to_A={reverse}
+        B_to_A_callout={reverseCallout}
         dropdown={dropdown}
         last_updated={last_updated}
         next_update={next_update}
