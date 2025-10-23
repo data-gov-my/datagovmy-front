@@ -15,37 +15,26 @@ GET https://api.data.gov.my/gtfs-static/<agency>
 The GTFS Static API provides access to standardized public transportation schedules and geographic information, following the General Transit Feed Specification (GTFS).
 To learn more about GTFS and its specifications, you can visit the [GTFS documentation](https://developers.google.com/transit/gtfs) provided by Google.
 
-### Important note: We are building iteratively
-
-This is the first time that Malaysia has had an official and freely-usable GTFS API. It is the result of months of hard work and collaboration between the data.gov.my developer team and various public transport operators. It is by no means complete; there are plenty of services that will only be integrated over the coming months and years. However, with several primary services already included, we felt that it was time to push it live - so that the private sector and public transport community could begin building from it, and most crucially, giving us feedback on how to improve it.
-
-If you have any feedback on the GTFS API, please write to us at dataterbuka@jdn.gov.my - we welcome any and all constructive feedback!
-
 ### Source of GTFS Static Data
 
-The GTFS Static API incorporates data from various transport agencies in Malaysia. Currently, the following agencies contribute their transit data:
+The GTFS Static API incorporates data from various transport operators across Malaysia. We currently feature static feeds from the following:
 
-- [**myBAS Johor Bahru**](https://www.causewaylink.com.my/mybas/en/): A bus service operator in Johor Bahru, Malaysia, providing bus transportation on 19 routes across 5 corridors, including Kota Tinggi, Masai, Kulai, Gelang Patah, and Pontian.
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
 - [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
+- [**BAS.MY**](https://bas.my/): Stage bus services across Malaysia, run by various operators. Endpoints for Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, and Kuching are currently available. We plan to expand the feed to cover Melaka, Seremban, and Ipoh by 15 November 2025.
 
 ### Frequency of Data Update
 
-- GTFS for myBAS Johor Bahru: **As required**.
-- GTFS for Prasarana: **As required**.
 - GTFS for KTMB: **Daily at 00:01:00**.
+- GTFS for Prasarana: **As required**.
+- GTFS for all BAS.MY services: **As required**.
+
+If you are scheduling a cron job, we recommend refreshing the static data at least once per day at 4am, i.e. right before rail and bus services nationwide begin their daily operations.
 
 ## Request Query & Response Format
 
 The GTFS Static API provides access to public transportation data represented as a GTFS Feed, which consists of a collection of text files packaged in a **ZIP file**.
 You can access these data files through the following endpoints:
-
-### myBAS Johor Bahru
-
-```http
-GET https://api.data.gov.my/gtfs-static/mybas-johor
-# ZIP file is returned
-```
 
 ### KTMB
 
@@ -65,6 +54,56 @@ GET https://api.data.gov.my/gtfs-static/prasarana?category=<category>
 - Note: A small number of trips (~2%, fully specified in [this CSV](https://openapi-malaysia-transport.s3.ap-southeast-1.amazonaws.com/prasarana/problematic_trips.csv))
   for the `rapid-bus-kl` endpoint have been removed from the `stop_times.txt` file due to operational issues which affect data accuracy.
   We are actively working to resolve and restore them to our GTFS feed.
+
+
+### BAS.MY Kangar
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-kangar
+# ZIP file is returned
+```
+
+### BAS.MY Alor Setar
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-alor-setar
+# ZIP file is returned
+```
+
+### BAS.MY Kota Bharu
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-kota-bharu
+# ZIP file is returned
+```
+
+### BAS.MY Kuala Terengganu
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-kuala-terengganu
+# ZIP file is returned
+```
+
+### BAS.MY Melaka
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-melaka
+# ZIP file is returned
+```
+
+### BAS.MY Johor Bahru
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-johor
+# ZIP file is returned
+```
+
+### BAS.MY Kuching
+
+```http
+GET https://api.data.gov.my/gtfs-static/mybas-kuching
+# ZIP file is returned
+```
 
 ### Understanding the data
 

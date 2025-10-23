@@ -56,7 +56,9 @@ const CatalogueShowWrapper: FunctionComponent<CatalogueShowWrapperProps> = ({
 
     const groupedData = groupBy(data.data, selectedViz.config.slider.key);
 
-    return Object.keys(groupedData);
+    return Object.keys(groupedData).sort(
+      (a: string, b: string) => new Date(a).getTime() - new Date(b).getTime()
+    );
   }, [selectedViz]);
 
   const slider = useMemo(() => {
