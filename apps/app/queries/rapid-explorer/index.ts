@@ -6,6 +6,11 @@ export const getTimeseriesData = (params: { origin: string; destination: string 
     AND destination = '${params.destination}'
     ORDER BY date
     ;
+  `;
+};
+
+export const getTimeseriesDataMonthly = (params: { origin: string; destination: string }) => {
+  return `
     SELECT ANY_VALUE(origin) as origin, ANY_VALUE(destination) as destination,
            (strftime('%Y-%m', date) || '-01') as date, CAST(SUM(passengers) AS INTEGER) as passengers
     FROM 'https://data.kijang.net/cb39dq/duckdb_test.parquet'

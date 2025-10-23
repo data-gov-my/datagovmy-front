@@ -11,11 +11,15 @@ import { useTranslation as _useTranslation } from "next-i18next";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { useDuckDb, DuckDBQuery } from "datagovmy-ui/hooks";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Arrow } from "duckdb-wasm-kit";
-import { getTimeseriesData } from "@queries/rapid-explorer";
+import { getTimeseriesData, getTimeseriesDataMonthly } from "@queries/rapid-explorer";
 
-type RapidExplorerVariable = "forward" | "reverse";
+type RapidExplorerVariable =
+  | "forward_daily"
+  | "reverse_daily"
+  | "forward_monthly"
+  | "reverse_monthly";
 
 const RapidExplorer: Page = ({
   meta,
@@ -33,94 +37,105 @@ const RapidExplorer: Page = ({
   // Define query configurations for the rapid explorer dashboard
   const queryConfigs: DuckDBQuery<RapidExplorerVariable>[] = [
     {
-      name: "forward",
+      name: "forward_daily",
       defaultValue: null,
       query: getTimeseriesData({ origin: params.origin, destination: params.destination }),
     },
     {
-      name: "reverse",
+      name: "forward_monthly",
+      defaultValue: null,
+      query: getTimeseriesDataMonthly({ origin: params.origin, destination: params.destination }),
+    },
+    {
+      name: "reverse_daily",
       defaultValue: null,
       query: getTimeseriesData({ origin: params.destination, destination: params.origin }),
     },
+    {
+      name: "reverse_monthly",
+      defaultValue: null,
+      query: getTimeseriesDataMonthly({ origin: params.destination, destination: params.origin }),
+    },
   ];
 
-  const { queryData, setQueryData, executeQueries, loading, db } = useDuckDb(queryConfigs);
+  const { queryData, executeQueries, loading, db } = useDuckDb(queryConfigs);
 
-  const processQueryResults = (queryResults: Record<RapidExplorerVariable, Arrow>) => {
-    if (queryResults.forward && Array.isArray(queryResults.forward)) {
-      const dailyRows = queryResults.forward[0].toArray() || [];
-      const monthlyRows = queryResults.forward[1].toArray() || [];
+  const { forward_daily, forward_monthly, reverse_daily, reverse_monthly } = queryData as Record<
+    string,
+    Arrow
+  >;
+
+  const timeseriesData = useMemo(() => {
+    if (!(params?.origin && params?.destination)) {
+      // Use default data
+      return {
+        forward: A_to_B,
+        forwardCallout: A_to_B_callout,
+        reverse: B_to_A,
+        reverseCallout: B_to_A_callout,
+      };
+    }
+
+    if (forward_daily && forward_monthly && reverse_daily && reverse_monthly) {
+      const forwardDaily = forward_daily.toArray() || [];
+      const forwardMonthly = forward_monthly.toArray() || [];
 
       const processedForward = {
         data_as_of: A_to_B.data_as_of,
         data: {
           daily: {
-            passengers: dailyRows.map((row: any) => row.passengers),
-            x: dailyRows.map((row: any) => row.date),
+            passengers: forwardDaily.map((row: any) => row.passengers),
+            x: forwardDaily.map((row: any) => row.date),
           },
           monthly: {
-            passengers: monthlyRows.map((row: any) => row.passengers),
-            x: monthlyRows.map((row: any) => row.date),
+            passengers: forwardMonthly.map((row: any) => row.passengers),
+            x: forwardMonthly.map((row: any) => row.date),
           },
         },
       };
 
-      setQueryData("forward", processedForward);
+      const _forwardCallout = {
+        daily: forwardDaily[forwardDaily.length - 1]?.passengers || 0,
+        monthly: forwardMonthly[forwardMonthly.length - 1]?.passengers || 0,
+      };
 
-      const dailyValue = dailyRows[dailyRows.length - 1]?.passengers || 0;
-      const monthlyValue = monthlyRows[monthlyRows.length - 1]?.passengers || 0;
-
-      setQueryData("forwardCallout", {
-        daily: dailyValue,
-        monthly: monthlyValue,
-      });
-    }
-
-    if (queryResults.reverse && Array.isArray(queryResults.reverse)) {
-      const dailyRows = queryResults.reverse[0].toArray() || [];
-      const monthlyRows = queryResults.reverse[1].toArray() || [];
+      const reverseDaily = reverse_daily.toArray() || [];
+      const reverseMonthly = reverse_monthly.toArray() || [];
 
       const processedReverse = {
         daily: {
-          passengers: dailyRows.map((row: any) => row.passengers),
-          x: dailyRows.map((row: any) => row.date),
+          passengers: reverseDaily.map((row: any) => row.passengers),
+          x: reverseDaily.map((row: any) => row.date),
         },
         monthly: {
-          passengers: monthlyRows.map((row: any) => row.passengers),
-          x: monthlyRows.map((row: any) => row.date),
+          passengers: reverseMonthly.map((row: any) => row.passengers),
+          x: reverseMonthly.map((row: any) => row.date),
         },
       };
 
-      setQueryData("reverse", processedReverse);
+      const _reverseCallout = {
+        daily: reverseDaily[reverseDaily.length - 1]?.passengers || 0,
+        monthly: reverseMonthly[reverseMonthly.length - 1]?.passengers || 0,
+      };
 
-      const dailyValue = dailyRows[dailyRows.length - 1]?.passengers || 0;
-      const monthlyValue = monthlyRows[monthlyRows.length - 1]?.passengers || 0;
-
-      setQueryData("reverseCallout", {
-        daily: dailyValue,
-        monthly: monthlyValue,
-      });
+      return {
+        forward: processedForward,
+        forwardCallout: _forwardCallout,
+        reverse: processedReverse,
+        reverseCallout: _reverseCallout,
+      };
     }
-  };
+  }, [queryData]);
 
   useEffect(() => {
     const runQueries = async () => {
       try {
-        const results = await executeQueries();
-        if (results) {
-          processQueryResults(results);
-        }
+        await executeQueries();
       } catch (error) {}
     };
 
     if (params?.origin && params?.destination) {
       runQueries();
-    } else {
-      // Use default data
-      setQueryData("forward", A_to_B);
-      setQueryData("forwardCallout", A_to_B_callout);
-      setQueryData("reverse", B_to_A);
-      setQueryData("reverseCallout", B_to_A_callout);
     }
   }, [params, db]);
 
@@ -134,11 +149,11 @@ const RapidExplorer: Page = ({
     );
   }
 
-  const { forward, reverse, forwardCallout, reverseCallout } = queryData;
-
-  if (!forward || !reverse) {
+  if (!timeseriesData) {
     return null;
   }
+
+  const { forward, reverse, forwardCallout, reverseCallout } = timeseriesData;
 
   return (
     <AnalyticsProvider meta={meta}>
