@@ -39,22 +39,22 @@ const RapidExplorer: Page = ({
     {
       name: "forward_daily",
       defaultValue: null,
-      query: getTimeseriesData({ origin: params.origin, destination: params.destination }),
+      ...getTimeseriesData({ origin: params.origin, destination: params.destination }),
     },
     {
       name: "forward_monthly",
       defaultValue: null,
-      query: getTimeseriesDataMonthly({ origin: params.origin, destination: params.destination }),
+      ...getTimeseriesDataMonthly({ origin: params.origin, destination: params.destination }),
     },
     {
       name: "reverse_daily",
       defaultValue: null,
-      query: getTimeseriesData({ origin: params.destination, destination: params.origin }),
+      ...getTimeseriesData({ origin: params.destination, destination: params.origin }),
     },
     {
       name: "reverse_monthly",
       defaultValue: null,
-      query: getTimeseriesDataMonthly({ origin: params.destination, destination: params.origin }),
+      ...getTimeseriesDataMonthly({ origin: params.destination, destination: params.origin }),
     },
   ];
 
@@ -134,7 +134,7 @@ const RapidExplorer: Page = ({
       } catch (error) {}
     };
 
-    if (params?.origin && params?.destination) {
+    if (db && params?.origin && params?.destination) {
       runQueries();
     }
   }, [params, db]);

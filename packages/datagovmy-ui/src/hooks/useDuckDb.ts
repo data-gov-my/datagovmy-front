@@ -1,11 +1,16 @@
 import { useDuckDb as _useDuckDb } from "duckdb-wasm-kit";
 import { useData } from "./useData";
 
-export interface DuckDBQuery<T> {
+export interface DuckDBQuery<T> extends QueriesStatement {
   name: T;
   defaultValue: any;
-  query: string;
 }
+
+// For DuckDB query
+export type QueriesStatement = {
+  query: string;
+  params?: string[];
+};
 
 /**
  * DuckDB hook for executing multiple SQL queries asynchronously.
@@ -62,7 +67,14 @@ export const useDuckDb = <T extends string>(
         async (accPromise, query) => {
           const acc = await accPromise;
           try {
-            const result = await connection.query(query.query);
+            let result;
+            if (query.params && query.params.length > 0) {
+              const stmt = await connection.prepare(query.query);
+              result = await stmt.query(...query.params);
+              await stmt.close();
+            } else {
+              result = await connection.query(query.query);
+            }
             acc[query.name] = result;
             return acc;
           } catch (err) {
@@ -87,14 +99,21 @@ export const useDuckDb = <T extends string>(
     }
   };
 
-  const executeQuery = async (query: string, key?: string) => {
+  const executeQuery = async (query: string, params?: any[], key?: string) => {
     if (!db) return null;
 
     const connection = await db.connect();
     const startTime = performance.now();
 
     try {
-      const result = await connection.query(query);
+      let result;
+      if (params && params.length > 0) {
+        const stmt = await connection.prepare(query);
+        result = await stmt.query(...params);
+        await stmt.close();
+      } else {
+        result = await connection.query(query);
+      }
       const endTime = performance.now();
       if (verbose) {
         console.log(`🚀 DuckDB queries completed in ${(endTime - startTime).toFixed(2)}ms`);
