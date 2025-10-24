@@ -206,8 +206,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       accessorKey: "date_submitted",
       id: "date_submitted",
       header: t("data-request:table.date_created"),
-      accessorFn({ date_submitted }) {
-        return DateTime.fromISO(date_submitted, { locale: "en-MY" }).toFormat("D");
+      sortingFn: "datetime",
+      cell: ({ getValue }) => {
+        return DateTime.fromISO(getValue(), { locale: "en-MY" }).toFormat("dd MMM yyyy");
       },
     },
     {
@@ -446,7 +447,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                     config={tableConfig}
                     empty={
                       <div className="flex lg:h-[200px] lg:items-center lg:justify-center">
-                        <div className="flex h-auto rounded-md bg-slate-200 px-3 pb-2 pt-1 dark:bg-zinc-800 lg:w-fit">
+                        <div className="flex h-auto rounded-md bg-slate-200 px-3 pb-2 pt-1 lg:w-fit dark:bg-zinc-800">
                           <p className="text-sm">
                             <span className="inline-flex pr-1">
                               <FaceFrownIcon className="h-5 w-5 translate-y-1" />
