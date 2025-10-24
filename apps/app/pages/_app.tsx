@@ -11,6 +11,8 @@ import { appWithTranslation } from "next-i18next";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/router";
 import { useEffect, ReactNode } from "react";
+import { DuckDBConfig } from "@duckdb/duckdb-wasm";
+import { initializeDuckDb } from "duckdb-wasm-kit";
 
 // App instance
 function App({ Component, pageProps }: AppPropsLayout) {
@@ -54,6 +56,20 @@ function App({ Component, pageProps }: AppPropsLayout) {
       router.events.off("routeChangeComplete", handleRouteChange);
     };
   }, [router.events, pageProps?.meta]);
+
+  useEffect(() => {
+    const config: DuckDBConfig = {
+      query: {
+        /**
+         * By default, int values returned by DuckDb are Int32Array(2).
+         * This setting tells DuckDB to cast ints to double instead,
+         * so they become JS numbers.
+         */
+        castBigIntToDouble: true,
+      },
+    };
+    initializeDuckDb({ config });
+  }, []);
 
   return (
     <div className={clx(body.variable, header.variable, "font-sans dark:bg-black")}>
