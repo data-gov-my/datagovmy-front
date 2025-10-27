@@ -74,7 +74,7 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             category: null,
             agency: null,
           },
-          items: data,
+          items: data.sort((a: DataRequestItem, b: DataRequestItem) => b.ticket_id - a.ticket_id),
           query: query ?? {},
           dropdown: dropdown,
           total_requests: data.length,
