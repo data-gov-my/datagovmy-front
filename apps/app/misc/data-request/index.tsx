@@ -90,12 +90,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   });
   const baseClass = "text-sm font-normal";
 
-  useWatch(() => {
-    data.show_request || data.show_published
-      ? (document.body.style.overflow = "hidden")
-      : (document.body.style.overflow = "unset");
-  }, [data.show_request, data.show_published]);
-
   useEffect(() => {
     events.on("routeChangeComplete", () => {
       setData("loading", false);
