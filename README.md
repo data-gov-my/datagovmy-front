@@ -34,6 +34,7 @@ Join us in shaping the future of data at Datagovmy!
 - [Installation](#installation)
 - [Commands to Know](#commands-to-know)
 - [Development Workflow](#development-workflow)
+- [API Integrations](#api-integrations)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -102,6 +103,26 @@ yarn prepare
 3. Push the branch to remote and create a PR to `staging`. Briefly describe the changes introduced in the PR.
 4. Assign a core developer to review and wait for it to be approved.
 5. That's all. Happy developing!
+
+## API Integrations
+
+### Groq API Integration
+
+To integrate Groq API (or other LLM services) into this codebase, see the comprehensive guide:
+
+📖 **[Groq API Integration Guide](GROQ_API_INTEGRATION.md)**
+
+The guide covers:
+- Where to place your API key
+- Environment variable configuration
+- Server-side vs client-side usage
+- Example implementations
+- Security best practices
+
+Quick start:
+1. Add `GROQ_API_KEY=your_key_here` to `apps/app/.env.local`
+2. Use the example API routes in `apps/app/pages/api/groq/`
+3. See the guide for complete integration instructions
 
 ## Contributing
 

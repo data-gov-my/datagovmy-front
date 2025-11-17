@@ -25,6 +25,10 @@ declare namespace NodeJS {
     NEXAUTH_SECRET: string;
     GITHUB_CLIENT_ID: string;
     GITHUB_CLIENT_SECRET: string;
+
+    // Groq API
+    GROQ_API_KEY: string;
+    NEXT_PUBLIC_GROQ_API_KEY: string;
   }
 }
 
