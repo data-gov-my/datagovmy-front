@@ -23,7 +23,7 @@ API GTFS _Realtime_ menggabungkan data dari pelbagai agensi pengangkutan di Mala
 
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): Pengendali keretapi yang menyediakan perkhidmatan keretapi di seluruh negara.
 - [**Prasarana**](https://myrapid.com.my/): Pengendali pengangkutan awam yang bertanggungjawab mengurus pelbagai mod pengangkutan termasuk LRT (Transit Aliran Ringan), MRT (Transit Aliran Massa), monorel, dan perkhidmatan bas.
-- [**BAS.MY**](https://bas.my/): Program Transformasi Bas Berhenti-Henti (SBST) di seluruh Malaysia yang dikendalikan oleh pelbagai pengendali perkhidmatan. Endpoint untuk Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, dan Kuching sudahpun tersedia. Kami merancang untuk menambah liputan ke Melaka, Seremban, dan Ipoh menjelang 15 November 2025.
+- [**BAS.MY**](https://bas.my/): Program Transformasi Bas Berhenti-Henti (SBST) di seluruh Malaysia yang dikendalikan oleh pelbagai pengendali perkhidmatan. _Endpoint_ untuk Kangar, Alor Setar, Kota Bharu, Kuala Terengganu, Ipoh, Seremban, Melaka, Johor Bahru, dan Kuching sudahpun tersedia.
 
 
 ### Format Permintaan (_Query_) dan Respon
@@ -81,6 +81,27 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
 
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuala-terengganu
+# Fail .proto dikembalikan
+```
+
+### BAS.MY Ipoh
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-ipoh
+# Fail .proto dikembalikan
+```
+
+### BAS.MY Seremban
+
+Berbeza dengan perkhidmatan BAS.MY di negeri-negeri lain, terdapat 2 _endpoint_ untuk Seremban, kerana ia dilaksanakan oleh 2 pengendali yang membekalkan data secara berasingan bagi tujuan Open API Nasional. Kami sarankan supaya pengguna membuat permintaan kepada kedua-dua _endpoint_ ini untuk mendapatkan gambaran lengkap mengenai perkhidmatan BAS.MY yang sedang beroperasi di Seremban.
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-seremban-a
+# Fail .proto dikembalikan
+```
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-seremban-b
 # Fail .proto dikembalikan
 ```
 
