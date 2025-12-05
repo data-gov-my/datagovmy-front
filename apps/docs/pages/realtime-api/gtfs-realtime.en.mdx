@@ -23,7 +23,7 @@ The GTFS Realtime API incorporates data from various transport agencies in Malay
 
 - [**KTMB (Keretapi Tanah Melayu Berhad)**](https://www.ktmb.com.my/): A railway operator providing train services across the country.
 - [**Prasarana**](https://myrapid.com.my/): A public transport operator responsible for managing various modes of transportation, including LRT (Light Rail Transit), MRT (Mass Rapid Transit), monorail, and bus services.
-- [**BAS.MY**](https://bas.my/): Stage bus services across Malaysia, run by various operators. Endpoints for Johor Bahru, Kangar, Alor Setar, Kuala Terengganu, Kota Bharu, and Kuching are currently available. We plan to expand the feed to cover Melaka, Seremban, and Ipoh by 15 November 2025.
+- [**BAS.MY**](https://bas.my/): Stage bus services across Malaysia, run by various operators. Endpoints for Kangar, Alor Setar, Kota Bharu, Terengganu, Ipoh, Seremban, Melaka, Johor Bahru, and Kuching are currently available.
 
 
 ### Request Query & Response Format
@@ -97,6 +97,27 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kota-bharu
 
 ```http
 GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuala-terengganu
+# .proto file is returned
+```
+
+### BAS.MY Ipoh
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-ipoh
+# .proto file is returned
+```
+
+### BAS.MY Seremban
+
+Unlike for BAS.MY services in other states, there are 2 endpoints for Seremban, due to the presence of 2 operators which separately provide data to for dissemination via the national Open API. Users should query both endpoints to get a complete picture of currently-running BAS.MY services in Seremban.
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-seremban-a
+# .proto file is returned
+```
+
+```http
+GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-seremban-b
 # .proto file is returned
 ```
 
