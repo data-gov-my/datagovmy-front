@@ -21,6 +21,7 @@ import { Agency, Page } from "datagovmy-ui/types";
 import { DateTime } from "luxon";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 
 const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr: false });
 
@@ -84,6 +85,7 @@ const Home: Page = ({
         category={[t("common:home.category"), "text-primary dark:text-primary-dark"]}
         header={[t("common:home.title")]}
         description={[t("common:home.description"), "text-dim"]}
+        className="relative"
         action={
           <div className="flex flex-wrap gap-3">
             <At className="btn-primary shadow-button text-sm" href="/dashboard" enableIcon>
@@ -104,6 +106,15 @@ const Home: Page = ({
             >
               {t("common:nav.api_docs")}
             </At>
+            <div className="pointer-events-none absolute bottom-0 right-0 max-lg:hidden">
+              <Image
+                src="/static/images/header/hero-motif.svg"
+                className="opacity-100 xl:h-[230px]"
+                width={315}
+                height={250}
+                alt="Datagovmy hero motif"
+              />
+            </div>
           </div>
         }
         agencyBadge={<AgencyBadge agency="govt" />}
