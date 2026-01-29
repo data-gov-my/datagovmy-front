@@ -13,6 +13,7 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@duckdb/duckdb-wasm": "^1.29.0",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.11",
     "@nivo/core": "^0.79.0",
@@ -36,6 +37,7 @@
     "d3-scale-chromatic": "^3.0.0",
     "datagovmy-ui": "*",
     "dom-to-image": "^2.6.0",
+    "duckdb-wasm-kit": "^0.1.39",
     "highlight.js": "^11.6.0",
     "i18next": "^22.4.14",
     "i18next-http-backend": "^2.2.0",

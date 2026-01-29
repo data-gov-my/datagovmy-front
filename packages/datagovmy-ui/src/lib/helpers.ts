@@ -345,13 +345,15 @@ export const interpolate = (raw_text: string): string | ReactElement[] => {
 
   if (matches.length <= 1) return raw_text;
 
-  return matches.map(item => {
+  return matches.map((item, idx) => {
     const match = item.split("](");
-    if (match.length <= 1) return createElement("span", { className: "text-inherit" }, item);
+    if (match.length <= 1)
+      return createElement("span", { key: `span-${idx}`, className: "text-inherit" }, item);
     const [text, url] = match;
     return createElement(
       "a",
       {
+        key: `link-${idx}-${text.replace(/\s+/g, "-").toLowerCase()}`,
         href: url,
         className:
           "text-primary dark:text-primary-dark hover:underline inline [text-underline-position:from-font]",
