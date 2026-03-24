@@ -41,6 +41,7 @@ export function Footer(): ReactElement {
                 className={classes.link}
                 href="https://github.com/data-gov-my/datagovmy-ai"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {renderString(config.footer.ai)}
               </a>
@@ -61,13 +62,28 @@ export function Footer(): ReactElement {
               >
                 {renderString(config.footer.guide)}
               </a>
-              <a className={classes.link} href="/helpdesk">
+              <a
+                className={classes.link}
+                href="https://data.gov.my/helpdesk"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {renderString(config.footer.faq)}
               </a>
-              <a className={classes.link} href="https://open.dosm.gov.my" target="_blank">
+              <a
+                className={classes.link}
+                href="https://open.dosm.gov.my"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 OpenDOSM
               </a>
-              <a className={classes.link} href="https://data.moh.gov.my" target="_blank">
+              <a
+                className={classes.link}
+                href="https://data.moh.gov.my"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 KKMNOW
               </a>
             </div>
