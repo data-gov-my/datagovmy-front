@@ -39,6 +39,13 @@ export function Footer(): ReactElement {
               </a>
               <a
                 className={classes.link}
+                href="https://github.com/data-gov-my/datagovmy-ai"
+                target="_blank"
+              >
+                {renderString(config.footer.ai)}
+              </a>
+              <a
+                className={classes.link}
                 href="https://www.figma.com/file/6iNojR8hO5bWvH0c3rvGD4"
                 target="_blank"
               >
@@ -54,8 +61,14 @@ export function Footer(): ReactElement {
               >
                 {renderString(config.footer.guide)}
               </a>
-              <a className={classes.link} href="#" target="_blank">
-                {renderString(config.footer.tos)}
+              <a className={classes.link} href="/helpdesk">
+                {renderString(config.footer.faq)}
+              </a>
+              <a className={classes.link} href="https://open.dosm.gov.my" target="_blank">
+                OpenDOSM
+              </a>
+              <a className={classes.link} href="https://data.moh.gov.my" target="_blank">
+                KKMNOW
               </a>
             </div>
           </div>
