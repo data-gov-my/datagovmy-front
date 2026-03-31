@@ -1,5 +1,7 @@
 import {
+  BarCallout,
   Button,
+  Callout,
   Container,
   Input,
   Modal,
@@ -21,7 +23,7 @@ import {
 } from "@floating-ui/react";
 import { useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent, useCallback, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -127,34 +129,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       id: "dataset_title",
       header: t("table.title"),
       className: "max-sm:max-w-[300px] md:max-w-[220px] truncate",
-      cell: ({ row, getValue }) => {
-        const titleRef = useRef<HTMLParagraphElement | null>(null);
-        const [isTruncated, setIsTruncated] = useState(false);
-        const isEllipsisActive = (e: HTMLElement | null) => {
-          if (e) {
-            return e.offsetWidth < e.scrollWidth;
-          }
-          return false;
-        };
-
-        useEffect(() => {
-          if (titleRef.current) {
-            setIsTruncated(isEllipsisActive(titleRef.current));
-          }
-        }, [titleRef.current]);
-
-        return (
-          <div className={clx("flex items-center gap-1")}>
-            {isTruncated ? (
-              <Tooltip text={getValue()} />
-            ) : (
-              <p ref={titleRef} className={clx(baseClass, "max-w-[220px] truncate")}>
-                {getValue()}
-              </p>
-            )}
-          </div>
-        );
-      },
+      cell: ({ getValue }) => <TruncatedCell text={getValue()} />,
     },
     {
       accessorKey: "dataset_description",
@@ -162,34 +137,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       enableSorting: false,
       className: "max-sm:max-w-[300px] md:max-w-[400px] truncate",
       header: t("table.description"),
-      cell: ({ row, getValue }) => {
-        const titleRef = useRef<HTMLParagraphElement | null>(null);
-        const [isTruncated, setIsTruncated] = useState(false);
-        const isEllipsisActive = (e: HTMLElement | null) => {
-          if (e) {
-            return e.offsetWidth < e.scrollWidth;
-          }
-          return false;
-        };
-
-        useEffect(() => {
-          if (titleRef.current) {
-            setIsTruncated(isEllipsisActive(titleRef.current));
-          }
-        }, [titleRef.current]);
-
-        return (
-          <div className={clx("flex items-center gap-1")}>
-            {isTruncated ? (
-              <Tooltip text={getValue()} className="w-[400px]" />
-            ) : (
-              <p ref={titleRef} className={clx(baseClass, "max-w-[400px] truncate")}>
-                {getValue()}
-              </p>
-            )}
-          </div>
-        );
-      },
+      cell: ({ getValue }) => (
+        <TruncatedCell text={getValue()} maxWidth="max-w-[400px]" tooltipClassName="w-[400px]" />
+      ),
     },
     {
       accessorKey: "agency",
@@ -389,8 +339,43 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         <Section
           title={
             <div className="flex items-center gap-3 text-black">
-              <TicketIcon className="h-5 w-5" />
+              <TicketIcon className="h-5 w-5 dark:text-white" />
               <h4>{t("data_request_tickets")}</h4>
+            </div>
+          }
+          menu={
+            <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <BarCallout
+                className="md:w-[200px]"
+                variant="information"
+                label={t("callout.total.label")}
+                count={10}
+                description={t("callout.total.description")}
+              />
+              <BarCallout
+                className="md:w-[200px]"
+                variant="warning"
+                label={t("callout.review.label")}
+                count={10}
+                suffix="80%"
+                description={t("callout.review.description")}
+              />
+              <BarCallout
+                className="md:w-[200px]"
+                variant="success"
+                label={t("callout.fulfilled.label")}
+                count={10}
+                suffix="80%"
+                description={t("callout.fulfilled.description")}
+              />
+              <BarCallout
+                className="md:w-[200px]"
+                variant="danger"
+                label={t("callout.rejected.label")}
+                count={10}
+                suffix="80%"
+                description={t("callout.rejected.description")}
+              />
             </div>
           }
         >
@@ -486,6 +471,31 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 };
 
 export default DataRequestDashboard;
+
+const TruncatedCell: FunctionComponent<{
+  text: string;
+  maxWidth?: string;
+  tooltipClassName?: string;
+}> = ({ text, maxWidth = "max-w-[220px]", tooltipClassName }) => {
+  const baseClass = "text-sm font-normal";
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const ref = useCallback((node: HTMLParagraphElement | null) => {
+    if (node) setIsTruncated(node.offsetWidth < node.scrollWidth);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-1">
+      {isTruncated ? (
+        <Tooltip text={text} className={tooltipClassName} />
+      ) : (
+        <p ref={ref} className={clx(baseClass, maxWidth, "truncate")}>
+          {text}
+        </p>
+      )}
+    </div>
+  );
+};
 
 const Tooltip: FunctionComponent<{ text: string; className?: string }> = ({ text, className }) => {
   const [isOpen, setIsOpen] = useState(false);
