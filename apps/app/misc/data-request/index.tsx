@@ -23,7 +23,7 @@ import {
 } from "@floating-ui/react";
 import { useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import { FunctionComponent, useCallback, useMemo, useState } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -38,7 +38,6 @@ import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
 import { PublishedDataModal, RequestDataModal } from "./modal";
-import { useRouter } from "next/router";
 import { debounce } from "lodash";
 import { DateTime } from "luxon";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
@@ -48,6 +47,12 @@ interface DataRequestDashboardProps {
   total_requests: number;
   items: Array<DataRequestItem>;
   dropdown: Array<{ acronym: string; name: string }>;
+  callout: {
+    total: number;
+    under_review: number;
+    data_published: number;
+    rejected: number;
+  };
 }
 
 const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
@@ -55,6 +60,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   total_requests,
   items,
   dropdown,
+  callout,
 }) => {
   const { t } = useTranslation(["data-request", "catalogue", "agencies"]);
 
@@ -77,7 +83,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     },
   ];
 
-  const { events } = useRouter();
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
@@ -92,24 +97,39 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   });
   const baseClass = "text-sm font-normal";
 
-  useEffect(() => {
-    events.on("routeChangeComplete", () => {
-      setData("loading", false);
-      setData("modal_loading", false);
-    });
-    return () => {
-      events.off("routeChangeComplete", () => {
-        setData("loading", false);
-        setData("modal_loading", false);
-      });
-    };
-  }, []);
+  const { filter, setFilter } = useFilter(
+    {
+      status: query.status ? STATUS_OPTIONS.find(item => item.value === query.status) : undefined,
+      query: query.query ? query.query : undefined,
+      ticket_id: query.ticket_id ? query.ticket_id : undefined,
+    },
+    {},
+    false,
+    true
+  );
 
-  const { filter, setFilter } = useFilter({
-    status: query.status ? STATUS_OPTIONS.find(item => item.value === query.status) : undefined,
-    query: query.query ? query.query : undefined,
-    ticket_id: query.ticket_id ? query.ticket_id : undefined,
-  });
+  const filteredItems = useMemo(() => {
+    let result = items;
+
+    const status = typeof filter.status === "object" ? filter.status?.value : filter.status;
+    if (status) {
+      result = result.filter(item => item.status === status);
+    }
+
+    if (filter.ticket_id) {
+      result = result.filter(item => item.ticket_id === Number(filter.ticket_id));
+    } else if (filter.query) {
+      const q = filter.query.toLowerCase();
+      result = result.filter(
+        item =>
+          item.dataset_title.toLowerCase().includes(q) ||
+          item.dataset_description.toLowerCase().includes(q) ||
+          item.agency.toLowerCase().includes(q)
+      );
+    }
+
+    return result;
+  }, [filter.status, filter.query, filter.ticket_id, items]);
 
   const tableConfig: TableConfig<DataRequestItem>[] = [
     {
@@ -349,31 +369,31 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 className="md:w-[200px]"
                 variant="information"
                 label={t("callout.total.label")}
-                count={10}
+                count={callout.total}
                 description={t("callout.total.description")}
               />
               <BarCallout
                 className="md:w-[200px]"
                 variant="warning"
                 label={t("callout.review.label")}
-                count={10}
-                suffix="80%"
+                count={callout.under_review}
+                suffix={`${callout.total ? Math.round((callout.under_review / callout.total) * 100) : 0}%`}
                 description={t("callout.review.description")}
               />
               <BarCallout
                 className="md:w-[200px]"
                 variant="success"
                 label={t("callout.fulfilled.label")}
-                count={10}
-                suffix="80%"
+                count={callout.data_published}
+                suffix={`${callout.total ? Math.round((callout.data_published / callout.total) * 100) : 0}%`}
                 description={t("callout.fulfilled.description")}
               />
               <BarCallout
                 className="md:w-[200px]"
                 variant="danger"
                 label={t("callout.rejected.label")}
-                count={10}
-                suffix="80%"
+                count={callout.rejected}
+                suffix={`${callout.total ? Math.round((callout.rejected / callout.total) * 100) : 0}%`}
                 description={t("callout.rejected.description")}
               />
             </div>
@@ -397,7 +417,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             current={data.tab}
             onChange={index => {
               setData("tab", index);
-              setData("loading", true);
               if (STATUS_OPTIONS[index].value === "all") {
                 setFilter("status", "");
               } else {
@@ -414,7 +433,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 ) : (
                   <Table
                     className="mb-12 mt-8 md:mx-auto md:w-4/5 lg:w-full"
-                    data={items}
+                    data={filteredItems}
                     enablePagination={10}
                     pagination={(currentPage, totalPage, setPage) => (
                       <NumberedPagination
