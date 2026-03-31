@@ -364,7 +364,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             </div>
           }
           menu={
-            <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
               <BarCallout
                 className="md:w-[200px]"
                 variant="information"
@@ -377,7 +377,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 variant="warning"
                 label={t("callout.review.label")}
                 count={callout.under_review}
-                suffix={`${callout.total ? Math.round((callout.under_review / callout.total) * 100) : 0}%`}
+                suffix={`${
+                  callout.total ? Math.round((callout.under_review / callout.total) * 100) : 0
+                }%`}
                 description={t("callout.review.description")}
               />
               <BarCallout
@@ -385,7 +387,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 variant="success"
                 label={t("callout.fulfilled.label")}
                 count={callout.data_published}
-                suffix={`${callout.total ? Math.round((callout.data_published / callout.total) * 100) : 0}%`}
+                suffix={`${
+                  callout.total ? Math.round((callout.data_published / callout.total) * 100) : 0
+                }%`}
                 description={t("callout.fulfilled.description")}
               />
               <BarCallout
@@ -393,7 +397,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 variant="danger"
                 label={t("callout.rejected.label")}
                 count={callout.rejected}
-                suffix={`${callout.total ? Math.round((callout.rejected / callout.total) * 100) : 0}%`}
+                suffix={`${
+                  callout.total ? Math.round((callout.rejected / callout.total) * 100) : 0
+                }%`}
                 description={t("callout.rejected.description")}
               />
             </div>
