@@ -34,6 +34,7 @@ const DataRequest: Page = ({
   query,
   total_requests,
   dropdown,
+  callout,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t } = useTranslation(["data-request"]);
 
@@ -46,6 +47,7 @@ const DataRequest: Page = ({
           total_requests={total_requests}
           items={items}
           dropdown={dropdown}
+          callout={callout}
         />
       </WindowProvider>
     </>
@@ -58,7 +60,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     try {
       const { data } = await get("data-request/list", {
         language: SHORT_LANG[locale as keyof typeof SHORT_LANG],
-        ...query,
       });
 
       const { data: dropdown } = await get("data-request/agencies/list", {
@@ -78,6 +79,14 @@ export const getServerSideProps: GetServerSideProps = withi18n(
           query: query ?? {},
           dropdown: dropdown,
           total_requests: data.length,
+          callout: {
+            total: data.length,
+            under_review: data.filter((item: DataRequestItem) => item.status === "under_review")
+              .length,
+            data_published: data.filter((item: DataRequestItem) => item.status === "data_published")
+              .length,
+            rejected: data.filter((item: DataRequestItem) => item.status === "rejected").length,
+          },
         },
       };
     } catch (error) {

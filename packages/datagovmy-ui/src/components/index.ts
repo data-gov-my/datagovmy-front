@@ -4,7 +4,7 @@ export { default as AgencyBadge } from "./Badge/agency";
 export { default as At } from "./At";
 export { default as Button } from "./Button";
 export { default as Banner } from "./Banner";
-export { default as Callout } from "./Callout";
+export { default as Callout, BarCallout } from "./Callout";
 export { default as Card } from "./Card";
 export { default as Checkbox } from "./Checkbox";
 export { default as Chips } from "./Chips";

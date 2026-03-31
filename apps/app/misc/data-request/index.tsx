@@ -1,5 +1,7 @@
 import {
+  BarCallout,
   Button,
+  Callout,
   Container,
   Input,
   Modal,
@@ -21,7 +23,7 @@ import {
 } from "@floating-ui/react";
 import { useData, useFilter, useTranslation, useWatch } from "datagovmy-ui/hooks";
 import { DataRequestItem, DataRequestStatus } from "pages/data-request";
-import { FunctionComponent, useCallback, useEffect, useRef, useState } from "react";
+import { FunctionComponent, useCallback, useMemo, useState } from "react";
 import {
   TicketIcon,
   MagnifyingGlassIcon,
@@ -36,7 +38,6 @@ import Table, { TableConfig } from "datagovmy-ui/charts/table";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { clx } from "datagovmy-ui/helpers";
 import { PublishedDataModal, RequestDataModal } from "./modal";
-import { useRouter } from "next/router";
 import { debounce } from "lodash";
 import { DateTime } from "luxon";
 import { FaceFrownIcon } from "@heroicons/react/24/outline";
@@ -46,6 +47,12 @@ interface DataRequestDashboardProps {
   total_requests: number;
   items: Array<DataRequestItem>;
   dropdown: Array<{ acronym: string; name: string }>;
+  callout: {
+    total: number;
+    under_review: number;
+    data_published: number;
+    rejected: number;
+  };
 }
 
 const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
@@ -53,6 +60,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   total_requests,
   items,
   dropdown,
+  callout,
 }) => {
   const { t } = useTranslation(["data-request", "catalogue", "agencies"]);
 
@@ -75,7 +83,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
     },
   ];
 
-  const { events } = useRouter();
   const { data, setData } = useData({
     loading: false,
     modal_loading: false,
@@ -90,24 +97,39 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
   });
   const baseClass = "text-sm font-normal";
 
-  useEffect(() => {
-    events.on("routeChangeComplete", () => {
-      setData("loading", false);
-      setData("modal_loading", false);
-    });
-    return () => {
-      events.off("routeChangeComplete", () => {
-        setData("loading", false);
-        setData("modal_loading", false);
-      });
-    };
-  }, []);
+  const { filter, setFilter } = useFilter(
+    {
+      status: query.status ? STATUS_OPTIONS.find(item => item.value === query.status) : undefined,
+      query: query.query ? query.query : undefined,
+      ticket_id: query.ticket_id ? query.ticket_id : undefined,
+    },
+    {},
+    false,
+    true
+  );
 
-  const { filter, setFilter } = useFilter({
-    status: query.status ? STATUS_OPTIONS.find(item => item.value === query.status) : undefined,
-    query: query.query ? query.query : undefined,
-    ticket_id: query.ticket_id ? query.ticket_id : undefined,
-  });
+  const filteredItems = useMemo(() => {
+    let result = items;
+
+    const status = typeof filter.status === "object" ? filter.status?.value : filter.status;
+    if (status) {
+      result = result.filter(item => item.status === status);
+    }
+
+    if (filter.ticket_id) {
+      result = result.filter(item => item.ticket_id === Number(filter.ticket_id));
+    } else if (filter.query) {
+      const q = filter.query.toLowerCase();
+      result = result.filter(
+        item =>
+          item.dataset_title.toLowerCase().includes(q) ||
+          item.dataset_description.toLowerCase().includes(q) ||
+          item.agency.toLowerCase().includes(q)
+      );
+    }
+
+    return result;
+  }, [filter.status, filter.query, filter.ticket_id, items]);
 
   const tableConfig: TableConfig<DataRequestItem>[] = [
     {
@@ -127,34 +149,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       id: "dataset_title",
       header: t("table.title"),
       className: "max-sm:max-w-[300px] md:max-w-[220px] truncate",
-      cell: ({ row, getValue }) => {
-        const titleRef = useRef<HTMLParagraphElement | null>(null);
-        const [isTruncated, setIsTruncated] = useState(false);
-        const isEllipsisActive = (e: HTMLElement | null) => {
-          if (e) {
-            return e.offsetWidth < e.scrollWidth;
-          }
-          return false;
-        };
-
-        useEffect(() => {
-          if (titleRef.current) {
-            setIsTruncated(isEllipsisActive(titleRef.current));
-          }
-        }, [titleRef.current]);
-
-        return (
-          <div className={clx("flex items-center gap-1")}>
-            {isTruncated ? (
-              <Tooltip text={getValue()} />
-            ) : (
-              <p ref={titleRef} className={clx(baseClass, "max-w-[220px] truncate")}>
-                {getValue()}
-              </p>
-            )}
-          </div>
-        );
-      },
+      cell: ({ getValue }) => <TruncatedCell text={getValue()} />,
     },
     {
       accessorKey: "dataset_description",
@@ -162,34 +157,9 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       enableSorting: false,
       className: "max-sm:max-w-[300px] md:max-w-[400px] truncate",
       header: t("table.description"),
-      cell: ({ row, getValue }) => {
-        const titleRef = useRef<HTMLParagraphElement | null>(null);
-        const [isTruncated, setIsTruncated] = useState(false);
-        const isEllipsisActive = (e: HTMLElement | null) => {
-          if (e) {
-            return e.offsetWidth < e.scrollWidth;
-          }
-          return false;
-        };
-
-        useEffect(() => {
-          if (titleRef.current) {
-            setIsTruncated(isEllipsisActive(titleRef.current));
-          }
-        }, [titleRef.current]);
-
-        return (
-          <div className={clx("flex items-center gap-1")}>
-            {isTruncated ? (
-              <Tooltip text={getValue()} className="w-[400px]" />
-            ) : (
-              <p ref={titleRef} className={clx(baseClass, "max-w-[400px] truncate")}>
-                {getValue()}
-              </p>
-            )}
-          </div>
-        );
-      },
+      cell: ({ getValue }) => (
+        <TruncatedCell text={getValue()} maxWidth="max-w-[400px]" tooltipClassName="w-[400px]" />
+      ),
     },
     {
       accessorKey: "agency",
@@ -389,8 +359,49 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
         <Section
           title={
             <div className="flex items-center gap-3 text-black">
-              <TicketIcon className="h-5 w-5" />
+              <TicketIcon className="h-5 w-5 dark:text-white" />
               <h4>{t("data_request_tickets")}</h4>
+            </div>
+          }
+          menu={
+            <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
+              <BarCallout
+                className="md:w-[200px]"
+                variant="information"
+                label={t("callout.total.label")}
+                count={callout.total}
+                description={t("callout.total.description")}
+              />
+              <BarCallout
+                className="md:w-[200px]"
+                variant="warning"
+                label={t("callout.review.label")}
+                count={callout.under_review}
+                suffix={`${
+                  callout.total ? Math.round((callout.under_review / callout.total) * 100) : 0
+                }%`}
+                description={t("callout.review.description")}
+              />
+              <BarCallout
+                className="md:w-[200px]"
+                variant="success"
+                label={t("callout.fulfilled.label")}
+                count={callout.data_published}
+                suffix={`${
+                  callout.total ? Math.round((callout.data_published / callout.total) * 100) : 0
+                }%`}
+                description={t("callout.fulfilled.description")}
+              />
+              <BarCallout
+                className="md:w-[200px]"
+                variant="danger"
+                label={t("callout.rejected.label")}
+                count={callout.rejected}
+                suffix={`${
+                  callout.total ? Math.round((callout.rejected / callout.total) * 100) : 0
+                }%`}
+                description={t("callout.rejected.description")}
+              />
             </div>
           }
         >
@@ -412,7 +423,6 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             current={data.tab}
             onChange={index => {
               setData("tab", index);
-              setData("loading", true);
               if (STATUS_OPTIONS[index].value === "all") {
                 setFilter("status", "");
               } else {
@@ -429,7 +439,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 ) : (
                   <Table
                     className="mb-12 mt-8 md:mx-auto md:w-4/5 lg:w-full"
-                    data={items}
+                    data={filteredItems}
                     enablePagination={10}
                     pagination={(currentPage, totalPage, setPage) => (
                       <NumberedPagination
@@ -486,6 +496,31 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
 };
 
 export default DataRequestDashboard;
+
+const TruncatedCell: FunctionComponent<{
+  text: string;
+  maxWidth?: string;
+  tooltipClassName?: string;
+}> = ({ text, maxWidth = "max-w-[220px]", tooltipClassName }) => {
+  const baseClass = "text-sm font-normal";
+  const [isTruncated, setIsTruncated] = useState(false);
+
+  const ref = useCallback((node: HTMLParagraphElement | null) => {
+    if (node) setIsTruncated(node.offsetWidth < node.scrollWidth);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-1">
+      {isTruncated ? (
+        <Tooltip text={text} className={tooltipClassName} />
+      ) : (
+        <p ref={ref} className={clx(baseClass, maxWidth, "truncate")}>
+          {text}
+        </p>
+      )}
+    </div>
+  );
+};
 
 const Tooltip: FunctionComponent<{ text: string; className?: string }> = ({ text, className }) => {
   const [isOpen, setIsOpen] = useState(false);

@@ -43,3 +43,47 @@ const Callout: FC<CalloutProps> = ({ children, className, variant }) => {
 };
 
 export default Callout;
+
+const bar_type: Record<string, { bg: string; text: string; bar: string }> = {
+  success: { bg: "bg-green-500", text: "text-success", bar: "bg-success" },
+  warning: { bg: "bg-yellow-50", text: "text-warning", bar: "bg-warning" },
+  information: { bg: "bg-gray-50", text: "text-outlineHover", bar: "bg-outlineHover" },
+  danger: { bg: "bg-red-50", text: "text-danger", bar: "bg-danger" },
+};
+
+type BarCalloutProps = {
+  className?: string;
+  variant: keyof typeof type;
+  label: string;
+  count: string | number;
+  suffix?: string;
+  description?: string;
+};
+
+export const BarCallout: FC<BarCalloutProps> = ({
+  variant,
+  className,
+  count,
+  label,
+  description,
+  suffix,
+}) => {
+  return (
+    <div
+      className={clx(
+        "dark:bg-washed-dark flex w-full overflow-hidden rounded-md border bg-transparent",
+        className
+      )}
+    >
+      <div className={clx("w-1.5 self-stretch ", bar_type[variant].bar)} />
+      <div className="w-full p-3 text-black dark:text-white">
+        <p className="text-xs font-semibold uppercase">{label}</p>
+        <p className="space-x-1.5">
+          <span className="text-3xl font-medium">{count}</span>
+          <span className={clx("text-xs", bar_type[variant].text)}>{suffix}</span>
+        </p>
+        <p className="text-xs">{description}</p>
+      </div>
+    </div>
+  );
+};
