@@ -35,7 +35,8 @@ const Footer: FunctionComponent<FooterProps> = ({ title, children, site }) => {
         <div className="flex gap-4">
           {/* LOGO */}
           <div className="mt-1 w-12">
-            <Image src="/static/images/jata_logo.png" width={48} height={36} alt="jata negara" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/static/images/jata_logo.png" width={48} height={36} alt="jata negara" />
           </div>
           <div>
             <div className="mb-2 font-bold uppercase">{title}</div>

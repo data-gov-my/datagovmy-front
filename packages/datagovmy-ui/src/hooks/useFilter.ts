@@ -15,7 +15,8 @@ import { useWatch } from "./useWatch";
 export const useFilter = (
   state: Record<string, any> = {},
   params = {},
-  sequential: boolean = false
+  sequential: boolean = false,
+  shallow: boolean = false
 ) => {
   const original = useRef(state);
   const { data, setData, reset } = useData(state);
@@ -52,8 +53,8 @@ export const useFilter = (
         Array.isArray(value)
           ? value.map((item: OptionType) => item.value).join(",")
           : typeof value === "string"
-          ? value
-          : (value as OptionType).value,
+            ? value
+            : (value as OptionType).value,
       ]);
 
       router.replace(
@@ -65,7 +66,7 @@ export const useFilter = (
           },
         },
         undefined,
-        { scroll: false }
+        { scroll: false, shallow }
       );
     }, 500),
     []

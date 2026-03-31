@@ -1,6 +1,5 @@
 import { Container, Nav } from "datagovmy-ui/components";
 import { useTranslation } from "datagovmy-ui/hooks";
-import Image from "next/image";
 import Link from "next/link";
 import { FunctionComponent, ReactNode } from "react";
 
@@ -19,7 +18,8 @@ const Header: FunctionComponent<HeaderProps> = ({ stateSelector, hideLanguage })
           <Link href="/">
             <div className="flex cursor-pointer gap-2">
               <div className="flex w-8 items-center justify-center">
-                <Image src="/static/images/logo.png" width={48} height={36} alt="datagovmy_logo" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/static/images/logo.png" width={48} height={36} alt="datagovmy_logo" />
               </div>
               <h4>data.gov.my</h4>
             </div>
