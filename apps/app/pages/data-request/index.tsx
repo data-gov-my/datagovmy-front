@@ -9,7 +9,7 @@ import { useTranslation } from "datagovmy-ui/hooks";
 import { Agency, Page } from "datagovmy-ui/types";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
-export type DataRequestStatus = "under_review" | "rejected" | "data_published";
+export type DataRequestStatus = "under_review" | "rejected" | "data_provided" | "data_published";
 
 export type DataRequestItem = {
   ticket_id: number;
@@ -83,8 +83,10 @@ export const getServerSideProps: GetServerSideProps = withi18n(
             total: data.length,
             under_review: data.filter((item: DataRequestItem) => item.status === "under_review")
               .length,
-            data_published: data.filter((item: DataRequestItem) => item.status === "data_published")
-              .length,
+            data_published: data.filter(
+              (item: DataRequestItem) =>
+                item.status === "data_published" || item.status === "data_provided"
+            ).length,
             rejected: data.filter((item: DataRequestItem) => item.status === "rejected").length,
           },
         },
