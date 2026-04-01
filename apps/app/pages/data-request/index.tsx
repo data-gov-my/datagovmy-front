@@ -94,9 +94,6 @@ export const getServerSideProps: GetServerSideProps = withi18n(
     } catch (error) {
       return { notFound: true };
     }
-  },
-  {
-    cache_expiry: 60 * 60 * 24, // 1 day
   }
 );
 
