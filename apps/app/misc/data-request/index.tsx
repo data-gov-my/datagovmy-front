@@ -74,6 +74,10 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
       value: "under_review",
     },
     {
+      label: t("status.data_provided"),
+      value: "data_provided",
+    },
+    {
       label: t("status.data_published"),
       value: "data_published",
     },
@@ -255,6 +259,11 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                     </div>
                   </div>
                 )}
+                {status === "data_provided" && (
+                  <div className="flex flex-col gap-3 text-sm">
+                    <p>{t(`status.${status}`, { context: "modal" })}</p>
+                  </div>
+                )}
               </div>
             )}
           </Modal>
@@ -276,6 +285,14 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
             <ClockIcon className="text-outlineHover h-5 w-5" />
             <p className={`text-outlineHover`}>{t("status.under_review")}</p>
             <ArrowUpRightIcon className="text-outlineHover h-5 w-5" />
+          </>
+        );
+      case "data_provided":
+        return base(
+          <>
+            <CheckCircleIcon color={AKSARA_COLOR.PRIMARY} className="h-5 w-5" />
+            <p className={`text-primary`}>{t("status.data_provided")}</p>
+            <ArrowUpRightIcon className={`text-primary h-5 w-5`} />
           </>
         );
       case "data_published":
@@ -366,14 +383,14 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
           menu={
             <div className="grid w-full grid-cols-2 gap-3 lg:grid-cols-4">
               <BarCallout
-                className="md:w-[200px]"
+                className="md:w-[220px]"
                 variant="information"
                 label={t("callout.total.label")}
                 count={callout.total}
                 description={t("callout.total.description")}
               />
               <BarCallout
-                className="md:w-[200px]"
+                className="md:w-[220px]"
                 variant="warning"
                 label={t("callout.review.label")}
                 count={callout.under_review}
@@ -383,7 +400,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 description={t("callout.review.description")}
               />
               <BarCallout
-                className="md:w-[200px]"
+                className="md:w-[220px]"
                 variant="success"
                 label={t("callout.fulfilled.label")}
                 count={callout.data_published}
@@ -393,7 +410,7 @@ const DataRequestDashboard: FunctionComponent<DataRequestDashboardProps> = ({
                 description={t("callout.fulfilled.description")}
               />
               <BarCallout
-                className="md:w-[200px]"
+                className="md:w-[220px]"
                 variant="danger"
                 label={t("callout.rejected.label")}
                 count={callout.rejected}
