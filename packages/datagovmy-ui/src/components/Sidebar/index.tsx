@@ -1,9 +1,20 @@
-import { FunctionComponent, ReactNode, SetStateAction, useState } from "react";
+import {
+  FunctionComponent,
+  ReactNode,
+  RefObject,
+  SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { Transition } from "@headlessui/react";
 import Button from "../Button";
 import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "../../hooks/useTranslation";
+import { useActiveSection } from "../../hooks/useActiveSection";
 import { clx } from "../../lib/helpers";
+
+const SUPPRESS_MS = 800;
 
 interface SidebarProps {
   children: ReactNode;
@@ -12,6 +23,8 @@ interface SidebarProps {
   sidebarTitle?: string;
   mobileClassName?: string;
   initialSelected?: string;
+  sectionRefs?: RefObject<Record<string, HTMLElement | null>>;
+  scrollOffset?: number;
   customList?: (
     setSelected: (value: SetStateAction<string>) => void,
     onSelect: (index: string) => void,
@@ -27,6 +40,8 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   sidebarTitle,
   mobileClassName,
   initialSelected,
+  sectionRefs,
+  scrollOffset = 180,
   customList,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
@@ -34,6 +49,15 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     initialSelected ?? Array.isArray(categories[0]) ? categories[0][0] : categories[0]
   );
   const [show, setShow] = useState<boolean>(false);
+
+  const clickedAt = useRef(0);
+
+  const onActiveSection = useCallback((id: string) => {
+    if (Date.now() - clickedAt.current < SUPPRESS_MS) return;
+    setSelected(id);
+  }, []);
+
+  useActiveSection(sectionRefs, scrollOffset, onActiveSection);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
     active:
@@ -62,6 +86,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                         selected === `${category}` ? styles.active : styles.default,
                       ].join(" ")}
                       onClick={() => {
+                        clickedAt.current = Date.now();
                         setSelected(`${category}`);
                         onSelect(
                           subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
@@ -82,6 +107,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                                   : styles.default,
                               ].join(" ")}
                               onClick={() => {
+                                clickedAt.current = Date.now();
                                 setSelected(`${category}: ${title}`);
                                 onSelect(`${category}: ${title}`);
                               }}
@@ -154,6 +180,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                             selected === category ? styles.active : styles.default,
                           ].join(" ")}
                           onClick={() => {
+                            clickedAt.current = Date.now();
                             setSelected(category);
                             onSelect(
                               subcategory.length > 0
@@ -174,6 +201,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                                     selected === title ? styles.active : styles.default,
                                   ].join(" ")}
                                   onClick={() => {
+                                    clickedAt.current = Date.now();
                                     setSelected(title);
                                     onSelect(`${category}: ${title}`);
                                   }}
