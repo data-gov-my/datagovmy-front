@@ -14,8 +14,6 @@ import { useTranslation } from "../../hooks/useTranslation";
 import { useActiveSection } from "../../hooks/useActiveSection";
 import { clx } from "../../lib/helpers";
 
-const SUPPRESS_MS = 800;
-
 interface SidebarProps {
   children: ReactNode;
   categories: Array<[category: string, subcategory: string[]]>;
@@ -48,10 +46,15 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   );
   const [show, setShow] = useState<boolean>(false);
 
-  const clickedAt = useRef(0);
+  // Mute the scrollspy until a click-triggered scroll settles.
+  const suppressed = useRef(false);
+  const suppressUntilScrollEnd = useCallback(() => {
+    suppressed.current = true;
+    window.addEventListener("scrollend", () => (suppressed.current = false), { once: true });
+  }, []);
 
   const onActiveSection = useCallback((id: string) => {
-    if (Date.now() - clickedAt.current < SUPPRESS_MS) return;
+    if (suppressed.current) return;
     setSelected(id);
   }, []);
 
@@ -84,7 +87,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                         selected === `${category}` ? styles.active : styles.default,
                       ].join(" ")}
                       onClick={() => {
-                        clickedAt.current = Date.now();
+                        suppressUntilScrollEnd();
                         setSelected(`${category}`);
                         onSelect(
                           subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
@@ -105,7 +108,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                                   : styles.default,
                               ].join(" ")}
                               onClick={() => {
-                                clickedAt.current = Date.now();
+                                suppressUntilScrollEnd();
                                 setSelected(`${category}: ${title}`);
                                 onSelect(`${category}: ${title}`);
                               }}
@@ -178,7 +181,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                             selected === category ? styles.active : styles.default,
                           ].join(" ")}
                           onClick={() => {
-                            clickedAt.current = Date.now();
+                            suppressUntilScrollEnd();
                             setSelected(category);
                             onSelect(
                               subcategory.length > 0
@@ -199,7 +202,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                                     selected === title ? styles.active : styles.default,
                                   ].join(" ")}
                                   onClick={() => {
-                                    clickedAt.current = Date.now();
+                                    suppressUntilScrollEnd();
                                     setSelected(title);
                                     onSelect(`${category}: ${title}`);
                                   }}
