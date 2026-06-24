@@ -24,7 +24,6 @@ interface SidebarProps {
   mobileClassName?: string;
   initialSelected?: string;
   sectionRefs?: RefObject<Record<string, HTMLElement | null>>;
-  scrollOffset?: number;
   customList?: (
     setSelected: (value: SetStateAction<string>) => void,
     onSelect: (index: string) => void,
@@ -41,7 +40,6 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   mobileClassName,
   initialSelected,
   sectionRefs,
-  scrollOffset = 180,
   customList,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
@@ -57,7 +55,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     setSelected(id);
   }, []);
 
-  useActiveSection(sectionRefs, scrollOffset, onActiveSection);
+  useActiveSection(sectionRefs, 180, onActiveSection);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
     active:
