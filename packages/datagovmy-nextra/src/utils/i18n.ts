@@ -11,7 +11,7 @@ export const en: Record<string, any> = {
   },
   footer: {
     "govt": "Government of Malaysia",
-    "dtsa": "© 2023 Public Sector Open Data",
+    "dtsa": "© 2026 Public Sector Open Data",
     "open-source": "Open Source",
     "fe": "Frontend Repo: NextJS",
     "be": "Backend Repo: Django",
@@ -47,7 +47,7 @@ export const ms: Record<string, any> = {
   },
   footer: {
     "govt": "Kerajaan Malaysia",
-    "dtsa": "© 2023 Data Terbuka Sektor Awam",
+    "dtsa": "© 2026 Data Terbuka Sektor Awam",
     "open-source": "Sumber Terbuka",
     "fe": "Repo 'Frontend': NextJS",
     "be": "Repo 'Backend': Django",
