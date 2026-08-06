@@ -20,6 +20,7 @@ import { AnalyticsProvider, Meta } from "../../contexts/analytics";
 import { DownloadCard } from "../Card";
 import DCMetadata from "./metadata";
 import DCChartsAndTable from "./charts-table";
+import CatalogueCitation from "../partials/citation";
 import { groupBy } from "lodash";
 
 /**
@@ -350,6 +351,25 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
               />
             </Section>
 
+            {/* Citation */}
+            {/* TODO(i18n): Replace hardcoded strings with t("citation") / t("citation_desc") once keys are added */}
+            <Section
+              title="Citation"
+              ref={ref => {
+                scrollRef.current[i18n.language === "en-GB" ? "Citation" : "Petikan"] = ref;
+              }}
+              description="Cite this dataset in your research, reports, or publications."
+              className="mx-auto w-full py-12"
+            >
+              <CatalogueCitation
+                id={data.id}
+                title={data.title}
+                dataSources={data.data_source}
+                dataAsOf={data.data_as_of}
+                lastUpdated={data.last_updated}
+              />
+            </Section>
+
             {/* API Request Code */}
             {data.exclude_openapi ? (
               <Section
@@ -424,6 +444,7 @@ const getSideBarCollection: (
         "Full dataset": [],
         "Open API": [],
       },
+      "Citation": {},
     },
     "ms-MY": {
       "Jadual & Carta": {},
@@ -441,6 +462,7 @@ const getSideBarCollection: (
         "Dataset penuh": [],
         "Open API": [],
       },
+      "Petikan": {},
     },
   };
 };
