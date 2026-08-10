@@ -163,6 +163,7 @@ export type Agency =
   | "mohe"
   | "mot"
   | "mynic"
+  | "mysa"
   | "napic"
   | "npra"
   | "nres"
