@@ -54,6 +54,11 @@ const CatalogueLine = dynamic(() => import("datagovmy-ui/dc-charts/line"), {
   ssr: false,
 });
 
+const NPRA_PHARMACEUTICAL_DATASETS = new Set([
+  "pharmaceutical_importers",
+  "pharmaceutical_manufacturers",
+]);
+
 type ChartTableProps = {
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   data: DCVariable;
@@ -172,7 +177,10 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
           columns,
           data.translations,
           config.freeze_columns,
-          (item, key) => item[key]
+          (item, key) =>
+            key === "license_year" && NPRA_PHARMACEUTICAL_DATASETS.has(dataset.meta.unique_id)
+              ? String(item[key])
+              : item[key]
         );
       default:
         return UNIVERSAL_TABLE_SCHEMA(columns, data.translations, config.freeze_columns);
