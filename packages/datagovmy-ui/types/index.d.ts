@@ -137,6 +137,7 @@ export type Agency =
   | "icu-jpm"
   | "imigresen"
   | "jakoa"
+  | "jbg"
   | "janm"
   | "jas"
   | "jdn"
