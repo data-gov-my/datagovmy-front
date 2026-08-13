@@ -22,6 +22,11 @@ import DCMetadata from "./metadata";
 import DCChartsAndTable from "./charts-table";
 import { groupBy } from "lodash";
 
+const formatDropdownLabel = (option: string): string =>
+  option.includes("-")
+    ? option.replace(/-/g, " ").replace(/\b\w/g, character => character.toUpperCase())
+    : option;
+
 /**
  * Catalogue Show
  * @overview Status: Live
@@ -164,15 +169,15 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
           ? item.options.find(opt => query[item.name] === opt)
             ? {
                 value: query[item.name],
-                label: data.translations[query[item.name]] ?? query[item.name],
+                label: data.translations[query[item.name]] ?? formatDropdownLabel(query[item.name]),
               }
             : {
                 value: item.options[0],
-                label: data.translations[item.options[0]] ?? item.options[0],
+                label: data.translations[item.options[0]] ?? formatDropdownLabel(item.options[0]),
               }
           : {
               value: item.selected,
-              label: data.translations[item.selected] ?? item.selected,
+              label: data.translations[item.selected] ?? formatDropdownLabel(item.selected),
             },
       ]),
       ["visual", { value: selectedViz.dataviz_id, label: selectedViz.dataviz_id }],
