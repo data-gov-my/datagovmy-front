@@ -1360,6 +1360,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({
     "icu-jpm": ICUJPMIcon,
     "imigresen": JIMIcon,
     "jakoa": JAKOAIcon,
+    "jbg": JataNegara,
     "janm": JataNegara,
     "jas": JataNegara,
     "jdn": JataNegara,

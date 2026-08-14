@@ -59,6 +59,11 @@ const NPRA_PHARMACEUTICAL_DATASETS = new Set([
   "pharmaceutical_manufacturers",
 ]);
 
+const formatDropdownLabel = (option: string): string =>
+  option.includes("-")
+    ? option.replace(/-/g, " ").replace(/\b\w/g, character => character.toUpperCase())
+    : option;
+
 type ChartTableProps = {
   scrollRef: MutableRefObject<Record<string, HTMLElement | null>>;
   data: DCVariable;
@@ -280,7 +285,7 @@ const DCChartsAndTable: FunctionComponent<ChartTableProps> = ({
                 width="w-full md:w-fit min-w-[120px]"
                 anchor={index > 0 ? "right" : "left"}
                 options={item.options.map(option => ({
-                  label: data.translations[option] ?? option,
+                  label: data.translations[option] ?? formatDropdownLabel(option),
                   value: option,
                 }))}
                 selected={filter[item.name]}
