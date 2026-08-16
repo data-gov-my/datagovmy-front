@@ -151,6 +151,7 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
 
       <Container className="min-h-screen lg:px-0 lg:pl-6">
         <Sidebar
+          sectionRefs={scrollRef}
           categories={Object.entries(collection).map(([category, subcategory]) => [
             category,
             Object.keys(subcategory),

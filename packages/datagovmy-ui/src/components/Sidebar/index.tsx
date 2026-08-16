@@ -1,8 +1,17 @@
-import { FunctionComponent, ReactNode, SetStateAction, useState } from "react";
+import {
+  FunctionComponent,
+  ReactNode,
+  RefObject,
+  SetStateAction,
+  useCallback,
+  useRef,
+  useState,
+} from "react";
 import { Transition } from "@headlessui/react";
 import Button from "../Button";
 import { Bars3BottomLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "../../hooks/useTranslation";
+import { useActiveSection } from "../../hooks/useActiveSection";
 import { clx } from "../../lib/helpers";
 
 interface SidebarProps {
@@ -12,6 +21,7 @@ interface SidebarProps {
   sidebarTitle?: string;
   mobileClassName?: string;
   initialSelected?: string;
+  sectionRefs?: RefObject<Record<string, HTMLElement | null>>;
   customList?: (
     setSelected: (value: SetStateAction<string>) => void,
     onSelect: (index: string) => void,
@@ -27,6 +37,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
   sidebarTitle,
   mobileClassName,
   initialSelected,
+  sectionRefs,
   customList,
 }) => {
   const { t } = useTranslation(["catalogue", "common"]);
@@ -34,6 +45,20 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
     initialSelected ?? Array.isArray(categories[0]) ? categories[0][0] : categories[0]
   );
   const [show, setShow] = useState<boolean>(false);
+
+  // Mute the scrollspy until a click-triggered scroll settles.
+  const suppressed = useRef(false);
+  const suppressUntilScrollEnd = useCallback(() => {
+    suppressed.current = true;
+    window.addEventListener("scrollend", () => (suppressed.current = false), { once: true });
+  }, []);
+
+  const onActiveSection = useCallback((id: string) => {
+    if (suppressed.current) return;
+    setSelected(id);
+  }, []);
+
+  useActiveSection(sectionRefs, 180, onActiveSection);
   const styles = {
     base: "px-4 lg:px-5 py-1.5 w-full rounded-none text-start leading-tight",
     active:
@@ -62,6 +87,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                         selected === `${category}` ? styles.active : styles.default,
                       ].join(" ")}
                       onClick={() => {
+                        suppressUntilScrollEnd();
                         setSelected(`${category}`);
                         onSelect(
                           subcategory.length > 0 ? `${category}: ${subcategory[0]}` : `${category}`
@@ -82,6 +108,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                                   : styles.default,
                               ].join(" ")}
                               onClick={() => {
+                                suppressUntilScrollEnd();
                                 setSelected(`${category}: ${title}`);
                                 onSelect(`${category}: ${title}`);
                               }}
@@ -154,6 +181,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                             selected === category ? styles.active : styles.default,
                           ].join(" ")}
                           onClick={() => {
+                            suppressUntilScrollEnd();
                             setSelected(category);
                             onSelect(
                               subcategory.length > 0
@@ -174,6 +202,7 @@ const Sidebar: FunctionComponent<SidebarProps> = ({
                                     selected === title ? styles.active : styles.default,
                                   ].join(" ")}
                                   onClick={() => {
+                                    suppressUntilScrollEnd();
                                     setSelected(title);
                                     onSelect(`${category}: ${title}`);
                                   }}
