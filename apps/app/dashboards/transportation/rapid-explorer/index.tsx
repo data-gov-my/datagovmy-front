@@ -126,7 +126,6 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
 
   const navigateToService = (service?: string, origin?: string, destination?: string) => {
     if (!service || !origin || !destination) return;
-    setData("loading", true);
     const route = `${routes.RAPID_EXPLORER}/${service}/${encodeURIComponent(
       origin
     )}/${encodeURIComponent(destination)}`;
@@ -134,7 +133,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
     push(route, undefined, {
       scroll: false,
       locale: i18n.language,
-    }).then(() => setData("loading", false));
+    });
   };
 
   return (

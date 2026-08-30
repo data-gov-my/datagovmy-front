@@ -14,3 +14,5 @@ export { useTrace } from "./useTrace";
 export { useTranslation } from "./useTranslation";
 export { useWatch } from "./useWatch";
 export { useZoom } from "./useZoom";
+export { useDuckDb } from "./useDuckDb";
+export type { DuckDBQuery } from "./useDuckDb";
