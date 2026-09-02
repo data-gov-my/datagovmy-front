@@ -35,6 +35,7 @@ const Timeseries = dynamic(() => import("datagovmy-ui/charts/timeseries"), { ssr
 interface RapidExplorerProps {
   A_to_B: WithData<Record<DashboardPeriod, Record<"x" | "passengers", number[]>>>;
   A_to_B_callout: Record<DashboardPeriod, number>;
+  A_to_B_has_data: boolean;
   B_to_A?: Record<DashboardPeriod, Record<"x" | "passengers", number[]>>;
   B_to_A_callout?: Record<DashboardPeriod, number>;
   dropdown: Record<string, Record<string, string[]>>;
@@ -46,6 +47,7 @@ interface RapidExplorerProps {
 const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   A_to_B,
   A_to_B_callout,
+  A_to_B_has_data,
   B_to_A,
   B_to_A_callout,
   dropdown,
@@ -91,6 +93,18 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   );
   const LATEST_MONTH = A_to_B.data.monthly.x[A_to_B.data.monthly.x.length - 1];
 
+  const NoRecords = ({ title }: { title: string }) => (
+    <div className="relative flex h-[400px] w-full flex-col lg:h-full">
+      <h5>{title}</h5>
+      <div className="z-10 flex h-full w-full flex-col items-center justify-center">
+        <Card className="bg-outline dark:bg-washed-dark flex flex-row items-center gap-2 rounded-md px-3 py-1.5">
+          <FaceFrownIcon className="h-6 w-6" />
+          {i18n.language === "ms-MY" ? "Tiada Rekod Data" : "No Data Available"}
+        </Card>
+      </div>
+    </div>
+  );
+
   const isAllStations = (station: string) => {
     if (station === "A0: All Stations") {
       return t("all_stations");
@@ -105,7 +119,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   const ORIGIN_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _origins: Array<OptionType> = [];
     if (data.service) {
-      _origins = Object.keys(dropdown[data.service]).map(origin => ({
+      _origins = Object.keys(dropdown[data.service] ?? {}).map(origin => ({
         label: isAllStations(origin),
         value: origin,
       }));
@@ -116,7 +130,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
   const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _destinations: Array<OptionType> = [];
     if (data.service && data.origin) {
-      _destinations = dropdown[data.service][data.origin].map(destination => ({
+      _destinations = (dropdown[data.service]?.[data.origin] ?? []).map(destination => ({
         label: isAllStations(destination),
         value: destination,
       }));
@@ -293,42 +307,51 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                       </div>
                     </div>
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-                      <Timeseries
-                        className="h-[300px] w-full"
-                        title={t("ridership", {
-                          from: isAllStations(params.origin) ?? DEFAULT_ORIG,
-                          to: isAllStations(params.destination) ?? DEFAULT_DEST,
-                        })}
-                        enableAnimation={!play}
-                        interval={config.period}
-                        data={{
-                          labels: A_to_B_coords.x,
-                          datasets: [
+                      {A_to_B_has_data ? (
+                        <Timeseries
+                          className="h-[300px] w-full"
+                          title={t("ridership", {
+                            from: isAllStations(params.origin) ?? DEFAULT_ORIG,
+                            to: isAllStations(params.destination) ?? DEFAULT_DEST,
+                          })}
+                          enableAnimation={!play}
+                          interval={config.period}
+                          data={{
+                            labels: A_to_B_coords.x,
+                            datasets: [
+                              {
+                                type: A_to_B_coords.x.length === 1 ? "bar" : "line",
+                                data: A_to_B_coords.passengers,
+                                label: t(`common:time.${config.key}`),
+                                fill: true,
+                                backgroundColor: AKSARA_COLOR.PRIMARY_H,
+                                borderColor: AKSARA_COLOR.PRIMARY,
+                                borderWidth: 1.5,
+                                barThickness: 12,
+                              },
+                            ],
+                          }}
+                          stats={[
                             {
-                              type: A_to_B_coords.x.length === 1 ? "bar" : "line",
-                              data: A_to_B_coords.passengers,
-                              label: t(`common:time.${config.key}`),
-                              fill: true,
-                              backgroundColor: AKSARA_COLOR.PRIMARY_H,
-                              borderColor: AKSARA_COLOR.PRIMARY,
-                              borderWidth: 1.5,
-                              barThickness: 12,
+                              title: t("common:time.daily"),
+                              value: `+${numFormat(A_to_B_callout.daily, "standard")}`,
                             },
-                          ],
-                        }}
-                        stats={[
-                          {
-                            title: t("common:time.daily"),
-                            value: `+${numFormat(A_to_B_callout.daily, "standard")}`,
-                          },
-                          {
-                            title: t("this_month", {
-                              date: toDate(LATEST_MONTH, "MMM yyyy", i18n.language),
-                            }),
-                            value: `${numFormat(A_to_B_callout.monthly, "standard")}`,
-                          },
-                        ]}
-                      />
+                            {
+                              title: t("this_month", {
+                                date: toDate(LATEST_MONTH, "MMM yyyy", i18n.language),
+                              }),
+                              value: `${numFormat(A_to_B_callout.monthly, "standard")}`,
+                            },
+                          ]}
+                        />
+                      ) : (
+                        <NoRecords
+                          title={t("ridership", {
+                            from: isAllStations(params.origin) ?? DEFAULT_ORIG,
+                            to: isAllStations(params.destination) ?? DEFAULT_DEST,
+                          })}
+                        />
+                      )}
                       {B_to_A && B_to_A_callout ? (
                         <Timeseries
                           className="h-[300px] w-full"
@@ -367,47 +390,23 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                           ]}
                         />
                       ) : (
-                        <div className="relative flex h-[400px] w-full flex-col lg:h-full">
-                          <h5>
-                            {t("ridership", {
-                              from: isAllStations(params.destination) ?? DEFAULT_DEST,
-                              to: isAllStations(params.origin) ?? DEFAULT_ORIG,
-                            })}
-                          </h5>
-                          <Timeseries
-                            className="absolute bottom-0 h-[300px] w-full opacity-30"
-                            enableCrosshair={false}
-                            enableTooltip={false}
-                            gridOffsetX={true}
-                            data={{
-                              labels: B_to_A_coords.x,
-                              datasets: [
-                                {
-                                  type: B_to_A_coords.x.length === 1 ? "bar" : "line",
-                                  data: B_to_A_coords.y,
-                                  fill: true,
-                                  borderWidth: 1,
-                                  barThickness: 12,
-                                },
-                              ],
-                            }}
-                          />
-                          <div className="z-10 flex h-full w-full flex-col items-center justify-center">
-                            <Card className="bg-outline dark:bg-washed-dark flex flex-row items-center gap-2 rounded-md px-3 py-1.5">
-                              <FaceFrownIcon className="h-6 w-6" />
-                              {t("no_trips")}
-                            </Card>
-                          </div>
-                        </div>
+                        <NoRecords
+                          title={t("ridership", {
+                            from: isAllStations(params.destination) ?? DEFAULT_DEST,
+                            to: isAllStations(params.origin) ?? DEFAULT_ORIG,
+                          })}
+                        />
                       )}
                     </div>
-                    <Slider
-                      type="range"
-                      period={config.period}
-                      value={data.minmax}
-                      data={A_to_B.data[config.key].x}
-                      onChange={e => setData("minmax", e)}
-                    />
+                    {A_to_B_has_data && (
+                      <Slider
+                        type="range"
+                        period={config.period}
+                        value={data.minmax}
+                        data={A_to_B.data[config.key].x}
+                        onChange={e => setData("minmax", e)}
+                      />
+                    )}
                   </>
                 )}
               </>
