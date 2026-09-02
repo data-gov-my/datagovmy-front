@@ -15,6 +15,7 @@ const RapidExplorer: Page = ({
   meta,
   A_to_B,
   A_to_B_callout,
+  A_to_B_has_data,
   B_to_A,
   B_to_A_callout,
   dropdown,
@@ -30,6 +31,7 @@ const RapidExplorer: Page = ({
       <RapidExplorerDashboard
         A_to_B={A_to_B}
         A_to_B_callout={A_to_B_callout}
+        A_to_B_has_data={A_to_B_has_data}
         B_to_A={B_to_A}
         B_to_A_callout={B_to_A_callout}
         dropdown={dropdown}
@@ -98,6 +100,25 @@ export const getStaticProps: GetStaticProps = withi18n(
       else return e.value.data;
     });
 
+    const normalizePeriod = (period: any) => ({
+      x: Array.isArray(period?.x) ? period.x : [],
+      passengers: Array.isArray(period?.passengers) ? period.passengers : [],
+    });
+    const normalizeTimeseries = (timeseries: any) => ({
+      data_as_of: timeseries?.data_as_of ?? null,
+      data: {
+        daily: normalizePeriod(timeseries?.data?.daily),
+        monthly: normalizePeriod(timeseries?.data?.monthly),
+      },
+    });
+    const emptyCallout = { daily: 0, monthly: 0 };
+    const normalized_A_to_B = normalizeTimeseries(A_to_B?.timeseries);
+    const normalized_B_to_A = normalizeTimeseries(B_to_A?.timeseries);
+    const hasRecords = (timeseries: ReturnType<typeof normalizeTimeseries>) =>
+      timeseries.data.daily.x.length > 0 || timeseries.data.monthly.x.length > 0;
+    const A_to_B_has_data = hasRecords(normalized_A_to_B);
+    const B_to_A_has_data = hasRecords(normalized_B_to_A);
+
     return {
       props: {
         meta: {
@@ -106,16 +127,19 @@ export const getStaticProps: GetStaticProps = withi18n(
           category: "transportation",
           agency: "prasarana",
         },
-        A_to_B: A_to_B.timeseries,
-        A_to_B_callout: A_to_B.timeseries_callout.data,
-        B_to_A: Object.keys(B_to_A.timeseries.data).length !== 0 ? B_to_A.timeseries.data : null,
-        B_to_A_callout:
-          Object.keys(B_to_A.timeseries_callout.data).length !== 0
-            ? B_to_A.timeseries_callout.data
-            : null,
-        dropdown: dropdown,
-        last_updated: A_to_B.data_last_updated,
-        next_update: A_to_B.data_next_update ?? null,
+        A_to_B: normalized_A_to_B,
+        A_to_B_callout: {
+          ...emptyCallout,
+          ...A_to_B?.timeseries_callout?.data,
+        },
+        A_to_B_has_data,
+        B_to_A: B_to_A_has_data ? normalized_B_to_A.data : null,
+        B_to_A_callout: B_to_A_has_data
+          ? { ...emptyCallout, ...B_to_A?.timeseries_callout?.data }
+          : null,
+        dropdown: dropdown ?? {},
+        last_updated: A_to_B?.data_last_updated ?? B_to_A?.data_last_updated ?? null,
+        next_update: A_to_B?.data_next_update ?? B_to_A?.data_next_update ?? null,
         params: params?.service ? { service, origin, destination } : {},
       },
       revalidate: 60 * 60 * 24, // 1 day (in seconds)
