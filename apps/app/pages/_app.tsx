@@ -1,5 +1,7 @@
 import Nexti18NextConfig from "../next-i18next.config";
+import "../styles/ai-helper.css";
 import "datagovmy-ui/styles";
+import { AIHelper } from "datagovmy-nextra";
 import Layout from "@components/Layout";
 import { Progress, Toast } from "datagovmy-ui/components";
 import { header, body } from "datagovmy-ui/configs/font";
@@ -59,6 +61,7 @@ function App({ Component, pageProps }: AppPropsLayout) {
     <div className={clx(body.variable, header.variable, "font-sans dark:bg-black")}>
       <ThemeProvider attribute="class" enableSystem={false} forcedTheme={Component.theme}>
         {layout(<Component {...pageProps} />, pageProps)}
+        <AIHelper />
         <Progress />
         <Toast />
       </ThemeProvider>

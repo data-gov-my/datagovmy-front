@@ -56,7 +56,7 @@ const useTranslation = () => {
 
   const t = (key: string) => {
     const _locale = locale ? locale : defaultLocale ? defaultLocale : "en";
-    const dict = _locale === "ms" ? ms : en;
+    const dict = _locale.toLowerCase().startsWith("ms") ? ms : en;
     return getValueByDotNotation(dict, key);
   };
 

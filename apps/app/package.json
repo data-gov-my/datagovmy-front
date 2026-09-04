@@ -34,6 +34,7 @@
     "chartjs-plugin-crosshair": "^1.2.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "d3-scale-chromatic": "^3.0.0",
+    "datagovmy-nextra": "*",
     "datagovmy-ui": "*",
     "dom-to-image": "^2.6.0",
     "highlight.js": "^11.6.0",

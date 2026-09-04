@@ -340,7 +340,9 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                               title: t("this_month", {
                                 date: toDate(LATEST_MONTH, "MMM yyyy", i18n.language),
                               }),
-                              value: `${numFormat(A_to_B_callout.monthly, "standard")}`,
+                              value: A_to_B.data.monthly.passengers.length
+                                ? `${numFormat(A_to_B_callout.monthly, "standard")}`
+                                : "N/A",
                             },
                           ]}
                         />
@@ -385,7 +387,9 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({
                               title: t("this_month", {
                                 date: toDate(LATEST_MONTH, "MMM yyyy", i18n.language),
                               }),
-                              value: `${numFormat(B_to_A_callout.monthly, "standard")}`,
+                              value: B_to_A.monthly.passengers.length
+                                ? `${numFormat(B_to_A_callout.monthly, "standard")}`
+                                : "N/A",
                             },
                           ]}
                         />

@@ -111,9 +111,18 @@ export const getStaticProps: GetStaticProps = withi18n(
         monthly: normalizePeriod(timeseries?.data?.monthly),
       },
     });
-    const emptyCallout = { daily: 0, monthly: 0 };
     const normalized_A_to_B = normalizeTimeseries(A_to_B?.timeseries);
     const normalized_B_to_A = normalizeTimeseries(B_to_A?.timeseries);
+    const normalizeCallout = (callout: any, timeseries: ReturnType<typeof normalizeTimeseries>) => {
+      const latestPassenger = (period: "daily" | "monthly") =>
+        timeseries.data[period].passengers.at(-1) ?? 0;
+
+      return {
+        daily: typeof callout?.daily === "number" ? callout.daily : latestPassenger("daily"),
+        monthly:
+          typeof callout?.monthly === "number" ? callout.monthly : latestPassenger("monthly"),
+      };
+    };
     const hasRecords = (timeseries: ReturnType<typeof normalizeTimeseries>) =>
       timeseries.data.daily.x.length > 0 || timeseries.data.monthly.x.length > 0;
     const A_to_B_has_data = hasRecords(normalized_A_to_B);
@@ -128,14 +137,11 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "prasarana",
         },
         A_to_B: normalized_A_to_B,
-        A_to_B_callout: {
-          ...emptyCallout,
-          ...A_to_B?.timeseries_callout?.data,
-        },
+        A_to_B_callout: normalizeCallout(A_to_B?.timeseries_callout?.data, normalized_A_to_B),
         A_to_B_has_data,
         B_to_A: B_to_A_has_data ? normalized_B_to_A.data : null,
         B_to_A_callout: B_to_A_has_data
-          ? { ...emptyCallout, ...B_to_A?.timeseries_callout?.data }
+          ? normalizeCallout(B_to_A?.timeseries_callout?.data, normalized_B_to_A)
           : null,
         dropdown: dropdown ?? {},
         last_updated: A_to_B?.data_last_updated ?? B_to_A?.data_last_updated ?? null,
