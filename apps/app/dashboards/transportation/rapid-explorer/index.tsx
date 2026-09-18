@@ -14,13 +14,12 @@ import {
   Section,
   Slider,
   Spinner,
-  Tabs,
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { numFormat, toDate } from "datagovmy-ui/helpers";
+import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
-import { DashboardPeriod, OptionType } from "datagovmy-ui/types";
+import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef } from "react";
@@ -62,6 +61,38 @@ interface RapidExplorerProps {
 const hasTrips = (series?: PairSeries) =>
   Boolean(series && series.daily.passengers.some(p => p > 0));
 
+/**
+ * How much of the series to show.
+ *
+ * The daily windows are whole numbers of weeks -- 4, 26 and 52 -- rather than
+ * calendar months. Ridership swings hard between weekdays and weekends, so a
+ * window holding, say, five Mondays but four Sundays tilts the shape and any
+ * average drawn from it. A multiple of seven contains each weekday the same
+ * number of times, which makes two windows honestly comparable.
+ *
+ * All of history is offered twice over, because the two answer different
+ * questions: daily is every one of ~1,350 points, which shows the weekly rhythm
+ * and one-off days but reads as noise at this width; monthly is ~45 points and
+ * shows the trend. Both cover 2023-01-01 to the latest service day.
+ */
+const RANGES: Array<{
+  id: string;
+  /** i18n key under the dashboard-rapid-explorer namespace */
+  key: string;
+  /** which aggregation of the pair to plot */
+  freq: "daily" | "monthly";
+  /** points to show, counting back from the latest; null means all of them */
+  days: number | null;
+}> = [
+  { id: "1m", key: "range_1m", freq: "daily", days: 28 },
+  { id: "6m", key: "range_6m", freq: "daily", days: 182 },
+  { id: "1y", key: "range_1y", freq: "daily", days: 364 },
+  { id: "all", key: "range_all_daily", freq: "daily", days: null },
+  { id: "all_monthly", key: "range_all_monthly", freq: "monthly", days: null },
+];
+
+const rangeById = (id: string) => RANGES.find(r => r.id === id) ?? RANGES[1];
+
 const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params }) => {
   const { t, i18n } = useTranslation(["dashboard-rapid-explorer", "common"]);
   const { push, query } = useRouter();
@@ -70,10 +101,12 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
   const { data, setData } = useData({
     loading: false,
     minmax: [0, explorer.default.A_to_B.daily.x.length - 1],
+    // Matches the demo's default. All history is one click away; opening on it
+    // would put ~1,350 daily points into a 300px chart, which reads as noise.
+    range: "6m",
     service: params.service,
     origin: params.origin,
     destination: params.destination,
-    tab: 0,
     // Starts as the pair that shipped statically. Replaced wholesale by a
     // DuckDB result once someone picks something else.
     pair: {
@@ -84,29 +117,35 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
     } as PairResult,
   });
 
-  const PERIODS: Array<DashboardPeriod> = ["daily", "monthly"];
-  const config = useMemo<{
-    key: DashboardPeriod;
-    period: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week">;
-  }>(() => {
-    const key = PERIODS[data.tab];
-    switch (key) {
-      case "monthly":
-        return { key, period: "month" };
-      default:
-        return { key: "daily" as DashboardPeriod, period: "day" };
-    }
-  }, [data.tab]);
+  // The range toggle picks both the aggregation and how much of it is shown.
+  const range = rangeById(data.range);
+  const frequency = range.freq;
+  const PERIOD: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week"> =
+    frequency === "monthly" ? "month" : "day";
 
   const A_to_B: PairSeries = data.pair.A_to_B;
   const B_to_A: PairSeries = data.pair.B_to_A;
-  const frequency = config.key === "monthly" ? "monthly" : "daily";
 
-  // The slider spans whichever frequency is on screen, and a new pair can have
-  // a different length, so the range is reset whenever either changes.
+  /**
+   * The window the range toggle asks for, as slider indices.
+   *
+   * Ranges are anchored to the end of the series -- "6 months" means the six
+   * months up to the latest service day, not the first six on record -- so the
+   * window is the last N points. A series shorter than the range shows whole.
+   */
+  const rangeWindow = useCallback((series: PairSeries, id: string): [number, number] => {
+    const { freq, days } = rangeById(id);
+    const length = series[freq].x.length;
+    const last = Math.max(length - 1, 0);
+    if (days === null || days >= length) return [0, last];
+    return [length - days, last];
+  }, []);
+
+  // Re-window whenever the range or the pair changes. A new pair can be a
+  // different length, so the indices cannot simply carry over.
   useEffect(() => {
-    setData("minmax", [0, Math.max(A_to_B[frequency].x.length - 1, 0)]);
-  }, [frequency, A_to_B]);
+    setData("minmax", rangeWindow(A_to_B, data.range));
+  }, [A_to_B, data.range]);
 
   const { coordinate: A_to_B_coords } = useSlice(A_to_B[frequency], data.minmax);
   const { coordinate: B_to_A_coords } = useSlice(
@@ -251,7 +290,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
       {
         type: (coords.x.length === 1 ? "bar" : "line") as "bar" | "line",
         data: coords.passengers,
-        label: t(`common:time.${config.key}`),
+        label: t(`common:time.${frequency}`),
         fill: true,
         backgroundColor: AKSARA_COLOR.PRIMARY_H,
         borderColor: AKSARA_COLOR.PRIMARY,
@@ -331,11 +370,24 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
           date={explorer.data_as_of}
           description={t("disclaimer")}
           menu={
-            <Tabs.List
-              options={[t("common:time.daily"), t("common:time.monthly")]}
-              current={data.tab}
-              onChange={index => setData("tab", index)}
-            />
+            <div className="flex items-center gap-1" role="group">
+              {RANGES.map(option => (
+                <button
+                  key={option.id}
+                  type="button"
+                  aria-pressed={data.range === option.id}
+                  onClick={() => setData("range", option.id)}
+                  className={clx(
+                    "rounded-md px-2.5 py-1 text-sm font-medium transition-colors",
+                    data.range === option.id
+                      ? "bg-primary dark:bg-primary-dark text-white"
+                      : "text-dim hover:bg-washed dark:hover:bg-washed-dark"
+                  )}
+                >
+                  {t(option.key)}
+                </button>
+              ))}
+            </div>
           }
         >
           <SliderProvider>
@@ -423,7 +475,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
                           to: isAllStations(data.destination),
                         })}
                         enableAnimation={!play}
-                        interval={config.period}
+                        interval={PERIOD}
                         data={chartDataset(A_to_B_coords)}
                         stats={chartStats(data.pair.A_to_B_callout)}
                       />
@@ -435,7 +487,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
                             to: isAllStations(data.origin),
                           })}
                           enableAnimation={!play}
-                          interval={config.period}
+                          interval={PERIOD}
                           data={chartDataset(B_to_A_coords)}
                           stats={chartStats(data.pair.B_to_A_callout)}
                         />
@@ -482,7 +534,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
                     </div>
                     <Slider
                       type="range"
-                      period={config.period}
+                      period={PERIOD}
                       value={data.minmax}
                       data={A_to_B[frequency].x}
                       onChange={e => setData("minmax", e)}

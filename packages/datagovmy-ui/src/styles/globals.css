@@ -3,6 +3,33 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/*
+ * Register the body font under its literal name, for canvas.
+ *
+ * Every chart draws to a <canvas> and names its font explicitly -- there are 23
+ * `family: "Inter"` declarations across the chart components. Canvas resolves a
+ * family against fonts registered in the document and does not inherit CSS, so
+ * those names only work while something registers a family actually called
+ * "Inter".
+ *
+ * That used to be the Google Fonts <link> in _document.tsx. Moving to
+ * `next/font/local` replaced it with a generated, obfuscated family name
+ * reachable only through --font-body, so charts fell back to the browser
+ * default on axes, labels and tooltips. This restores the name the charts ask
+ * for, pointing at the same local file.
+ *
+ * The tidier fix is for the charts to read --font-body instead of naming a
+ * font, but that is 23 edits across 9 shared components; this keeps the
+ * invariant they were written against.
+ */
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/inter-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* MODULE CSS */
 @import "./dashboards/general.css";
 @import "./dashboards/table.css";
