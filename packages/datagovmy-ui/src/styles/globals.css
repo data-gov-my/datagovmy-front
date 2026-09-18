@@ -3,6 +3,15 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/* MODULE CSS */
+@import "./dashboards/general.css";
+@import "./dashboards/table.css";
+@import "./dashboards/banner.css";
+@import "./markdown.css";
+@import "leaflet.markercluster";
+@import "leaflet.markercluster/dist/MarkerCluster.css";
+@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
+
 /*
  * Register the body font under its literal name, for canvas.
  *
@@ -29,15 +38,6 @@
   font-style: normal;
   font-display: swap;
 }
-
-/* MODULE CSS */
-@import "./dashboards/general.css";
-@import "./dashboards/table.css";
-@import "./dashboards/banner.css";
-@import "./markdown.css";
-@import "leaflet.markercluster";
-@import "leaflet.markercluster/dist/MarkerCluster.css";
-@import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 
 @layer base {
   h1 {

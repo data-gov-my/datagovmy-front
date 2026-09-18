@@ -10,6 +10,7 @@ import {
   Dropdown,
   Hero,
   Label,
+  List,
   Modal,
   Section,
   Slider,
@@ -17,12 +18,14 @@ import {
 } from "datagovmy-ui/components";
 import { AKSARA_COLOR } from "datagovmy-ui/constants";
 import { SliderProvider } from "datagovmy-ui/contexts/slider";
-import { clx, numFormat, toDate } from "datagovmy-ui/helpers";
+import { numFormat, toDate } from "datagovmy-ui/helpers";
 import { useData, useSlice, useTranslation } from "datagovmy-ui/hooks";
 import { OptionType } from "datagovmy-ui/types";
 import dynamic from "next/dynamic";
+import { DateTime } from "luxon";
 import { useRouter } from "next/router";
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef } from "react";
+import { slugLookup, stationSlug } from "./slug";
 import { PairResult, PairSeries, useExplorerQuery } from "./useExplorerQuery";
 
 /**
@@ -54,7 +57,6 @@ type ExplorerMeta = {
 
 interface RapidExplorerProps {
   explorer: ExplorerMeta;
-  params: { service: string; origin: string; destination: string };
 }
 
 /** A series is worth charting only if something actually travelled. */
@@ -74,6 +76,9 @@ const hasTrips = (series?: PairSeries) =>
  * questions: daily is every one of ~1,350 points, which shows the weekly rhythm
  * and one-off days but reads as noise at this width; monthly is ~45 points and
  * shows the trend. Both cover 2023-01-01 to the latest service day.
+ *
+ * Ordered widest-first, so the row reads left to right from all of history down
+ * to the last four weeks, the zoom getting finer as the eye travels.
  */
 const RANGES: Array<{
   id: string;
@@ -84,29 +89,43 @@ const RANGES: Array<{
   /** points to show, counting back from the latest; null means all of them */
   days: number | null;
 }> = [
-  { id: "1m", key: "range_1m", freq: "daily", days: 28 },
-  { id: "6m", key: "range_6m", freq: "daily", days: 182 },
-  { id: "1y", key: "range_1y", freq: "daily", days: 364 },
-  { id: "all", key: "range_all_daily", freq: "daily", days: null },
   { id: "all_monthly", key: "range_all_monthly", freq: "monthly", days: null },
+  { id: "all", key: "range_all_daily", freq: "daily", days: null },
+  { id: "1y", key: "range_1y", freq: "daily", days: 364 },
+  { id: "6m", key: "range_6m", freq: "daily", days: 182 },
+  { id: "1m", key: "range_1m", freq: "daily", days: 28 },
 ];
 
-const rangeById = (id: string) => RANGES.find(r => r.id === id) ?? RANGES[1];
+// All of history, daily. Affordable as a default because the default pair's
+// whole series ships in the static props -- the landing paints ~1,350 points
+// without a single request, and DuckDB is only needed once someone picks a
+// different pair.
+const DEFAULT_RANGE = "all";
+const rangeById = (id: string) =>
+  RANGES.find(r => r.id === id) ?? RANGES.find(r => r.id === DEFAULT_RANGE)!;
 
-const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params }) => {
+/**
+ * Fixed width for the station dropdowns.
+ *
+ * Left to `w-fit` they resize to whatever is selected, so the row shifts under
+ * the cursor on every pick. Sized to the 95th-percentile label (26 characters)
+ * rather than the longest (33, "SP26: Taman Perindustrian Puchong"): fitting
+ * the outlier would make every dropdown permanently wider than it needs to be,
+ * and the handful that overflow truncate.
+ */
+const STATION_DROPDOWN_WIDTH = "w-full sm:w-60";
+
+const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
   const { t, i18n } = useTranslation(["dashboard-rapid-explorer", "common"]);
-  const { push, query } = useRouter();
+  const { push, query, isReady } = useRouter();
   const { ready, queryPair } = useExplorerQuery();
 
   const { data, setData } = useData({
     loading: false,
     minmax: [0, explorer.default.A_to_B.daily.x.length - 1],
-    // Matches the demo's default. All history is one click away; opening on it
-    // would put ~1,350 daily points into a 300px chart, which reads as noise.
-    range: "6m",
-    service: params.service,
-    origin: params.origin,
-    destination: params.destination,
+    range: DEFAULT_RANGE,
+    origin: explorer.default.origin,
+    destination: explorer.default.destination,
     // Starts as the pair that shipped statically. Replaced wholesale by a
     // DuckDB result once someone picks something else.
     pair: {
@@ -120,11 +139,61 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
   // The range toggle picks both the aggregation and how much of it is shown.
   const range = rangeById(data.range);
   const frequency = range.freq;
+
+  /** Only the shortest window is about individual days. */
+  const showDayOfMonth = frequency === "daily" && range.days !== null && range.days <= 31;
+
+  /**
+   * The axis ticks on months for every window but the shortest.
+   *
+   * This is a tick unit, not an aggregation -- the daily series still plots
+   * every day. Putting ticks on month boundaries is what lets January be a tick
+   * at all, and `enableMajorTick` then stops auto-skip from dropping it, which
+   * is the only reliable way to get a year label onto a long span.
+   */
   const PERIOD: Exclude<Periods, false | "millisecond" | "second" | "minute" | "week"> =
-    frequency === "monthly" ? "month" : "day";
+    showDayOfMonth ? "day" : "month";
+
+  /** The slider follows the data, not the axis. */
+  const SLIDER_PERIOD = frequency === "monthly" ? "month" : "day";
+
+  /** Tooltips always name the actual point, whatever the ticks do. */
+  const TOOLTIP_FORMAT = frequency === "monthly" ? "MMM yyyy" : "dd MMM yyyy";
 
   const A_to_B: PairSeries = data.pair.A_to_B;
   const B_to_A: PairSeries = data.pair.B_to_A;
+
+  /**
+   * Is the newest month still in progress?
+   *
+   * The data ends on whatever service day Prasarana last published, so the
+   * final monthly bucket is usually a part-month -- 16 days of September, say --
+   * which plots as a cliff that never happened. The callout wants that number,
+   * because "This Month" means month-to-date, so it is dropped from the chart
+   * rather than from the series.
+   */
+  const partialMonth = useMemo(() => {
+    const [y, m, d] = explorer.last_day.split("-").map(Number);
+    if (!y || !m || !d) return false;
+    const daysInMonth = new Date(Date.UTC(y, m, 0)).getUTCDate();
+    return d < daysInMonth;
+  }, [explorer.last_day]);
+
+  /** The series actually plotted, once the part-month is taken off. */
+  const plotted = useCallback(
+    (pair: PairSeries) => {
+      if (frequency !== "monthly") return pair.daily;
+      if (!partialMonth) return pair.monthly;
+      return {
+        x: pair.monthly.x.slice(0, -1),
+        passengers: pair.monthly.passengers.slice(0, -1),
+      };
+    },
+    [frequency, partialMonth]
+  );
+
+  const A_to_B_plot = plotted(A_to_B);
+  const B_to_A_plot = plotted(B_to_A);
 
   /**
    * The window the range toggle asks for, as slider indices.
@@ -133,9 +202,9 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
    * months up to the latest service day, not the first six on record -- so the
    * window is the last N points. A series shorter than the range shows whole.
    */
-  const rangeWindow = useCallback((series: PairSeries, id: string): [number, number] => {
-    const { freq, days } = rangeById(id);
-    const length = series[freq].x.length;
+  const rangeWindow = useCallback((series: { x: number[] }, id: string): [number, number] => {
+    const { days } = rangeById(id);
+    const length = series.x.length;
     const last = Math.max(length - 1, 0);
     if (days === null || days >= length) return [0, last];
     return [length - days, last];
@@ -144,23 +213,65 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
   // Re-window whenever the range or the pair changes. A new pair can be a
   // different length, so the indices cannot simply carry over.
   useEffect(() => {
-    setData("minmax", rangeWindow(A_to_B, data.range));
-  }, [A_to_B, data.range]);
+    setData("minmax", rangeWindow(A_to_B_plot, data.range));
+  }, [A_to_B, data.range, frequency]);
 
-  const { coordinate: A_to_B_coords } = useSlice(A_to_B[frequency], data.minmax);
+  const { coordinate: A_to_B_coords } = useSlice(A_to_B_plot, data.minmax);
   const { coordinate: B_to_A_coords } = useSlice(
-    hasTrips(B_to_A) ? B_to_A[frequency] : A_to_B[frequency],
+    hasTrips(B_to_A) ? B_to_A_plot : A_to_B_plot,
     data.minmax
   );
   const LATEST_MONTH = A_to_B.monthly.x[A_to_B.monthly.x.length - 1];
 
+  const bySlug = useMemo(
+    () => slugLookup(explorer.stations, explorer.all_stations),
+    [explorer.stations, explorer.all_stations]
+  );
+  const toSlug = useCallback(
+    (station: string) => stationSlug(station, explorer.all_stations),
+    [explorer.all_stations]
+  );
+
+  /** Does the window on screen cross a new year? */
+  const spansYears = useMemo(() => {
+    const xs = A_to_B_coords.x;
+    if (!xs?.length) return false;
+    return DateTime.fromMillis(xs[0]).year !== DateTime.fromMillis(xs[xs.length - 1]).year;
+  }, [A_to_B_coords]);
+
+  /**
+   * Label each tick with the smallest thing that still distinguishes it.
+   *
+   * Chart.js writes the whole date on every tick, so a multi-year span repeats
+   * the same year a dozen times and a six-month one repeats nothing useful at
+   * all. A unit earns its place here only when it changes: the month always,
+   * the day only in the 1-month window, and the year only where a new one
+   * starts -- stacked underneath, so the handover is visible without crowding
+   * the row. A window inside one year carries no year at all.
+   *
+   * The year test is on the tick's own date rather than its neighbour's,
+   * because this callback is handed every candidate tick (182 of them for a
+   * six-month window, one per day), not the handful that survive auto-skip --
+   * so "different from the previous entry" would compare two adjacent days and
+   * never fire.
+   */
+  const tickX = useCallback(
+    function (this: any, value: any, index: number, ticks: Array<{ value: number }>) {
+      const ts = ticks?.[index]?.value;
+      if (typeof ts !== "number") return value;
+
+      const at = DateTime.fromMillis(ts).setLocale(i18n.language);
+      const label = showDayOfMonth ? at.toFormat("d LLL") : at.toFormat("LLL");
+      if (!spansYears) return label;
+
+      const startsAYear = at.month === 1 && at.day === 1;
+      return startsAYear || index === 0 ? [label, at.toFormat("yyyy")] : label;
+    },
+    [spansYears, showDayOfMonth, i18n.language]
+  );
+
   const isAllStations = (station: string) =>
     station === explorer.all_stations ? t("all_stations") : station;
-
-  const SERVICE_OPTIONS = useMemo<Array<OptionType>>(
-    () => [{ label: t("rail"), value: "rail" }],
-    [i18n.language]
-  );
 
   const ORIGIN_OPTIONS = useMemo<Array<OptionType>>(
     () => explorer.stations.map(s => ({ label: isAllStations(s), value: s })),
@@ -242,30 +353,48 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
    * not re-run `getStaticProps`, so the chart updates from the DuckDB result
    * while the address bar stays shareable.
    */
-  const syncUrl = (service: string, origin: string, destination: string) => {
-    const route = `${routes.RAPID_EXPLORER}/${service}/${encodeURIComponent(
-      origin
-    )}/${encodeURIComponent(destination)}`;
-    push(route, undefined, { shallow: true, scroll: false, locale: i18n.language });
+  const syncUrl = (origin: string, destination: string) => {
+    push(
+      {
+        pathname: routes.RAPID_EXPLORER,
+        query: { origin: toSlug(origin), destination: toSlug(destination) },
+      },
+      undefined,
+      { shallow: true, scroll: false, locale: i18n.language }
+    );
   };
 
   /**
-   * Follow the address bar back and forward.
+   * Follow the address bar, forwards and back.
    *
-   * `push` with `shallow` adds a history entry but does not re-run
+   * `push` with `shallow` adds a history entry without re-running
    * `getStaticProps`, so going back changes the URL and nothing else unless the
-   * component watches it. Reading the pair out of the route restores the
-   * back-button behaviour the per-pair routes used to give for free; the effect
-   * above then loads whatever this leaves in state.
+   * component watches it. The query is also how a shared link arrives, and it
+   * is only readable once the router is ready: this page is statically
+   * generated, so on the very first render there is no query to read yet.
+   *
+   * Naming one end is enough. A link that gives only an origin means "from here
+   * to anywhere", and the reverse for a destination, so the other end falls back
+   * to the All Stations aggregate rather than to nothing.
    */
   useEffect(() => {
-    const segments = (query.service as string[] | undefined) ?? [];
-    const [, origin, destination] = segments;
-    if (!origin || !destination) return;
+    if (!isReady) return;
+
+    const asked = (value: typeof query.origin) =>
+      typeof value === "string" ? bySlug.get(value) : undefined;
+    const from = asked(query.origin);
+    const to = asked(query.destination);
+
+    // Neither named: the landing keeps the default pair it rendered with.
+    if (!from && !to) return;
+
+    const origin = from ?? explorer.all_stations;
+    const destination = to ?? explorer.all_stations;
     if (origin === data.origin && destination === data.destination) return;
+
     setData("origin", origin);
     setData("destination", destination);
-  }, [query.service]);
+  }, [isReady, query.origin, query.destination, bySlug]);
 
   // Selection only moves state and the URL; the effect above owns fetching, so
   // there is exactly one place that decides when a query runs.
@@ -273,7 +402,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
     if (!origin || !destination) return;
     setData("origin", origin);
     setData("destination", destination);
-    syncUrl(data.service, origin, destination);
+    syncUrl(origin, destination);
   };
 
   /** Picking a new origin invalidates the destination unless it survives. */
@@ -313,18 +442,38 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
     },
   ];
 
+  /**
+   * The range toggles.
+   *
+   * These sit on the controls row rather than in the Section header: five
+   * labels as wordy as "All Time (Monthly)" do not fit beside the description,
+   * and wrapped onto a second line there. `flex-nowrap` with a scroll fallback
+   * keeps them on one line at any width.
+   */
+  /**
+   * The range toggles.
+   *
+   * `List` is the site's pill control -- the same one the vehicle-registrations
+   * dashboard uses for its monthly/yearly switch -- so the selected state and
+   * hover match every other dashboard rather than being styled by hand here.
+   *
+   * These sit on the controls row rather than in the Section header: five
+   * labels as wordy as "All Time (Monthly)" wrapped onto a second line there.
+   */
+  const rangeToggles = (
+    <List
+      className="hide-scrollbar flex-nowrap overflow-x-auto"
+      current={Math.max(
+        RANGES.findIndex(r => r.id === data.range),
+        0
+      )}
+      onChange={index => setData("range", RANGES[index].id)}
+      options={RANGES.map(r => t(r.key))}
+    />
+  );
+
   const filters = () => (
     <>
-      <div className="space-y-2 py-3">
-        <Label label={t("service")} className="text-sm" />
-        <Dropdown
-          anchor="bottom"
-          width="w-full"
-          options={SERVICE_OPTIONS}
-          selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
-          onChange={selected => setData("service", selected.value)}
-        />
-      </div>
       <div className="space-y-2 py-3">
         <Label label={t("origin")} className="text-sm" />
         <Dropdown
@@ -332,7 +481,6 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
           width="w-full"
           options={ORIGIN_OPTIONS}
           selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-          disabled={!data.service}
           onChange={selected => selectOrigin(selected.value)}
           enableSearch={ORIGIN_OPTIONS.length > 15}
         />
@@ -344,7 +492,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
           width="w-full"
           options={DESTINATION_OPTIONS}
           selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-          disabled={!data.service || !data.origin}
+          disabled={!data.origin}
           onChange={selected => setData("destination", selected.value)}
           enableSearch={DESTINATION_OPTIONS.length > 15}
         />
@@ -365,42 +513,18 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
       />
 
       <Container>
-        <Section
-          title={t("title")}
-          date={explorer.data_as_of}
-          description={t("disclaimer")}
-          menu={
-            <div className="flex items-center gap-1" role="group">
-              {RANGES.map(option => (
-                <button
-                  key={option.id}
-                  type="button"
-                  aria-pressed={data.range === option.id}
-                  onClick={() => setData("range", option.id)}
-                  className={clx(
-                    "rounded-md px-2.5 py-1 text-sm font-medium transition-colors",
-                    data.range === option.id
-                      ? "bg-primary dark:bg-primary-dark text-white"
-                      : "text-dim hover:bg-washed dark:hover:bg-washed-dark"
-                  )}
-                >
-                  {t(option.key)}
-                </button>
-              ))}
-            </div>
-          }
-        >
+        <Section title={t("title")} date={explorer.data_as_of} description={t("disclaimer")}>
           <SliderProvider>
             {play => (
               <>
-                <div className="pb-3 lg:pb-6">
+                <div className="flex flex-wrap items-center justify-between gap-3 pb-3 lg:pb-6">
                   <div className="flex sm:hidden">
                     <Modal
                       trigger={open => (
                         <Button onClick={open} className="btn-default shadow-floating">
                           <span>{t("filters")}</span>
                           <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
-                            3
+                            2
                           </span>
                           <ChevronDownIcon className="-mx-[5px] h-5 w-5" />
                         </Button>
@@ -434,65 +558,66 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
                   </div>
                   <div className="hidden gap-2 sm:flex sm:flex-wrap lg:gap-3">
                     <Dropdown
-                      placeholder={t("service")}
-                      anchor="left"
-                      options={SERVICE_OPTIONS}
-                      selected={SERVICE_OPTIONS.find(e => e.value === data.service)}
-                      onChange={selected => setData("service", selected.value)}
-                    />
-                    <Dropdown
                       placeholder={t("select_origin")}
                       anchor="left"
+                      width={STATION_DROPDOWN_WIDTH}
                       options={ORIGIN_OPTIONS}
                       selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-                      disabled={!data.service}
                       onChange={selected => selectOrigin(selected.value)}
                       enableSearch={ORIGIN_OPTIONS.length > 15}
                     />
                     <Dropdown
                       placeholder={t("select_destination")}
                       anchor="left"
+                      width={STATION_DROPDOWN_WIDTH}
                       options={DESTINATION_OPTIONS}
                       selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-                      disabled={!data.service || !data.origin}
+                      disabled={!data.origin}
                       onChange={selected => selectPair(data.origin, selected.value)}
                       enableSearch={DESTINATION_OPTIONS.length > 15}
                     />
                   </div>
+                  {rangeToggles}
                 </div>
 
                 {data.loading ? (
-                  <div className="flex h-[452px] items-center justify-center">
+                  <div className="flex h-[540px] items-center justify-center">
                     <Spinner loading={data.loading} />
                   </div>
                 ) : (
                   <>
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
                       <Timeseries
-                        className="h-[300px] w-full"
+                        className="h-[420px] w-full"
                         title={t("ridership", {
                           from: isAllStations(data.origin),
                           to: isAllStations(data.destination),
                         })}
                         enableAnimation={!play}
                         interval={PERIOD}
+                        enableMajorTick
+                        tooltipFormat={TOOLTIP_FORMAT}
+                        tickXCallback={tickX}
                         data={chartDataset(A_to_B_coords)}
                         stats={chartStats(data.pair.A_to_B_callout)}
                       />
                       {hasTrips(B_to_A) ? (
                         <Timeseries
-                          className="h-[300px] w-full"
+                          className="h-[420px] w-full"
                           title={t("ridership", {
                             from: isAllStations(data.destination),
                             to: isAllStations(data.origin),
                           })}
                           enableAnimation={!play}
                           interval={PERIOD}
+                          enableMajorTick
+                          tooltipFormat={TOOLTIP_FORMAT}
+                          tickXCallback={tickX}
                           data={chartDataset(B_to_A_coords)}
                           stats={chartStats(data.pair.B_to_A_callout)}
                         />
                       ) : (
-                        <div className="relative flex h-[400px] w-full flex-col lg:h-full">
+                        <div className="relative flex h-[500px] w-full flex-col lg:h-full">
                           <h5>
                             {t("ridership", {
                               from: isAllStations(data.destination),
@@ -500,7 +625,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
                             })}
                           </h5>
                           <Timeseries
-                            className="absolute bottom-0 h-[300px] w-full opacity-30"
+                            className="absolute bottom-0 h-[420px] w-full opacity-30"
                             enableCrosshair={false}
                             enableTooltip={false}
                             gridOffsetX={true}
@@ -534,9 +659,9 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer, params
                     </div>
                     <Slider
                       type="range"
-                      period={PERIOD}
+                      period={SLIDER_PERIOD}
                       value={data.minmax}
-                      data={A_to_B[frequency].x}
+                      data={A_to_B_plot.x}
                       onChange={e => setData("minmax", e)}
                     />
                   </>

@@ -56,6 +56,21 @@ type ConditionalProps =
 
 type DropdownProps = CommonProps & ConditionalProps & LabelProps;
 
+/**
+ * Render plainly up to this many options, virtualise beyond it.
+ *
+ * Virtualising is not free: `react-window` rebuilds its rows on every scroll,
+ * and each row is a Headless UI option that re-renders as the active item
+ * changes under the pointer. Measured over an identical scroll, a 174-option
+ * list cost ~609ms of work virtualised against ~242ms rendered plainly -- no
+ * single long task, just steady overhead that reads as jank. A few hundred
+ * plain DOM nodes are cheaper than the machinery for avoiding them.
+ *
+ * The threshold was 160, which put a list of 174 stations on the slow side of
+ * the line for no benefit.
+ */
+const VIRTUALISE_ABOVE = 300;
+
 const Dropdown: FunctionComponent<DropdownProps> = ({
   className = "",
   disabled = false,
@@ -99,10 +114,20 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   };
 
   const availableOptions = useMemo<OptionType[]>(() => {
-    if (!enableSearch) return options;
+    // Rank by relevance while searching, but keep the caller's order otherwise.
+    // `matchSorter` with an empty needle re-sorts alphabetically, which quietly
+    // discards any deliberate ordering -- an "All Stations" entry meant to lead
+    // the list ends up filed under A, between two station names.
+    if (!enableSearch || !search) return options;
 
     return matchSorter(options, search.toLowerCase(), { keys: ["label"] });
-  }, [options, search]);
+  }, [options, search, enableSearch]);
+
+  /** Where the current selection sits in the visible list; -1 when absent. */
+  const selectedIndex = useMemo<number>(() => {
+    if (multiple || !selected) return -1;
+    return availableOptions.findIndex(option => option.value === (selected as OptionType).value);
+  }, [availableOptions, selected, multiple]);
 
   const ListboxOption = ({
     option,
@@ -234,7 +259,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               ref={optionsRef}
               className={clx(
                 "dark:ring-washed-dark shadow-floating absolute z-20 mt-1 rounded-md bg-white text-black ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-black dark:text-white",
-                availableOptions.length <= 160 && "max-h-60 overflow-auto",
+                availableOptions.length <= VIRTUALISE_ABOVE && "max-h-60 overflow-auto",
                 width ? width : "",
                 anchor === "right" ? "right-0" : anchor === "left" ? "left-0" : anchor
               )}
@@ -256,12 +281,20 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                 </div>
               )}
               {/* Options */}
-              {availableOptions.length > 160 ? (
+              {availableOptions.length > VIRTUALISE_ABOVE ? (
                 <FixedSizeList
                   height={240}
                   width={"100%"}
                   itemCount={availableOptions.length}
                   itemSize={36}
+                  // Open on the current selection, the way the unvirtualised
+                  // list does. Headless UI scrolls the selected option into
+                  // view itself, but it cannot here: past 160 options only the
+                  // visible handful are in the DOM, so a list of, say, 174
+                  // stations always opened at the top with the chosen one
+                  // nowhere in sight -- and with no scrollbar showing until you
+                  // interact, that reads as a dropdown that will not scroll.
+                  initialScrollOffset={Math.max(0, selectedIndex) * 36}
                 >
                   {({ index, style }: { index: number; style: CSSProperties }) => {
                     const option = availableOptions[index];

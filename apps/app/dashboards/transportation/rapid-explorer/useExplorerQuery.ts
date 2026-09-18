@@ -51,20 +51,20 @@ const EMPTY_SERIES: PairSeries = {
  */
 const PAIR_SQL = `
   WITH pair AS (
-    SELECT origin, destination, date, passengers
-    FROM read_parquet($url)
-    WHERE (origin = $a AND destination = $b)
-       OR (origin = $b AND destination = $a)
+    SELECT (origin = ?) AS forward, date, passengers
+    FROM read_parquet(?)
+    WHERE (origin = ? AND destination = ?)
+       OR (origin = ? AND destination = ?)
   )
   SELECT
-    (origin = $a) AS forward,
-    'daily'       AS freq,
+    forward,
+    'daily' AS freq,
     epoch_ms(date::TIMESTAMP)::BIGINT AS x,
     passengers::BIGINT                AS passengers
   FROM pair
   UNION ALL
   SELECT
-    (origin = $a),
+    forward,
     'monthly',
     epoch_ms(date_trunc('month', date)::TIMESTAMP)::BIGINT,
     sum(passengers)::BIGINT
@@ -72,6 +72,29 @@ const PAIR_SQL = `
   GROUP BY 1, 2, 3
   ORDER BY freq, forward, x
 `;
+
+/**
+ * Values for PAIR_SQL's `?` placeholders, in the order they appear.
+ *
+ * `AsyncPreparedStatement.query` is `(...params: any[])` -- positional only.
+ * Passing an object to bind `$name` parameters instead fails at runtime with
+ * "Invalid column type encountered for argument 0", because the object itself
+ * is bound as the first parameter.
+ *
+ * The station names repeat because the predicate has to name them literally:
+ * lifting them into a CTE and joining would bind each once, but the filter
+ * would then compare against a runtime column rather than a constant, and
+ * DuckDB could no longer prune row groups from the parquet statistics -- which
+ * is the whole reason a pair costs ~126 KB instead of 24 MB.
+ */
+const pairParams = (url: string, origin: string, destination: string) => [
+  origin, // forward flag
+  url, // read_parquet
+  origin, // A -> B
+  destination,
+  destination, // B -> A
+  origin,
+];
 
 /** Arrow rows -> the two directions, each with its two frequencies. */
 function shape(
@@ -104,18 +127,56 @@ function shape(
   };
 }
 
+/**
+ * Pay the one-off costs before anyone asks for a pair.
+ *
+ * Instantiating DuckDB is not enough to make the first query fast. That query
+ * also downloads the parquet extension from extensions.duckdb.org and reads the
+ * file footer (a HEAD plus a GET), and only then fetches the row group it
+ * wants -- so the first station change was carrying three round trips the rest
+ * never pay.
+ *
+ * `count(*)` over a parquet is answered from the footer's row counts alone, so
+ * this loads the extension and caches the metadata without pulling any row
+ * group. The landing renders from static props and needs none of this, which
+ * makes the seconds a reader spends getting their bearings exactly the right
+ * time to spend on it.
+ */
+async function warmUp(db: any) {
+  const conn = await db.connect();
+  try {
+    await conn.query(`SELECT count(*) FROM read_parquet('${EXPLORER_PARQUET}')`);
+  } catch {
+    // Warming is an optimisation; a failure here must not stop the page from
+    // querying normally later.
+  } finally {
+    await conn.close();
+  }
+}
+
 export function useExplorerQuery() {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const dbRef = useRef<any>(null);
-  // Survives the double-invoked effect that StrictMode runs in development,
-  // which would otherwise spin up two workers and leak one.
-  const startedRef = useRef(false);
 
+  /**
+   * Start DuckDB once per mount.
+   *
+   * Deliberately no "already started" ref. StrictMode double-invokes this in
+   * development -- mount, clean up, mount again -- and a ref guard interacts
+   * with the cancellation flag to fatal effect: the first pass sets the guard
+   * and is then cancelled, the second returns early because the guard is set,
+   * and the first pass terminates itself on seeing `cancelled` without ever
+   * calling `setReady`. The result is a database that loads its WASM, shuts
+   * itself down, and leaves `ready` false forever, so no query ever runs.
+   *
+   * Letting both passes run is correct instead: the cancelled one terminates
+   * the instance it created, the surviving one becomes the connection. The
+   * cost is one extra instantiate in development only.
+   */
   useEffect(() => {
-    if (startedRef.current) return;
-    startedRef.current = true;
     let cancelled = false;
+    let instance: any = null;
 
     (async () => {
       try {
@@ -129,7 +190,14 @@ export function useExplorerQuery() {
         const db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
         await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
         URL.revokeObjectURL(workerUrl);
+        instance = db;
 
+        if (cancelled) {
+          await db.terminate();
+          return;
+        }
+
+        await warmUp(db);
         if (cancelled) {
           await db.terminate();
           return;
@@ -146,8 +214,13 @@ export function useExplorerQuery() {
 
     return () => {
       cancelled = true;
-      dbRef.current?.terminate?.();
-      dbRef.current = null;
+      // Only tear down what this pass created; a later pass owns whatever is
+      // in the ref by then.
+      instance?.terminate?.();
+      if (dbRef.current === instance) {
+        dbRef.current = null;
+        setReady(false);
+      }
     };
   }, []);
 
@@ -158,11 +231,7 @@ export function useExplorerQuery() {
       const conn = await dbRef.current.connect();
       try {
         const stmt = await conn.prepare(PAIR_SQL);
-        const table = await stmt.query({
-          url: EXPLORER_PARQUET,
-          a: origin,
-          b: destination,
-        });
+        const table = await stmt.query(...pairParams(EXPLORER_PARQUET, origin, destination));
         return shape(table.toArray().map((r: any) => r.toJSON?.() ?? r));
       } finally {
         await conn.close();

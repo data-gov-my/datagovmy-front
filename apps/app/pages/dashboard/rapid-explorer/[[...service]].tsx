@@ -8,20 +8,34 @@ import { clx } from "datagovmy-ui/helpers";
 import { useTranslation } from "datagovmy-ui/hooks";
 import { Page } from "datagovmy-ui/types";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
+import { routes } from "@lib/routes";
+import { stationSlug } from "@dashboards/transportation/rapid-explorer/slug";
 
 const EXPLORER_META = "https://storage.data.gov.my/dashboards/prasarana_explorer_meta.json";
+const RAPID_EXPLORER = routes.RAPID_EXPLORER;
 
 const RapidExplorer: Page = ({
   meta,
   explorer,
-  params,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation("dashboard-rapid-explorer");
 
   return (
     <AnalyticsProvider meta={meta}>
+      <Head>
+        {/*
+          The explorer reaches three origins the moment DuckDB starts warming:
+          the WASM bundle, the parquet extension, and the data itself. Opening
+          those connections during the initial render means the warm-up is not
+          also paying for DNS and TLS on each.
+        */}
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://extensions.duckdb.org" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://storage.data.gov.my" crossOrigin="anonymous" />
+      </Head>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <RapidExplorerDashboard explorer={explorer} params={params} />
+      <RapidExplorerDashboard explorer={explorer} />
     </AnalyticsProvider>
   );
 };
@@ -43,18 +57,18 @@ RapidExplorer.layout = (page, props) => {
 };
 
 /**
- * Path: /{service}/{origin}/{destination}
- * service - required - rail
- * origin - required - KJ10: KLCC
- * destination - required - KJ15: KL Sentral
+ * The explorer lives at one URL, with the pair in the query string:
  *
- * Every pair keeps its own URL so existing links and shares still resolve, but
- * the path no longer decides what is fetched on the server. Each path returns
- * the same static props -- the station list, which pairs are valid, and the
- * default pair's series -- and the browser queries the requested pair from the
- * parquet with DuckDB. A cold path therefore costs one 13 KB metadata fetch
- * rather than three API calls, which is what makes `fallback: "blocking"`
- * cheap here in a way it was not before.
+ *   /dashboard/rapid-explorer?origin=kj10-klcc&destination=kj15-kl-sentral
+ *
+ * It used to be a catch-all path of raw station labels, which encoded into
+ * `/rail/KJ10%3A%20KLCC/KJ15%3A%20KL%20Sentral` -- unreadable, and unpleasant
+ * to paste anywhere. Those links are still out in the world, so this route
+ * stays to catch them and answers with a permanent redirect to the slug form.
+ *
+ * Only the bare path is rendered. There is one page, statically generated, and
+ * the query decides nothing on the server: props are identical for every pair,
+ * and the browser resolves the slugs and queries DuckDB for that pair itself.
  */
 export const getStaticPaths: GetStaticPaths = () => {
   return {
@@ -66,19 +80,40 @@ export const getStaticPaths: GetStaticPaths = () => {
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-rapid-explorer",
   async ({ params }) => {
-    const [service, origin, destination] = params?.service ? (params.service as string[]) : [];
-
     const response = await fetch(EXPLORER_META);
     if (!response.ok) {
       throw new Error(`Explorer metadata fetch failed: ${response.status}`);
     }
     const explorer = await response.json();
 
-    // A path can name a pair that does not exist -- a station closes, or the
-    // link was hand-edited. Falling back to the default beats rendering a chart
-    // that would always be empty.
-    const known = new Set<string>(explorer.stations);
-    const valid = Boolean(origin && destination && known.has(origin) && known.has(destination));
+    // Old-style link: /{service}/{origin}/{destination}, labels and all.
+    const segments = (params?.service as string[] | undefined) ?? [];
+    if (segments.length) {
+      const [, origin, destination] = segments.map(segment => {
+        try {
+          return decodeURIComponent(segment);
+        } catch {
+          return segment;
+        }
+      });
+
+      const known = new Set<string>(explorer.stations);
+      const query = new URLSearchParams();
+      // Carry over only what still names a real station; anything else falls
+      // through to the landing rather than redirecting to an empty chart.
+      if (origin && known.has(origin))
+        query.set("origin", stationSlug(origin, explorer.all_stations));
+      if (destination && known.has(destination))
+        query.set("destination", stationSlug(destination, explorer.all_stations));
+
+      const search = query.toString();
+      return {
+        redirect: {
+          destination: `${RAPID_EXPLORER}${search ? `?${search}` : ""}`,
+          permanent: true,
+        },
+      };
+    }
 
     return {
       props: {
@@ -89,11 +124,6 @@ export const getStaticProps: GetStaticProps = withi18n(
           agency: "prasarana",
         },
         explorer,
-        params: {
-          service: service ?? "rail",
-          origin: valid ? origin : explorer.default.origin,
-          destination: valid ? destination : explorer.default.destination,
-        },
       },
       revalidate: 60 * 60 * 24, // 1 day (in seconds)
     };
