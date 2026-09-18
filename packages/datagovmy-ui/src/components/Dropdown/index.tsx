@@ -123,12 +123,6 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
     return matchSorter(options, search.toLowerCase(), { keys: ["label"] });
   }, [options, search, enableSearch]);
 
-  /** Where the current selection sits in the visible list; -1 when absent. */
-  const selectedIndex = useMemo<number>(() => {
-    if (multiple || !selected) return -1;
-    return availableOptions.findIndex(option => option.value === (selected as OptionType).value);
-  }, [availableOptions, selected, multiple]);
-
   const ListboxOption = ({
     option,
     index,
@@ -287,14 +281,6 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
                   width={"100%"}
                   itemCount={availableOptions.length}
                   itemSize={36}
-                  // Open on the current selection, the way the unvirtualised
-                  // list does. Headless UI scrolls the selected option into
-                  // view itself, but it cannot here: past 160 options only the
-                  // visible handful are in the DOM, so a list of, say, 174
-                  // stations always opened at the top with the chosen one
-                  // nowhere in sight -- and with no scrollbar showing until you
-                  // interact, that reads as a dropdown that will not scroll.
-                  initialScrollOffset={Math.max(0, selectedIndex) * 36}
                 >
                   {({ index, style }: { index: number; style: CSSProperties }) => {
                     const option = availableOptions[index];

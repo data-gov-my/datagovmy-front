@@ -126,6 +126,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
     range: DEFAULT_RANGE,
     origin: explorer.default.origin,
     destination: explorer.default.destination,
+    // The mobile filter modal edits a draft, committed only on "Apply", so
+    // browsing the dropdowns there neither queries nor touches the URL.
+    draft_origin: explorer.default.origin,
+    draft_destination: explorer.default.destination,
     // Starts as the pair that shipped statically. Replaced wholesale by a
     // DuckDB result once someone picks something else.
     pair: {
@@ -283,14 +287,39 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
    * origin. 12,864 of the 30,276 possible pairs have never carried a passenger,
    * so an unfiltered list would mostly offer empty charts.
    */
-  const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
-    const index = explorer.stations.indexOf(data.origin);
-    if (index < 0) return [];
-    return (explorer.reachable[String(index)] ?? []).map(i => ({
-      label: isAllStations(explorer.stations[i]),
-      value: explorer.stations[i],
-    }));
-  }, [data.origin, explorer.reachable, i18n.language]);
+  const reachableFrom = useCallback(
+    (origin: string): string[] => {
+      const index = explorer.stations.indexOf(origin);
+      if (index < 0) return [];
+      return (explorer.reachable[String(index)] ?? []).map(i => explorer.stations[i]);
+    },
+    [explorer.stations, explorer.reachable]
+  );
+
+  const destinationOptions = (origin: string): Array<OptionType> =>
+    reachableFrom(origin).map(s => ({ label: isAllStations(s), value: s }));
+
+  const DESTINATION_OPTIONS = useMemo(
+    () => destinationOptions(data.origin),
+    [data.origin, reachableFrom, i18n.language]
+  );
+  const DRAFT_DESTINATION_OPTIONS = useMemo(
+    () => destinationOptions(data.draft_origin),
+    [data.draft_origin, reachableFrom, i18n.language]
+  );
+
+  /**
+   * The destination to pair with a newly picked origin: the current one if it
+   * is still reachable, otherwise All Stations, which every origin but All
+   * Stations itself can reach, otherwise the first reachable station. Never
+   * empty, so a pick always lands on a pair that can be charted and linked.
+   */
+  const destinationFor = (origin: string, current: string): string => {
+    const reachable = reachableFrom(origin);
+    if (reachable.includes(current)) return current;
+    if (reachable.includes(explorer.all_stations)) return explorer.all_stations;
+    return reachable[0];
+  };
 
   const loadPair = useCallback(
     async (origin: string, destination: string) => {
@@ -385,11 +414,10 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
     const from = asked(query.origin);
     const to = asked(query.destination);
 
-    // Neither named: the landing keeps the default pair it rendered with.
-    if (!from && !to) return;
-
-    const origin = from ?? explorer.all_stations;
-    const destination = to ?? explorer.all_stations;
+    // Neither named means the bare landing -- on first load, or on going back
+    // to it after picking a pair -- which always shows the default pair.
+    const origin = from ?? (to ? explorer.all_stations : explorer.default.origin);
+    const destination = to ?? (from ? explorer.all_stations : explorer.default.destination);
     if (origin === data.origin && destination === data.destination) return;
 
     setData("origin", origin);
@@ -405,12 +433,14 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
     syncUrl(origin, destination);
   };
 
-  /** Picking a new origin invalidates the destination unless it survives. */
-  const selectOrigin = (origin: string) => {
-    const index = explorer.stations.indexOf(origin);
-    const reachable = (explorer.reachable[String(index)] ?? []).map(i => explorer.stations[i]);
-    setData("origin", origin);
-    if (!reachable.includes(data.destination)) setData("destination", null);
+  /** A new origin is a new pair: keep the destination if it survives. */
+  const selectOrigin = (origin: string) =>
+    selectPair(origin, destinationFor(origin, data.destination));
+
+  /** The modal's equivalent, which only moves the draft. */
+  const selectDraftOrigin = (origin: string) => {
+    setData("draft_origin", origin);
+    setData("draft_destination", destinationFor(origin, data.draft_destination));
   };
 
   const chartDataset = (coords: { x: number[]; passengers: number[] }) => ({
@@ -445,20 +475,13 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
   /**
    * The range toggles.
    *
-   * These sit on the controls row rather than in the Section header: five
-   * labels as wordy as "All Time (Monthly)" do not fit beside the description,
-   * and wrapped onto a second line there. `flex-nowrap` with a scroll fallback
-   * keeps them on one line at any width.
-   */
-  /**
-   * The range toggles.
-   *
    * `List` is the site's pill control -- the same one the vehicle-registrations
    * dashboard uses for its monthly/yearly switch -- so the selected state and
    * hover match every other dashboard rather than being styled by hand here.
    *
    * These sit on the controls row rather than in the Section header: five
    * labels as wordy as "All Time (Monthly)" wrapped onto a second line there.
+   * `flex-nowrap` with a scroll fallback keeps them on one line at any width.
    */
   const rangeToggles = (
     <List
@@ -472,6 +495,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
     />
   );
 
+  /** The mobile modal's dropdowns, which edit the draft pair. */
   const filters = () => (
     <>
       <div className="space-y-2 py-3">
@@ -480,8 +504,8 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
           anchor="bottom-10"
           width="w-full"
           options={ORIGIN_OPTIONS}
-          selected={ORIGIN_OPTIONS.find(e => e.value === data.origin)}
-          onChange={selected => selectOrigin(selected.value)}
+          selected={ORIGIN_OPTIONS.find(e => e.value === data.draft_origin)}
+          onChange={selected => selectDraftOrigin(selected.value)}
           enableSearch={ORIGIN_OPTIONS.length > 15}
         />
       </div>
@@ -490,11 +514,11 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
         <Dropdown
           anchor="right-0 bottom-10"
           width="w-full"
-          options={DESTINATION_OPTIONS}
-          selected={DESTINATION_OPTIONS.find(e => e.value === data.destination)}
-          disabled={!data.origin}
-          onChange={selected => setData("destination", selected.value)}
-          enableSearch={DESTINATION_OPTIONS.length > 15}
+          options={DRAFT_DESTINATION_OPTIONS}
+          selected={DRAFT_DESTINATION_OPTIONS.find(e => e.value === data.draft_destination)}
+          disabled={!data.draft_origin}
+          onChange={selected => setData("draft_destination", selected.value)}
+          enableSearch={DRAFT_DESTINATION_OPTIONS.length > 15}
         />
       </div>
     </>
@@ -521,7 +545,16 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
                   <div className="flex sm:hidden">
                     <Modal
                       trigger={open => (
-                        <Button onClick={open} className="btn-default shadow-floating">
+                        <Button
+                          onClick={() => {
+                            // Open on the pair on screen, not whatever was
+                            // left in the draft by a modal closed unapplied.
+                            setData("draft_origin", data.origin);
+                            setData("draft_destination", data.destination);
+                            open();
+                          }}
+                          className="btn-default shadow-floating"
+                        >
                           <span>{t("filters")}</span>
                           <span className="bg-primary dark:bg-primary-dark w-4.5 h-5 rounded-md text-center text-white">
                             2
@@ -541,7 +574,7 @@ const RapidExplorer: FunctionComponent<RapidExplorerProps> = ({ explorer }) => {
                               variant="primary"
                               className="justify-center"
                               onClick={() => {
-                                selectPair(data.origin, data.destination);
+                                selectPair(data.draft_origin, data.draft_destination);
                                 close();
                               }}
                             >

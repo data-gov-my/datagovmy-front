@@ -53,10 +53,13 @@ const CatalogueIndex: FunctionComponent<CatalogueIndexProps> = ({
   const scrollRef = useRef<Record<string, HTMLElement | null>>({});
   const filterRef = useRef<CatalogueFilterRef>(null);
   const { size } = useContext(WindowContext);
-  const sourceOptions = sources.map(source => ({
-    label: t(`agencies:${source.toLowerCase()}.full`),
-    value: source,
-  }));
+  // Sorted by the translated name shown, not the abbreviation it arrives as.
+  const sourceOptions = sources
+    .map(source => ({
+      label: t(`agencies:${source.toLowerCase()}.full`),
+      value: source,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   const _collection = useMemo<Array<[string, any]>>(() => {
     const resultCollection: Array<[string, Catalogue[]]> = [];

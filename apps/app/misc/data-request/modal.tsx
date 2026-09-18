@@ -170,10 +170,12 @@ export const RequestDataModal: FunctionComponent<RequestDataModalProps> = ({
   );
 
   const agencies: OptionType[] = dropdown
-    ? dropdown?.map(item => ({
-        label: `${item.name} (${item.acronym})`,
-        value: item.acronym,
-      }))
+    ? dropdown
+        .map(item => ({
+          label: `${item.name} (${item.acronym})`,
+          value: item.acronym,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label))
     : [];
 
   const PURPOSES: Array<OptionType> = [

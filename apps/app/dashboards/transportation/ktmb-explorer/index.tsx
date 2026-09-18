@@ -99,10 +99,12 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const ORIGIN_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _origins: Array<OptionType> = [];
     if (data.service) {
-      _origins = Object.keys(dropdown[data.service]).map(origin => ({
-        label: origin,
-        value: origin,
-      }));
+      _origins = Object.keys(dropdown[data.service])
+        .sort((a, b) => a.localeCompare(b))
+        .map(origin => ({
+          label: origin,
+          value: origin,
+        }));
     }
     return _origins;
   }, [data.service]);
@@ -110,10 +112,12 @@ const KTMBExplorer: FunctionComponent<KTMBExplorerProps> = ({
   const DESTINATION_OPTIONS = useMemo<Array<OptionType>>(() => {
     let _destinations: Array<OptionType> = [];
     if (data.service && data.origin) {
-      _destinations = dropdown[data.service][data.origin].map((destination: string) => ({
-        label: destination,
-        value: destination,
-      }));
+      _destinations = [...dropdown[data.service][data.origin]]
+        .sort((a: string, b: string) => a.localeCompare(b))
+        .map((destination: string) => ({
+          label: destination,
+          value: destination,
+        }));
     }
     return _destinations;
   }, [data.origin]);

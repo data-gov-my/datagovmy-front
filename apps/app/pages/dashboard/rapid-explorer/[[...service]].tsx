@@ -25,13 +25,11 @@ const RapidExplorer: Page = ({
     <AnalyticsProvider meta={meta}>
       <Head>
         {/*
-          The explorer reaches three origins the moment DuckDB starts warming:
-          the WASM bundle, the parquet extension, and the data itself. Opening
-          those connections during the initial render means the warm-up is not
-          also paying for DNS and TLS on each.
+          DuckDB, its parquet extension and the data all live on this one
+          origin, and are fetched the moment DuckDB starts warming. Opening the
+          connection during the initial render means the warm-up does not also
+          pay for DNS and TLS.
         */}
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://extensions.duckdb.org" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://storage.data.gov.my" crossOrigin="anonymous" />
       </Head>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
@@ -79,7 +77,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-rapid-explorer",
-  async ({ params }) => {
+  async ({ params, locale, defaultLocale }) => {
     const response = await fetch(EXPLORER_META);
     if (!response.ok) {
       throw new Error(`Explorer metadata fetch failed: ${response.status}`);
@@ -107,9 +105,13 @@ export const getStaticProps: GetStaticProps = withi18n(
         query.set("destination", stationSlug(destination, explorer.all_stations));
 
       const search = query.toString();
+      // A redirect from getStaticProps is not locale-aware: the destination is
+      // taken literally, so without the prefix a Malay link would land on the
+      // English page.
+      const prefix = locale && locale !== defaultLocale ? `/${locale}` : "";
       return {
         redirect: {
-          destination: `${RAPID_EXPLORER}${search ? `?${search}` : ""}`,
+          destination: `${prefix}${RAPID_EXPLORER}${search ? `?${search}` : ""}`,
           permanent: true,
         },
       };

@@ -12,7 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
  *
  * The file is sorted by (origin, destination, date), so a pair's rows sit
  * together and DuckDB skips almost the entire file from the row-group
- * statistics: roughly one 126 KB row group out of 24 MB per query.
+ * statistics: a handful of row groups out of 193, well under 1 MB of 22 MB.
  *
  * Initialisation is deliberately lazy and non-blocking. The landing renders
  * from the default pair's series, which ships in the metadata JSON, so nothing
@@ -21,6 +21,30 @@ import { useCallback, useEffect, useRef, useState } from "react";
  */
 
 export const EXPLORER_PARQUET = "https://storage.data.gov.my/dashboards/prasarana_explorer.parquet";
+
+/**
+ * DuckDB itself is self-hosted beside the data rather than pulled from
+ * jsDelivr and extensions.duckdb.org, so the explorer depends on one origin we
+ * control. The files are Brotli-compressed on S3 (the distribution does not
+ * compress on the fly), which takes the engine from 34 MB to 5 MB.
+ *
+ * Both paths are tied to the exact package version: `1.32.0` is the
+ * @duckdb/duckdb-wasm release, and `v1.4.3` the DuckDB core inside it, which is
+ * where the engine looks for extensions. Upgrading the package means uploading
+ * a new set of files under new folders, so the pin in package.json is exact.
+ */
+const DUCKDB_HOST = "https://storage.data.gov.my/duckdb-wasm";
+const DUCKDB_BUNDLES = {
+  mvp: {
+    mainModule: `${DUCKDB_HOST}/1.32.0/duckdb-mvp.wasm`,
+    mainWorker: `${DUCKDB_HOST}/1.32.0/duckdb-browser-mvp.worker.js`,
+  },
+  eh: {
+    mainModule: `${DUCKDB_HOST}/1.32.0/duckdb-eh.wasm`,
+    mainWorker: `${DUCKDB_HOST}/1.32.0/duckdb-browser-eh.worker.js`,
+  },
+};
+const DUCKDB_EXTENSIONS = `${DUCKDB_HOST}/extensions`;
 
 export type Series = { x: number[]; passengers: number[] };
 export type PairSeries = { daily: Series; monthly: Series };
@@ -53,8 +77,8 @@ const PAIR_SQL = `
   WITH pair AS (
     SELECT (origin = ?) AS forward, date, passengers
     FROM read_parquet(?)
-    WHERE (origin = ? AND destination = ?)
-       OR (origin = ? AND destination = ?)
+    WHERE origin IN (?, ?) AND destination IN (?, ?)
+      AND ((origin = ? AND destination = ?) OR (origin = ? AND destination = ?))
   )
   SELECT
     forward,
@@ -84,12 +108,22 @@ const PAIR_SQL = `
  * The station names repeat because the predicate has to name them literally:
  * lifting them into a CTE and joining would bind each once, but the filter
  * would then compare against a runtime column rather than a constant, and
- * DuckDB could no longer prune row groups from the parquet statistics -- which
- * is the whole reason a pair costs ~126 KB instead of 24 MB.
+ * DuckDB could no longer prune row groups from the parquet statistics.
+ *
+ * The `IN` pair is what makes pruning happen at all. The exact match, an OR of
+ * two ANDs across two columns, cannot be pushed into the parquet scan, so on
+ * its own it reads all 23.6M rows (the whole 22 MB file). Per-column `IN`
+ * filters can be pushed down and checked against each row group's min/max, so
+ * the scan touches ~4 of 193 row groups; the exact match then drops the rows
+ * that pair the two stations the wrong way round.
  */
 const pairParams = (url: string, origin: string, destination: string) => [
   origin, // forward flag
   url, // read_parquet
+  origin, // origin IN
+  destination,
+  origin, // destination IN
+  destination,
   origin, // A -> B
   destination,
   destination, // B -> A
@@ -131,7 +165,7 @@ function shape(
  * Pay the one-off costs before anyone asks for a pair.
  *
  * Instantiating DuckDB is not enough to make the first query fast. That query
- * also downloads the parquet extension from extensions.duckdb.org and reads the
+ * also downloads the parquet extension and reads the
  * file footer (a HEAD plus a GET), and only then fetches the row group it
  * wants -- so the first station change was carrying three round trips the rest
  * never pay.
@@ -145,6 +179,10 @@ function shape(
 async function warmUp(db: any) {
   const conn = await db.connect();
   try {
+    // Parquet is not built into the WASM engine; it is fetched on first use.
+    // `autoinstall_` covers that implicit fetch, `custom_` an explicit INSTALL.
+    await conn.query(`SET autoinstall_extension_repository = '${DUCKDB_EXTENSIONS}'`);
+    await conn.query(`SET custom_extension_repository = '${DUCKDB_EXTENSIONS}'`);
     await conn.query(`SELECT count(*) FROM read_parquet('${EXPLORER_PARQUET}')`);
   } catch {
     // Warming is an optimisation; a failure here must not stop the page from
@@ -181,7 +219,7 @@ export function useExplorerQuery() {
     (async () => {
       try {
         const duckdb = await import("@duckdb/duckdb-wasm");
-        const bundle = await duckdb.selectBundle(duckdb.getJsDelivrBundles());
+        const bundle = await duckdb.selectBundle(DUCKDB_BUNDLES);
 
         const workerUrl = URL.createObjectURL(
           new Blob([`importScripts("${bundle.mainWorker}");`], { type: "text/javascript" })
@@ -189,6 +227,18 @@ export function useExplorerQuery() {
         const worker = new Worker(workerUrl);
         const db = new duckdb.AsyncDuckDB(new duckdb.VoidLogger(), worker);
         await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+        // Without an explicit filesystem config DuckDB never sends a Range
+        // header and downloads the whole parquet on first read. These settings
+        // make it probe with a one-byte range, which CloudFront answers with
+        // 206, and read byte ranges from then on. `reliableHeadRequests` stays
+        // off because CloudFront answers a ranged HEAD with 200, not 206.
+        await db.open({
+          filesystem: {
+            allowFullHTTPReads: true,
+            reliableHeadRequests: false,
+            forceFullHTTPReads: false,
+          },
+        });
         URL.revokeObjectURL(workerUrl);
         instance = db;
 
