@@ -148,6 +148,8 @@ function getOS(): string {
 export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, children }) => {
   const [data, setData] = useState<AnalyticsResult<"dashboard" | "data-catalogue"> | undefined>();
   const router = useRouter();
+  const tinybirdUrl = process.env.NEXT_PUBLIC_TINYBIRD_URL;
+  const tinybirdToken = process.env.NEXT_PUBLIC_TINYBIRD_TOKEN;
 
   // send new analytics data when the component mounts or when the route change
   useEffect(() => {
@@ -177,32 +179,31 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
   // Tinybird increment view count
   const track = async (id: string, type: Meta["type"], metric: MetricType) => {
+    if (!tinybirdUrl || !tinybirdToken) return;
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=dgmy_views&wait=true`,
-        {
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
-          },
-          body: JSON.stringify({
-            id: id,
-            timestamp: DateTime.now().toSQL({ includeOffset: false }),
-            type: type,
-          }),
-        }
-      );
+      const response = await fetch(`${tinybirdUrl}/events?name=dgmy_views&wait=true`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tinybirdToken}`,
+        },
+        body: JSON.stringify({
+          id: id,
+          timestamp: DateTime.now().toSQL({ includeOffset: false }),
+          type: type,
+        }),
+      });
 
       // Get updated view-count after POST request completed
       const updatedResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_total_views_by_id.json?page_id=${id}&page_type=${type}`,
+        `${tinybirdUrl}/pipes/dgmy_total_views_by_id.json?page_id=${id}&page_type=${type}`,
         {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+            "Authorization": `Bearer ${tinybirdToken}`,
           },
         }
       );
@@ -210,12 +211,12 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       if (type === "data-catalogue") {
         const downloadsResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/pipes/dgmy_dc_analytics.json?catalogue_id=${id}`,
+          `${tinybirdUrl}/pipes/dgmy_dc_analytics.json?catalogue_id=${id}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
+              "Authorization": `Bearer ${tinybirdToken}`,
             },
           }
         );
@@ -255,23 +256,22 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
   // For DC only. Tinybird update download count for DC.
   const updateDownloadCount = async (id: string, format: DownloadFileFormat) => {
+    if (!tinybirdUrl || !tinybirdToken) return;
+
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=dgmy_dc_dls`,
-        {
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
-          },
-          body: JSON.stringify({
-            id: id,
-            timestamp: DateTime.now().toSQL({ includeOffset: false }),
-            format: format,
-          }),
-        }
-      );
+      const response = await fetch(`${tinybirdUrl}/events?name=dgmy_dc_dls`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tinybirdToken}`,
+        },
+        body: JSON.stringify({
+          id: id,
+          timestamp: DateTime.now().toSQL({ includeOffset: false }),
+          format: format,
+        }),
+      });
 
       if (response.ok) {
         setData(
@@ -298,6 +298,8 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
       resource_id?: number;
     }
   ) => {
+    if (!tinybirdUrl || !tinybirdToken) return;
+
     try {
       const { country, city } = await getGeolocation();
 
@@ -339,18 +341,15 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
         payload: JSON.stringify(payload),
       };
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_TINYBIRD_URL}/events?name=opendata_analytics`,
-        {
-          method: "POST",
-          headers: {
-            "Accept": "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${process.env.NEXT_PUBLIC_TINYBIRD_TOKEN}`,
-          },
-          body: JSON.stringify(analyticsData),
-        }
-      );
+      const response = await fetch(`${tinybirdUrl}/events?name=opendata_analytics`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tinybirdToken}`,
+        },
+        body: JSON.stringify(analyticsData),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to send new analytics data");

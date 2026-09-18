@@ -22,7 +22,19 @@ export async function middleware(request: NextRequest) {
   const purpose = headers.get("purpose");
   if (purpose && purpose.match(/prefetch/i)) headers.delete("x-middleware-prefetch"); // empty json bugfix (in the browser headers still show, but here it is gone)
 
-  const token = await get<string>("ROLLING_TOKEN");
+  // Tolerate the lookup failing. There is no Edge Config connection string in
+  // local development, so this turned every matched route into a 500; in
+  // production a transient Edge Config outage would do the same. Both now fall
+  // through to the "yikes" default the cookie already defines.
+  //
+  // try/catch rather than .catch(): with no connection string the SDK throws
+  // synchronously, so there is no promise to attach a handler to.
+  let token: string | undefined;
+  try {
+    token = await get<string>("ROLLING_TOKEN");
+  } catch {
+    token = undefined;
+  }
 
   // Development / Production
   if (["development", "production"].includes(process.env.NEXT_PUBLIC_APP_ENV)) {

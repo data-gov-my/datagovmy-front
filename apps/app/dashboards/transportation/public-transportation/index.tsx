@@ -349,6 +349,7 @@ const PublicTransportation: FunctionComponent<PublicTransportationProps> = ({
                     item => item !== "x" && item !== "bus" && item !== "rail" && item !== "overall"
                   ).map(key => (
                     <Timeseries
+                      key={key}
                       className="h-[300px] w-full"
                       title={t(`ridership_${key}`)}
                       enableAnimation={!play}

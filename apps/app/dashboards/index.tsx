@@ -211,10 +211,17 @@ const DashboardFilter: FunctionComponent<DashboardFilterProps> = ({
   const { t } = useTranslation(["dashboards", "agencies", "common"]);
   const reset = () => onSearch("");
 
-  const filterSources: OptionType[] = dropdown.map(source => ({
-    label: t(`agencies:${source}.abbr`),
-    value: source,
-  }));
+  // Sorted here rather than left to the Dropdown. This list came out
+  // alphabetical only as a side effect of the search ranking running over an
+  // empty query; now that the component keeps the order it is given, the
+  // ordering has to be stated. Labels are translated, so the comparison is
+  // locale-aware.
+  const filterSources: OptionType[] = dropdown
+    .map(source => ({
+      label: t(`agencies:${source}.abbr`),
+      value: source,
+    }))
+    .sort((a, b) => a.label.localeCompare(b.label));
 
   return (
     <div className="dark:border-washed-dark sticky top-14 z-10 flex items-center justify-between gap-2 border-b bg-white py-3 lg:pl-2 dark:bg-black">
