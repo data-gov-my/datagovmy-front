@@ -15,9 +15,11 @@ export const en: Record<string, any> = {
     "open-source": "Open Source",
     "fe": "Frontend Repo: NextJS",
     "be": "Backend Repo: Django",
+    "ai": "AI Repo: Python",
     "uiux": "UI + UX Design: Figma",
     "open-data": "Open Data",
     "guide": "Guiding Principles",
+    "faq": "FAQ",
     "tos": "Terms of Use",
   },
   ai: {
@@ -51,9 +53,11 @@ export const ms: Record<string, any> = {
     "open-source": "Sumber Terbuka",
     "fe": "Repo 'Frontend': NextJS",
     "be": "Repo 'Backend': Django",
+    "ai": "Repo 'AI': Python",
     "uiux": "Reka Bentuk UI + UX: Figma",
     "open-data": "Data Terbuka",
     "guide": "Prinsip Panduan",
+    "faq": "Soalan Lazim",
     "tos": "Syarat Penggunaan",
   },
   ai: {

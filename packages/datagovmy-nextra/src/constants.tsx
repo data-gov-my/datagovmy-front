@@ -77,9 +77,11 @@ export const themeSchema = z.strictObject({
     openSource: z.function().returns(z.string()),
     fe: z.function().returns(z.string()),
     be: z.function().returns(z.string()),
+    ai: z.function().returns(z.string()),
     uiux: z.function().returns(z.string()),
     openData: z.function().returns(z.string()),
     guide: z.function().returns(z.string()),
+    faq: z.function().returns(z.string()),
     tos: z.function().returns(z.string()),
   }),
   gitTimestamp: z.custom<ReactNode | FC<{ timestamp: Date }>>(...reactNode),
@@ -230,6 +232,10 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
         const { t } = useTranslation();
         return t("footer.be");
       },
+      ai() {
+        const { t } = useTranslation();
+        return t("footer.ai");
+      },
       uiux() {
         const { t } = useTranslation();
         return t("footer.uiux");
@@ -241,6 +247,10 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
       guide() {
         const { t } = useTranslation();
         return t("footer.guide");
+      },
+      faq() {
+        const { t } = useTranslation();
+        return t("footer.faq");
       },
       tos() {
         const { t } = useTranslation();
