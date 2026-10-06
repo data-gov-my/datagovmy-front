@@ -40,24 +40,36 @@ const Immigration: Page = ({
 export const getStaticProps: GetStaticProps = withi18n(
   "dashboard-passport-and-passes",
   async () => {
-    const { data } = await get("/dashboard", { dashboard: "immigration" });
+    if (process.env.NEXT_PUBLIC_APP_ENV === "production") {
+      return {
+        notFound: true,
+      };
+    }
 
-    return {
-      notFound: process.env.NEXT_PUBLIC_APP_ENV === "production",
-      props: {
-        meta: {
-          id: "dashboard-passport-and-passes",
-          type: "dashboard",
-          category: "public-administration",
-          agency: "imigresen",
+    try {
+      const { data } = await get("/dashboard", { dashboard: "immigration" });
+
+      return {
+        notFound: false,
+        props: {
+          meta: {
+            id: "dashboard-passport-and-passes",
+            type: "dashboard",
+            category: "public-administration",
+            agency: "imigresen",
+          },
+          last_updated: data.data_last_updated,
+          next_update: data.data_next_update,
+          choropleth: data.choropleth,
+          timeseries: data.timeseries,
+          timeseries_callout: data.timeseries_callout,
         },
-        last_updated: data.data_last_updated,
-        next_update: data.data_next_update,
-        choropleth: data.choropleth,
-        timeseries: data.timeseries,
-        timeseries_callout: data.timeseries_callout,
-      },
-    };
+      };
+    } catch (e) {
+      return {
+        notFound: true,
+      };
+    }
   }
 );
 
