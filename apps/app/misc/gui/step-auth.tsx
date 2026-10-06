@@ -92,7 +92,7 @@ const StepAuth: FunctionComponent<StepAuthProps> = ({ onClickContinue }) => {
         <h4 className="text-xl font-bold">{t("step_auth.connect_to_continue")}</h4>
         <p className="text-dim font- text-sm">{t("step_auth.access_is_limited")}</p>
         <Button
-          onClick={() => signIn("github")}
+          onClick={() => signIn("github", { callbackUrl: routes.GUI_CATALOGUE })}
           className="bg-background-dark mt-4 h-[42px] text-white"
           icon={
             <Image
