@@ -149,7 +149,13 @@ export const toDate = (
   timestamp: number | string,
   format: string = "dd MMM yyyy",
   locale: string = "en-GB"
-): string => {
+): string =>
+  // Month names come from the runtime's Intl data, which disagrees on en-GB September: Node and
+  // Chrome say "Sept", Safari says "Sep". Pin one spelling so server and client render the same
+  // text, otherwise any September date fails hydration in Safari.
+  formatDate(timestamp, format, locale).replace(/\bSept\b/g, "Sep");
+
+const formatDate = (timestamp: number | string, format: string, locale: string): string => {
   if (typeof timestamp === "number") {
     const formatted_date = DateTime.fromMillis(timestamp).setLocale(locale).toFormat(format);
     return formatted_date !== "Invalid DateTime" ? formatted_date : "N/A";

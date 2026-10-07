@@ -77,6 +77,7 @@ export interface TimeseriesProps extends ChartHeaderProps {
   enableCallout?: boolean;
   enableCrosshair?: boolean;
   enableLegend?: boolean;
+  legendAlign?: "start" | "center" | "end";
   enableTooltip?: boolean;
   enableGridX?: boolean;
   enableGridY?: boolean;
@@ -130,6 +131,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
   enableCallout = false,
   enableCrosshair = true,
   enableLegend = false,
+  legendAlign = "start",
   enableGridX = false,
   enableGridY = true,
   enableMajorTick = true,
@@ -214,7 +216,7 @@ const Timeseries: FunctionComponent<TimeseriesProps> = ({
             generateLabels: generateLabels,
           },
           position: "top",
-          align: "start",
+          align: legendAlign,
         },
         tooltip: {
           enabled: enableTooltip,
