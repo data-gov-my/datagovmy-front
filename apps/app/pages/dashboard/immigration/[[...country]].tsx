@@ -1,39 +1,26 @@
 import { Metadata } from "datagovmy-ui/components";
-import ImmigrationDashboard from "@dashboards/demography/immigration";
+import ImmigrationDashboard, { ImmigrationProps } from "@dashboards/demography/immigration";
 import { AnalyticsProvider } from "datagovmy-ui/contexts/analytics";
 import { useTranslation } from "datagovmy-ui/hooks";
-import { get } from "datagovmy-ui/api";
 import { withi18n } from "datagovmy-ui/decorators";
 import { Page } from "datagovmy-ui/types";
-import { GetStaticPaths, GetStaticProps } from "next";
-import { InferGetStaticPropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import {
+  CONTINENTS,
+  ImmigrationData,
+  topCountries,
+} from "@dashboards/demography/immigration/types";
+import { routes } from "@lib/routes";
 
-const Immigration: Page = ({
-  meta,
-  params,
-  last_updated,
-  next_update,
-  countries,
-  timeseries,
-  timeseries_callout,
-  demography,
-  demography_callout,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const IMMIGRATION_DATA = "https://storage.data.gov.my/dashboards/immigration.json";
+
+const Immigration: Page = ({ meta, ...props }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(["dashboard-immigration", "common", "countries"]);
 
   return (
     <AnalyticsProvider meta={meta}>
       <Metadata title={t("header")} description={t("description")} keywords={""} />
-      <ImmigrationDashboard
-        countries={countries}
-        last_updated={last_updated}
-        next_update={next_update}
-        params={params}
-        timeseries={timeseries}
-        timeseries_callout={timeseries_callout}
-        demography={demography}
-        demography_callout={demography_callout}
-      />
+      <ImmigrationDashboard {...(props as ImmigrationProps)} />
     </AnalyticsProvider>
   );
 };
@@ -45,46 +32,83 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
+/**
+ * Everything comes from one static JSON built by the arrivals pipeline (dataproc-jim), so the
+ * build no longer depends on the backend API.
+ *
+ * The dashboard is one page, with the country in the query string:
+ *
+ *   /dashboard/immigration?country=SG
+ *
+ * Every country's series ships with the page (~170 KB, ~60 KB gzipped), so switching country is
+ * instant and needs no server round trip. The country used to be a path segment
+ * (/dashboard/immigration/SG); those links still exist, so this catch-all route stays to answer
+ * them with a permanent redirect to the query form.
+ */
 export const getStaticProps: GetStaticProps = withi18n(
   ["dashboard-immigration", "countries"],
-  async ({ params }) => {
-    try {
-      const country = params?.country ? params.country[0] : "ALL";
-
-      const [{ data: dropdown }, { data }] = await Promise.all([
-        get("/dropdown", { dashboard: "immigration_country" }),
-        get("/dashboard", { dashboard: "immigration_temp", country }),
-      ]).catch(e => {
-        console.error(e);
-        throw new Error("Invalid country. Message: " + e);
-      });
-
-      return {
-        props: {
-          meta: {
-            id: "dashboard-immigration",
-            type: "dashboard",
-            category: "demography",
-            agency: "imigresen",
-          },
-          params: {
-            country: country || "ALL",
-          },
-          last_updated: data.data_last_updated,
-          next_update: data.data_next_update,
-          countries: dropdown,
-          timeseries: data.timeseries_country,
-          timeseries_callout: data.timeseries_country_callout,
-          // TODO: to add back later when switch
-          // demography: data.timeseries_demography,
-          // demography_callout: data.timeseries_demography_callout,
-        },
-      };
-    } catch (e: any) {
-      console.error(e.message);
-      return { notFound: true };
+  async ({ params, locale, defaultLocale }) => {
+    const response = await fetch(IMMIGRATION_DATA);
+    if (!response.ok) {
+      throw new Error(`Immigration data fetch failed: ${response.status}`);
     }
+    const data: ImmigrationData = await response.json();
+
+    // Old-style link: /dashboard/immigration/{country}
+    const segments = (params?.country as string[] | undefined) ?? [];
+    if (segments.length) {
+      const country = segments[0].toUpperCase();
+      // An unknown code falls through to the national view rather than an empty chart
+      const query = country !== "ALL" && data.timeseries[country] ? `?country=${country}` : "";
+      // A redirect from getStaticProps is not locale-aware: the destination is taken literally
+      const prefix = locale && locale !== defaultLocale ? `/${locale}` : "";
+      return {
+        redirect: { destination: `${prefix}${routes.IMMIGRATION}${query}`, permanent: true },
+      };
+    }
+
+    const x = data.x.map(date => Date.parse(date));
+
+    return {
+      props: {
+        meta: {
+          id: "dashboard-immigration",
+          type: "dashboard",
+          category: "demography",
+          agency: "imigresen",
+        },
+        last_updated: data.data_last_updated,
+        next_update: data.data_next_update,
+        data_as_of: data.data_as_of,
+        // Busiest sources first, so the dropdown opens on the countries people look for
+        countries: Object.keys(data.timeseries).sort((a, b) =>
+          a === "ALL" ? -1 : b === "ALL" ? 1 : sumLast(data, b) - sumLast(data, a)
+        ),
+        top_countries: topCountries(data),
+        x,
+        timeseries: data.timeseries,
+        continents: {
+          x,
+          ...Object.fromEntries(CONTINENTS.map(c => [c, data.continents[c]])),
+        },
+        key_sources: {
+          start: data.key_sources.start,
+          end: data.key_sources.end,
+          countries: data.key_sources.countries,
+          timeseries: {
+            x,
+            ...Object.fromEntries(
+              data.key_sources.countries.map(c => [c, data.timeseries[c].total])
+            ),
+          },
+        },
+      },
+      revalidate: 60 * 60 * 24, // 1 day (in seconds)
+    };
   }
 );
+
+const sumLast = (data: ImmigrationData, country: string, months = 12) =>
+  data.timeseries[country].total.slice(-months).reduce((a, b) => a + b, 0);
 
 export default Immigration;

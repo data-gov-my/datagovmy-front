@@ -17,6 +17,8 @@ type ComboBoxProps<T> = Pick<ComboOptionProps<T>, "format" | "image"> & {
   loading?: boolean;
   config?: MatchSorterOptions<ComboOptionProp<T>>;
   className?: string;
+  /** "sm" is a slimmer bar (40px instead of 50px, 14px text) */
+  size?: "md" | "sm";
 };
 
 const ComboBox = <T extends unknown>({
@@ -30,6 +32,7 @@ const ComboBox = <T extends unknown>({
   loading = false,
   config = { keys: ["label"] },
   className,
+  size = "md",
 }: ComboBoxProps<T>) => {
   const { t } = useTranslation();
   const [items, setItems] = useState(options);
@@ -82,11 +85,21 @@ const ComboBox = <T extends unknown>({
             className
           )}
         >
-          <span className="flex h-auto max-h-8 w-8 shrink-0 justify-center self-center">
+          <span
+            className={clx(
+              "flex h-auto shrink-0 justify-center self-center",
+              size === "sm" ? "max-h-6 w-7" : "max-h-8 w-8"
+            )}
+          >
             {image && selectedItem ? (
               image(selectedItem.value)
             ) : (
-              <MagnifyingGlassIcon className="h-5 w-5 text-zinc-900 dark:text-zinc-500" />
+              <MagnifyingGlassIcon
+                className={clx(
+                  "text-zinc-900 dark:text-zinc-500",
+                  size === "sm" ? "h-4 w-4" : "h-5 w-5"
+                )}
+              />
             )}
           </span>
 
@@ -101,12 +114,18 @@ const ComboBox = <T extends unknown>({
                 if (onSearch) onSearch(event.target.value);
               },
             })}
-            className="w-full truncate rounded-r-full border-none bg-white py-3 pl-2 pr-0 focus:outline-none focus:ring-0 dark:bg-black"
+            className={clx(
+              "w-full truncate rounded-r-full border-none bg-white pl-2 pr-0 focus:outline-none focus:ring-0 dark:bg-black",
+              size === "sm" ? "py-2 text-sm" : "py-3"
+            )}
           />
           {inputValue && (
             <Button
               variant="ghost"
-              className="mr-2 flex h-8 w-8 justify-center rounded-full px-1.5"
+              className={clx(
+                "mr-2 flex justify-center rounded-full px-1.5",
+                size === "sm" ? "h-7 w-7" : "h-8 w-8"
+              )}
               onClick={() => {
                 reset();
                 selectItem(null);
@@ -115,12 +134,14 @@ const ComboBox = <T extends unknown>({
                 inputRef.current && inputRef.current.focus();
               }}
             >
-              <XMarkIcon className="size-5" />
+              <XMarkIcon className={size === "sm" ? "size-4" : "size-5"} />
             </Button>
           )}
         </div>
       </div>
-      <div className="absolute left-0 top-[54px] z-10 w-full">
+      <div
+        className={clx("absolute left-0 z-10 w-full", size === "sm" ? "top-[42px]" : "top-[54px]")}
+      >
         <ul
           {...getMenuProps({ ref: listRef })}
           className={clx(
