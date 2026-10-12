@@ -50,4 +50,20 @@ const namespaces = [
   "validations",
 ];
 
-module.exports = defineConfig(namespaces, ["common", "agencies", "dashboards", "validations"]);
+const config = defineConfig(namespaces, ["common", "agencies", "dashboards", "validations"]);
+
+if (process.env.NEXT_PUBLIC_I18N_FORMAT === "meta") {
+  const baseUrl = (process.env.NEXT_PUBLIC_I18N_URL || "").replace(/\/+$/, "");
+  config.backend = {
+    ...config.backend,
+    // Browser requests use the app's proxy; the static meta server needs no CORS setup.
+    loadPath:
+      typeof window === "undefined"
+        ? `${baseUrl}/i18n/{{lng}}/{{ns}}.json`
+        : "/_meta-i18n/{{lng}}/{{ns}}.json",
+    parse: data => JSON.parse(data).translation,
+    requestOptions: { cache: "no-store" },
+  };
+}
+
+module.exports = config;

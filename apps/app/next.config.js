@@ -48,6 +48,15 @@ const nextConfig = {
   },
   async rewrites() {
     return [
+      ...(process.env.NEXT_PUBLIC_I18N_FORMAT === "meta"
+        ? [
+            {
+              source: "/_meta-i18n/:path*",
+              destination: `${process.env.NEXT_PUBLIC_I18N_URL.replace(/\/+$/, "")}/i18n/:path*`,
+              locale: false,
+            },
+          ]
+        : []),
       {
         source: "/mp/lib.min.js",
         destination: "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js",
