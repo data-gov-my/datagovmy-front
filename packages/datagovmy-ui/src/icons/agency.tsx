@@ -1452,7 +1452,7 @@ export const AgencyIcon: FunctionComponent<AgencyIconProps> = ({
     "moh": MOHIcon,
     "mohe": JataNegara,
     "mot": MOTIcon,
-    "mosti": MOSTIcon,
+    "mosti": JataNegara,
     "mysa": JataNegara,
     "napic": JataNegara,
     "npra": JataNegara,
