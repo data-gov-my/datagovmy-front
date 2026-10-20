@@ -162,6 +162,8 @@ export const AKSARA_COLOR = {
   PURPLE_H: "#7C3AED1A",
   ORANGE: "#FF820E",
   ORANGE_H: "#FF820E1A",
+  PINK: "#EC4899",
+  PINK_H: "#EC48991A",
 } as const;
 
 /**
@@ -253,6 +255,7 @@ export const AgencyLink: Record<Agency, string> = {
   "mof": "https://www.mof.gov.my/portal/en",
   "moh": "https://www.moh.gov.my",
   "mot": "https://www.mot.gov.my/en/",
+  "mosti": "https://www.mosti.gov.my",
   "mynic": "https://mynic.my/",
   "mysa": "https://www.mysa.gov.my/",
   "napic": "https://napic.jpph.gov.my/ms",

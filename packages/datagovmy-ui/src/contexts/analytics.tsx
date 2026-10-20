@@ -182,7 +182,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
     if (!tinybirdUrl || !tinybirdToken) return;
 
     try {
-      const response = await fetch(`${tinybirdUrl}/events?name=dgmy_views&wait=true`, {
+      const response = await fetch(`${tinybirdUrl}/events?name=page_views&wait=true`, {
         method: "POST",
         headers: {
           "Accept": "application/json, text/plain, */*",
@@ -198,7 +198,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       // Get updated view-count after POST request completed
       const updatedResponse = await fetch(
-        `${tinybirdUrl}/pipes/dgmy_total_views_by_id.json?page_id=${id}&page_type=${type}`,
+        `${tinybirdUrl}/pipes/page_views_by_id.json?page_id=${id}&page_type=${type}`,
         {
           method: "GET",
           headers: {
@@ -211,7 +211,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
 
       if (type === "data-catalogue") {
         const downloadsResponse = await fetch(
-          `${tinybirdUrl}/pipes/dgmy_dc_analytics.json?catalogue_id=${id}`,
+          `${tinybirdUrl}/pipes/catalogue_stats.json?catalogue_id=${id}`,
           {
             method: "GET",
             headers: {
@@ -259,7 +259,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
     if (!tinybirdUrl || !tinybirdToken) return;
 
     try {
-      const response = await fetch(`${tinybirdUrl}/events?name=dgmy_dc_dls`, {
+      const response = await fetch(`${tinybirdUrl}/events?name=catalogue_downloads`, {
         method: "POST",
         headers: {
           "Accept": "application/json, text/plain, */*",
@@ -341,7 +341,7 @@ export const AnalyticsProvider: FunctionComponent<ContextChildren> = ({ meta, ch
         payload: JSON.stringify(payload),
       };
 
-      const response = await fetch(`${tinybirdUrl}/events?name=opendata_analytics`, {
+      const response = await fetch(`${tinybirdUrl}/events?name=web_events`, {
         method: "POST",
         headers: {
           "Accept": "application/json, text/plain, */*",

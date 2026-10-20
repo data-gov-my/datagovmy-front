@@ -29,7 +29,6 @@ export const routes = {
   MONEY_SUPPLY: "/dashboard/money-supply",
   NAME_POPULARITY: "/dashboard/name-popularity",
   ORANG_ASLI: "/dashboard/orang-asli",
-  PASSPORT_AND_PASSES: "/dashboard/passport-and-passes",
   POVERTY: "/dashboard/poverty",
   PUBLIC_CONTRACTING: "/dashboard/public-contracting",
   PUBLIC_PENSION: "/dashboard/public-pension",
