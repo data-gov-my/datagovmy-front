@@ -111,6 +111,8 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
   ];
 
   useEffect(() => {
+    if (!process.env.NEXT_PUBLIC_TINYBIRD_URL || !process.env.NEXT_PUBLIC_TINYBIRD_TOKEN) return;
+
     const fetchViews = async () => {
       try {
         const response = await fetch(
@@ -123,8 +125,11 @@ const DashboardIndex: FunctionComponent<DashboardIndexProps> = ({ dropdown, dash
             },
           }
         );
+        if (!response.ok) {
+          throw new Error(`Error retrieving dashboard views: HTTP ${response.status}`);
+        }
         const { data } = await response.json();
-        setViews(data);
+        setViews(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error(error);
       }
