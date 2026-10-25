@@ -129,13 +129,13 @@ GET https://api.data.gov.my/gtfs-realtime/vehicle-position/mybas-kuching
 # Fail .proto dikembalikan
 ```
 
-- Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-mrtfeeder`, `rapid-bus-kuantan` dan `rapid-bus-penang`.
+- Senarai nilai sah bagi `<category>` adalah `rapid-bus-kl`, `rapid-bus-mrtfeeder` dan `rapid-bus-penang`.
   - Endpoint `rapid-rail-kl` yang terkandung dalam API GTFS Statik belum lagi dibekalkan dalam API _realtime_ kerana data operasi _realtime_ belum dapat dibekalkan secara stabil.
-- Ralat yang sudah dikenalpasti bagi `rapid-bus-kuantan` dan `rapid-bus-penang`:
+- Ralat yang sudah dikenalpasti bagi `rapid-bus-penang`:
   - [E003](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E003): GTFS-rt `trip_id` tidak wujud dalam data GTFS
   - [E004](https://github.com/MobilityData/gtfs-realtime-validator/blob/master/RULES.md#E004): GTFS-rt `route_id` tidak wujud dalam data GTFS
     - Ralat ini disebabkan oleh beberapa isu dengan sistem operasi legasi (antaranya yang sudah dipakai lebih daripada sepuluh tahun) yang tidak dapat menjejaki perjalanan kenderaan dan menjana data laluan dengan sempurna. Pasukan kami giat berusaha untuk mengatasi kekangan ini untuk memastikan data _realtime_ menepati piawaian maka menjadi lebih berguna.
-- Ralat yang sudah dikenalpasti bagi `rapid-bus-penang`:
+- Isu yang sudah dikenalpasti bagi `rapid-bus-penang`:
   - _Developer_ perlu memadankan ID perjalanan (_trip ID_) dalam data _realtime_ dengan ID perjalanan sedia ada dalam jadual statik. Ini dapat dilaksanakan dengan membandingkan segmen ID perjalanan selepas awalan ID perkhidmatan.
     - Sebagai contoh, ID perjalanan `30000001_1000000855_053000_02` dalam GTFS _Realtime_ sepadan dengan ID perjalanan statik seperti:
       - `weekend_30000001_1000000855_053000_02`
