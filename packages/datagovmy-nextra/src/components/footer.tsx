@@ -54,8 +54,12 @@ export function Footer(): ReactElement {
               >
                 {renderString(config.footer.guide)}
               </a>
-              <a className={classes.link} href="#" target="_blank">
-                {renderString(config.footer.tos)}
+              <a
+                className={classes.link}
+                href="https://creativecommons.org/licenses/by/4.0/"
+                target="_blank"
+              >
+                {renderString(config.footer.license)}
               </a>
             </div>
           </div>

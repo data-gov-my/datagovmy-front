@@ -80,7 +80,7 @@ export const themeSchema = z.strictObject({
     uiux: z.function().returns(z.string()),
     openData: z.function().returns(z.string()),
     guide: z.function().returns(z.string()),
-    tos: z.function().returns(z.string()),
+    license: z.function().returns(z.string()),
   }),
   gitTimestamp: z.custom<ReactNode | FC<{ timestamp: Date }>>(...reactNode),
   head: z.custom<ReactNode | FC>(...reactNode),
@@ -242,9 +242,9 @@ export const DEFAULT_THEME: DocsThemeConfig = (() => {
         const { t } = useTranslation();
         return t("footer.guide");
       },
-      tos() {
+      license() {
         const { t } = useTranslation();
-        return t("footer.tos");
+        return t("footer.license");
       },
     },
     gitTimestamp: ({ timestamp }) => {
