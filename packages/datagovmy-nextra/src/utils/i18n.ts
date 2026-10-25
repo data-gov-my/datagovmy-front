@@ -18,7 +18,7 @@ export const en: Record<string, any> = {
     "uiux": "UI + UX Design: Figma",
     "open-data": "Open Data",
     "guide": "Guiding Principles",
-    "tos": "Terms of Use",
+    "license": "License: CC BY 4.0",
   },
   ai: {
     "header": "AI Helper",
@@ -54,7 +54,7 @@ export const ms: Record<string, any> = {
     "uiux": "Reka Bentuk UI + UX: Figma",
     "open-data": "Data Terbuka",
     "guide": "Prinsip Panduan",
-    "tos": "Syarat Penggunaan",
+    "license": "Lesen: CC BY 4.0",
   },
   ai: {
     "header": "Penolong AI",
