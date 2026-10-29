@@ -46,9 +46,18 @@ export async function middleware(request: NextRequest) {
   // Staging
   const basicAuth = request.headers.get("authorization");
   if (basicAuth) {
-    const authValue = basicAuth.split(" ")[1];
-    const [user, password] = atob(authValue).split(":");
-    if (user === "admin" && password === process.env.AUTH_TOKEN) {
+    const authValue = basicAuth.split(" ")[1] ?? "";
+    let decoded = "";
+    try {
+      decoded = atob(authValue);
+    } catch {
+      decoded = "";
+    }
+    // Split on the first colon only, so passwords may contain ":"
+    const sep = decoded.indexOf(":");
+    const user = sep === -1 ? decoded : decoded.slice(0, sep);
+    const password = sep === -1 ? "" : decoded.slice(sep + 1);
+    if (isValidStagingUser(user, password)) {
       response = NextResponse.next({ request: { headers } });
       response.cookies.set("rolling_token", token || "yikes", { path: "/", maxAge: 60 * 60 });
       return response;
@@ -58,4 +67,19 @@ export async function middleware(request: NextRequest) {
     status: 401,
     headers: { "WWW-Authenticate": `Basic realm="Secure Area"` },
   });
+}
+
+// Staging basic-auth accounts:
+// - "admin" with the AUTH_TOKEN env var (original account)
+// - extra accounts from AUTH_EXTRA_USERS, formatted "user1:pass1,user2:pass2"
+//   (usernames must not contain ":" or ","; passwords must not contain ",")
+function isValidStagingUser(user: string, password: string): boolean {
+  if (!user || !password) return false;
+  const accounts: Array<[string, string | undefined]> = [["admin", process.env.AUTH_TOKEN]];
+  for (const entry of (process.env.AUTH_EXTRA_USERS ?? "").split(",")) {
+    const sep = entry.indexOf(":");
+    if (sep <= 0) continue;
+    accounts.push([entry.slice(0, sep).trim(), entry.slice(sep + 1).trim()]);
+  }
+  return accounts.some(([u, p]) => !!p && u === user && p === password);
 }
