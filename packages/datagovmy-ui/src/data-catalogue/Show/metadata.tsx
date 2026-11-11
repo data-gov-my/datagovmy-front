@@ -373,10 +373,9 @@ const DCMetadata: FunctionComponent<MetadataProps> = ({
                             className="table-slate table-default-slate md:w-full"
                             data={metadata.fields.map(item => {
                               const raw = item.description;
-                              const [type, definition] = [
-                                raw.substring(raw.indexOf("[") + 1, raw.indexOf("]")),
-                                raw.substring(raw.indexOf("]") + 1),
-                              ];
+                              const typePrefix = raw.match(/^\s*\[([^\[\]\r\n]+)\]/);
+                              const type = typePrefix?.[1] ?? "";
+                              const definition = typePrefix ? raw.slice(typePrefix[0].length) : raw;
 
                               return {
                                 variable: item.name,
