@@ -217,6 +217,7 @@ const CatalogueShow: FunctionComponent<CatalogueShowProps> = ({
     <div>
       <Container className="min-h-screen">
         <Sidebar
+          sectionRefs={scrollRef}
           categories={Object.entries(
             getSideBarCollection({
               publications: Boolean(data.publication),
