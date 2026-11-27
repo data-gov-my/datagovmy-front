@@ -74,6 +74,22 @@ const rebuild = async (res: NextApiResponse, route: string, routes: string[]) =>
         resolve(true);
         break;
 
+      // Vehicle filters are cached as separate static pages.
+      case "/dashboard/vehicle-registrations":
+      case "/ms-MY/dashboard/vehicle-registrations": {
+        const vehicleRoutes = ["all", "bus", "car", "lorry", "motorcycle", "other", "van"].map(
+          type => `${route}/${type}`
+        );
+        try {
+          await Promise.all([route, ...vehicleRoutes].map(path => res.revalidate(path)));
+          routes.push(...vehicleRoutes);
+          resolve(true);
+        } catch (error) {
+          reject(error);
+        }
+        break;
+      }
+
       // Simple route
       default:
         await res.revalidate(route).catch(e => reject(e));

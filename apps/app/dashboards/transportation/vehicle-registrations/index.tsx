@@ -83,6 +83,12 @@ const VehicleRegistrations: FunctionComponent<VehicleRegistrationsProps> = ({
     periodly: "monthly",
   });
 
+  // Callouts may contain the last non-zero record from an older month.
+  // Keep the latest fuel count and its label aligned with the monthly chart.
+  const latestFuelMonth = fuel_timeseries.data.monthly;
+  const latestFuelMonthIndex = latestFuelMonth.x.length - 1;
+  const latestFuelTimestamp = latestFuelMonth.x[latestFuelMonthIndex];
+
   const LATEST_TIMESTAMP =
     vehicle_timeseries.data[data.periodly].x[vehicle_timeseries.data[data.periodly].x.length - 1];
 
@@ -178,10 +184,10 @@ const VehicleRegistrations: FunctionComponent<VehicleRegistrationsProps> = ({
                       stats={[
                         {
                           title: t("common:common.latest", {
-                            date: toDate(LATEST_TIMESTAMP, "MMM yyyy", i18n.language),
+                            date: toDate(latestFuelTimestamp, "MMM yyyy", i18n.language),
                           }),
                           value: `+${numFormat(
-                            fuel_timeseries_callout.data[fuel].latest,
+                            latestFuelMonth[fuel][latestFuelMonthIndex],
                             "standard"
                           )}`,
                         },
